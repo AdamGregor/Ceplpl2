@@ -3,6 +3,7 @@
 
 
 
+
 //IMPLEMENTACE DATOVEHO TYPU GODS
 
 //Deklarace/definice tridy God. Z ni budou dedit jednotlivi bohove

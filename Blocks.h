@@ -12,14 +12,14 @@ public:
 };
 
 class Rest: public Block {
-protected:
+public:
 	//I/O Porty
 	Gods *IPort1;
 	bool IPort1_Connected;
 	Gods *OPort1;
 	bool OPort1_Connected;
 
-public:
+
 	Rest();
 	void eval();
 };
@@ -62,7 +62,7 @@ public:
 };
 
 class DiceThrow : public Block {
-protected:
+public:
 	//I/O Porty
 	Gods *IPort1;
 	bool IPort1_Connected;
@@ -71,7 +71,7 @@ protected:
 	bool OPort1_Connected;
 
 	//metody
-public:
+
 	DiceThrow();
 	void eval();
 };
