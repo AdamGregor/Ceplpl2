@@ -14,8 +14,9 @@ struct PortStuff {
 class Block {
 public:
 	SubscribeList *subscriptions;
+	bool OPort1_Connected;
 
-	Block() { this->subscriptions = new SubscribeList; }
+	Block() { this->subscriptions = new SubscribeList; OPort1_Connected = true; }
 	void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); }
 	virtual char* getOut() = 0;
 	virtual PortStuff tryConnect(char*) = 0;
@@ -35,6 +36,7 @@ public:
 
 
 	Rest();
+	void distribute();
 	void eval();
 	PortStuff tryConnect(char*);
 	char* getOut() {return "Gods"; }

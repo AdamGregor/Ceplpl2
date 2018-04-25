@@ -1,4 +1,5 @@
 #include "Blocks.h"
+#include "SupportClasses.h"
 #include <iostream>
 #include <typeinfo>
 
@@ -94,7 +95,7 @@ PortStuff DiceThrow::tryConnect(char* typ) {
 		return ret;
 }
 
-void * Combat::tryConnect(char* typ) {
+PortStuff Combat::tryConnect(char* typ) {
 	PortStuff ret;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
@@ -104,44 +105,63 @@ void * Combat::tryConnect(char* typ) {
 	}
 	else if (typ == "Gods" && IPort3_Connected == false) {
 		this->IPort3_Connected = true;
-		return (void *)&IPort3;
+		ret.value = (void*)(this->IPort3);
+		ret.init = &(this->IPort3_Initiated);
+		return ret;
 	}
 	else if (typ == "Arena" && IPort2_Connected == false) {
-		this->IPort2_Connected = true;
-		return (void *)&IPort2;
+		ret.value = (void*)(this->IPort2);
+		ret.init = &(this->IPort2_Initiated);
+		return ret;
 	}
 	else
 		ret.value = nullptr;
 		return ret;
 }
 
-void * ItemApply::tryConnect(char* typ) {
+PortStuff ItemApply::tryConnect(char* typ) {
+	PortStuff ret;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
-		return (void *)&IPort1;
+		ret.value = (void*)(this->IPort1);
+		ret.init = &(this->IPort1_Initiated);
+		return ret;
 	}
 	else
-		return nullptr;
+		ret.value = nullptr;
+		return ret;
 }
 
-void * ArenaSelect::tryConnect(char* typ) {
+PortStuff ArenaSelect::tryConnect(char* typ) {
+	PortStuff ret;
 	if (typ == "Gods" && IPort1_Connected == false) {
-		std::cout << "tady jeste sem";
 		this->IPort1_Connected = true;
-		return (void *)&IPort1;
+		ret.value = (void*)(this->IPort1);
+		ret.init = &(this->IPort1_Initiated);
+		return ret;
 	}
 	else if (typ == "Gods" && IPort2_Connected == false) {
 		this->IPort2_Connected = true;
-		return (void *)&IPort2;
+		ret.value = (void*)(this->IPort2);
+		ret.init = &(this->IPort2_Initiated);
+		return ret;
 	}
 	else
-		return nullptr;
+		ret.value = nullptr;
+		return ret;
 }
 
 
 //eval bloku REST
 void Rest::eval() {
 	this->OPort1 = this->IPort1->setStrenght(this->IPort1->getOriginalStrenght());
+
+	//distribuce vysledku
+	ListItem *subscribes = this->subscriptions->getFirst();
+	while (subscribes != nullptr) {
+		subscribes->data->distributeResult();
+		subscribes = subscribes->next;
+	}
 }
 
 //Select areny na zaklade bohu
@@ -327,16 +347,18 @@ void SubscribeList::InsertItem(Connect *data) {
 	this->listLenght++;
 }
 
+void Rest::distribute() {
+
+
+}
 
 ///TODO pridat tento spoj do seznamu odchozcich v bloku
 Connect::Connect(Block* Blok1, Block *Blok2) {
 	this->transfered = false;
 	
-	char* typ = Blok1->getOut();
-	void * IPort = Blok2->tryConnect(typ);
-	std::cout << typ << "\n";
-	if (IPort != nullptr) {
-		// TODO pridat se do seznamu, plus se nastavi na odebirane
+	this->Data_type = Blok1->getOut();
+	this->reaction = Blok2->tryConnect(this->Data_type);
+	if (reaction.value != nullptr) {
 		Blok1->setSubscribe(this);
 		std::cout << "je to fajn \n";
 		this->in = Blok1;
@@ -349,11 +371,11 @@ Connect::Connect(Block* Blok1, Block *Blok2) {
 
 }
 
-
+/*
 Connect::DistributeResult()
 	
 }
-
+*/
 
 /*
 Connect::Delete() {

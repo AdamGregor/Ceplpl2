@@ -28,6 +28,7 @@ int main() {
 	Connect con(&thro, &aren);
 	std::cout << aren.IPort1_Connected << " " << aren.IPort2_Connected << "\n";
 
+
 	Rest rest;
 	rest.IPort1 = &Aty;
 	thro.IPort1 = &Aty;
