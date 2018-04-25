@@ -17,7 +17,7 @@ public:
 	double			getStrenght() { return Strenght; }
 	virtual double  getOriginalStrenght() = 0;
 	char*			getName() { return Name; }
-	Gods*			setStrenght(double newStrenght) { Strenght = newStrenght; return this;}
+	Gods*			setStrenght(double newStrenght) { Strenght = newStrenght; return this; }
 	Gods* 			addStrenght(double change) { Strenght += change; return this; }
 };
 

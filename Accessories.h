@@ -20,44 +20,43 @@ public:
 
 class LeviathanAxe : public Accessories {
 public:
-	LeviathanAxe() { 
-		Effect = 7.0; 
+	LeviathanAxe() {
+		Effect = 7.0;
 		Name = "Leviathan Axe";
 	}
 };
 
 class Curse : public Accessories {
 public:
-	Curse()	{ 
-		Effect = -10.0; 
+	Curse() {
+		Effect = -10.0;
 		Name = "Curse";
 	}
 };
 
 class ScrollOfWisdom : public Accessories {
 public:
-	ScrollOfWisdom() { 
-		Effect = 4.0; 
+	ScrollOfWisdom() {
+		Effect = 4.0;
 		Name = "Scroll Of Wisdom";
 	}
 };
 
 class Piety : public Accessories {
 public:
-	Piety() { 
-		Effect = 3.0; 
+	Piety() {
+		Effect = 3.0;
 		Name = "Piety";
 	}
 };
 
 class Impiety : public Accessories {
 public:
-	Impiety() { 
-		Effect = -3.0; 
-		Name = "Imiety";
+	Impiety() {
+		Effect = -3.0;
+		Name = "Impiety";
 	}
 };
 
 
 #endif
-

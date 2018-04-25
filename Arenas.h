@@ -44,7 +44,10 @@ public:
 //Areny norskych bohu
 class Asgartd : public Arena {
 public:
-	Asgartd() {Effect = 9.0;}
+	Asgartd() { 
+		Effect = 9.0; 
+		Name = "Asgartd";
+	}
 };
 
 class NorwegianSea : public Arena {
@@ -68,10 +71,9 @@ class ValleyOfTheKings : public Arena {
 public:
 	ValleyOfTheKings() {
 		Effect = 0.0;
-		Name = "Norwegian Sea";
+		Name = "Valley Of Kings";
 	}
 };
 
 
 #endif
-
