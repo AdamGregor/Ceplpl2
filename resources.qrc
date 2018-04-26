@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>arenaSelect.jpg</file>
+        <file>combat.jpg</file>
+        <file>dice.jpg</file>
+        <file>itemSelect.jpg</file>
+        <file>rest.jpg</file>
+    </qresource>
+</RCC>
