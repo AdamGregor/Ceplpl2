@@ -1,11 +1,20 @@
 #include "Blocks.h"
 #include "SupportClasses.h"
 #include "Arenas.h"
+#include "Execute.h"
 #include <iostream>
 #include <typeinfo>
 
 #define HIGHEST_EFFECT 1.0
 #define LOWEST_EFFECT -0.5
+
+//globalni promenna, jedinacek
+extern Execute Program;
+
+Execute::Execute() {
+	this->Blocks = new Blocklist;
+	Block_count = 0;
+}
 
 // Konstruktory bloku, portum jsou nastaveny pocatecni hodnoty (nullptr, false)
 
@@ -16,6 +25,8 @@ Rest::Rest() {
 	OPort1 = nullptr;
 	OPort1_Connected = false;
 	OPort1_Initiated = false;
+
+	Program.AddBlock(this);
 }
 
 DiceThrow::DiceThrow() {
@@ -25,6 +36,8 @@ DiceThrow::DiceThrow() {
 	OPort1 = nullptr;
 	OPort1_Connected = false;
 	OPort1_Initiated = false;
+
+	Program.AddBlock(this);
 }
 
 Combat::Combat() {
@@ -43,6 +56,8 @@ Combat::Combat() {
 	OPort1 = nullptr;
 	OPort1_Connected = false;
 	OPort1_Initiated = false;
+
+	Program.AddBlock(this);
 }
 
 ItemApply::ItemApply() {
@@ -55,6 +70,8 @@ ItemApply::ItemApply() {
 	OPort1 = nullptr;
 	OPort1_Connected = false;
 	OPort1_Initiated = false;
+
+	Program.AddBlock(this);
 }
 
 ArenaSelect::ArenaSelect() {
@@ -67,8 +84,50 @@ ArenaSelect::ArenaSelect() {
 	OPort1 = nullptr;
 	OPort1_Connected = false;
 	OPort1_Initiated = false;
+
+	Program.AddBlock(this);
 }
 
+
+
+bool Rest::askReady() {
+	std::cout << "Plupluplu \n";
+	if ((IPort1_Initiated == true || IPort1_Connected == false) && OPort1_Initiated == false)
+		return true; 
+	else
+		return false; 
+}
+
+bool Combat::askReady() {
+	if ((IPort1_Initiated == true || IPort1_Connected == false) && (IPort2_Initiated == true || IPort2_Connected == false) 
+		&& (IPort3_Initiated == true || IPort3_Connected == false) && OPort1_Initiated == false)
+		return true;
+	else
+		return false;
+}
+
+bool ItemApply::askReady() {
+	if ((IPort1_Initiated == true || IPort1_Connected == false) &&
+		(IPort2_Initiated == true || IPort2_Connected == false) && OPort1_Initiated == false)
+		return true;
+	else
+		return false;
+}
+
+bool DiceThrow::askReady() {
+	if ((IPort1_Initiated == true || IPort1_Connected == false) &&	OPort1_Initiated == false)
+		return true;
+	else
+		return false;
+}
+
+bool ArenaSelect::askReady() {
+	if ((IPort1_Initiated == true || IPort1_Connected == false) &&
+		(IPort2_Initiated == true || IPort2_Connected == false) && OPort1_Initiated == false)
+		return true;
+	else
+		return false;
+}
 
 PortStuff * Rest::tryConnect(char* typ) {
 	std::cout << typ << IPort1_Connected; 
@@ -394,7 +453,6 @@ void SubscribeList::InsertItem(Connect *data) {
 }
 
 
-///TODO pridat tento spoj do seznamu odchozcich v bloku
 Connect::Connect(Block* Blok1, Block *Blok2) {
 	this->transfered = false;
 	
@@ -436,9 +494,45 @@ void Connect::DistributeResult(void* value){
 	
 }
 
+void Blocklist::addItem(Block *data) {
+	BlocklistElem *tmp = new BlocklistElem;
+	tmp->Data = data;
+	tmp->next = this->first;
+	this->first = tmp;
+}
 
-/*
-Connect::Delete() {
+void Execute::AddBlock(Block* blok) {
+	this->Blocks->addItem(blok);
+	this->Block_count += 1;
+}
 
-
-}*/
+void Execute::Run() {
+	int Done = 0;
+	int NotReadyInRow = 0;
+	bool Ready;
+	BlocklistElem * data = this->Blocks->getFirst();
+	
+	while (1) {
+		if (Done == this->Block_count) {
+			std::cout << "Juch juch";
+			return;
+		}
+		Ready = data->Data->askReady();
+		std::cout << "moje redy: " << Ready;
+		if (Ready) {
+			data->Data->eval();
+			Done +=1 ;
+			NotReadyInRow = 0;
+		}
+		else {
+			NotReadyInRow += 1;
+			if (NotReadyInRow == this->Block_count) {
+				std::cout << "Nach nach";
+				return;
+			}
+			data = data->next;
+			if (data == nullptr)
+				data = this->Blocks->getFirst();
+		}
+	}
+}

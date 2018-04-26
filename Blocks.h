@@ -18,6 +18,7 @@ public:
 	virtual char* getOut() = 0;
 	virtual PortStuff *tryConnect(char*) = 0;
 	virtual void eval() = 0;
+	virtual bool askReady() = 0;
 };
 
 class Rest : public Block {
@@ -34,6 +35,7 @@ public:
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() {return "Gods"; }
+	bool askReady();
 };
 
 class Combat : public Block {
@@ -59,6 +61,7 @@ public:
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
+	bool askReady();
 	
 };
 
@@ -82,6 +85,7 @@ public:
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
+	bool askReady();
 };
 
 class DiceThrow : public Block {
@@ -99,6 +103,7 @@ public:
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
+	bool askReady();
 };
 
 class ArenaSelect : public Block {
@@ -120,6 +125,7 @@ public:
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Arena"; }
+	bool askReady();
 };
 
 

@@ -9,6 +9,9 @@
 #include "Accessories.h"
 #include "Blocks.h"
 #include "SupportClasses.h"
+#include "Execute.h"
+
+Execute Program;
 
 int main() {
 	srand(time(0));
@@ -17,15 +20,18 @@ int main() {
 	DiceThrow *hod = new DiceThrow;
 	Rest *spi = new Rest;
 	Connect spoj(hod, spi);
-	std::cout << spi->IPort1 << " " << spi->IPort1_Connected << " " << spi->IPort1_Initiated << " " << "\n";
 	hod->IPort1 = (void*)&vod;
+	std::cout << "\n" << Program.Block_count << "   \n";
+	Program.Run();
+	/*std::cout << spi->IPort1 << " " << spi->IPort1_Connected << " " << spi->IPort1_Initiated << " " << "\n";
+	
 	hod->eval();
 	std::cout << hod->OPort1->getName() << " " << hod->OPort1_Connected << " " << hod->subscriptions->first<<" " << hod->OPort1<<"\n";
 	std::cout << spi->IPort1 << " " << spi->IPort1_Connected << " " << spi->IPort1_Initiated << " " << "\n";
 	std::cout << spi->OPort1_Initiated;
 	spi->eval();
 	std::cout << spi->OPort1_Connected;
-
+	*/
  	std::cout << "KONEC TESTU\n\n\n\n";
 	Zeus DIE;
 	Athena Aty;

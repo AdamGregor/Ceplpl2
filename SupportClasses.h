@@ -30,8 +30,6 @@ struct ListItem {
 	ListItem *next;
 };
 
-
-
 class SubscribeList {
 public:
 	ListItem *first;
