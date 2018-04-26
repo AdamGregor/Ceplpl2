@@ -6,19 +6,22 @@
 #include "Blocks.h"
 
 class Block;
-
+struct PortStuff {
+	void *value;
+	bool *init;
+};
 
 class Connect {
 public:
 	char *Data_type;
 	bool transfered;
-	PortStuff reaction;
+	PortStuff *reaction;
 
 	Block* in;
 	Block* out;
 
 	Connect(Block *blok, Block *blok2);
-	void distributeResult();
+	void DistributeResult(void *);
 
 };
 

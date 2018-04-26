@@ -5,67 +5,59 @@
 #include "Accessories.h"
 #include "SupportClasses.h"
 #include <typeinfo>
-/// Hlavicky jednotlivych bloku
-struct PortStuff {
-	void *value;
-	bool *init;
-};
 
+/// Hlavicky jednotlivych bloku
 class Block {
 public:
 	SubscribeList *subscriptions;
 	bool OPort1_Connected;
+	bool OPort1_Initiated;
 
-	Block() { this->subscriptions = new SubscribeList; OPort1_Connected = true; }
-	void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); }
+	Block() { this->subscriptions = new SubscribeList; }
+	virtual void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); this->OPort1_Connected = true; }
 	virtual char* getOut() = 0;
-	virtual PortStuff tryConnect(char*) = 0;
+	virtual PortStuff *tryConnect(char*) = 0;
 	virtual void eval() = 0;
 };
 
 class Rest : public Block {
 public:
 	//I/O Porty
-	Gods *IPort1;
+	void *IPort1;	//BUH
 	bool IPort1_Connected;
 	bool IPort1_Initiated;
 	
-	Gods *OPort1;
-	bool OPort1_Connected;
-	bool OPort1_Initiated;
+    Gods *OPort1;
 
 
 	Rest();
-	void distribute();
 	void eval();
-	PortStuff tryConnect(char*);
+	PortStuff *tryConnect(char*);
 	char* getOut() {return "Gods"; }
 };
 
 class Combat : public Block {
 public:
 	//I/O Porty
-	Gods *IPort1;
+	void *IPort1; //BUH
 	bool IPort1_Connected;
 	bool IPort1_Initiated;
 	
-	Arena *IPort2;
+	void *IPort2; //ARENA
 	bool IPort2_Connected;
 	bool IPort2_Initiated;
 	
-	Gods *IPort3;
+	void *IPort3; //BUH
 	bool IPort3_Connected;
 	bool IPort3_Initiated;
 
 	Gods *OPort1;
-	bool OPort1_Connected;
-	bool OPort1_Initiated;
 
 	//metody
 
 	Combat();
 	void eval();
-	PortStuff tryConnect(char*);
+	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
 	
 };
@@ -74,65 +66,59 @@ public:
 class ItemApply : public Block {
 public:
 	//I/O Porty
-	Gods *IPort1;
+	void *IPort1;	//BUH
 	bool IPort1_Connected;
 	bool IPort1_Initiated;
 	
-	Accessories *IPort2;
+	void *IPort2;	//PREDMET
 	bool IPort2_Connected;
 	bool IPort2_Initiated;
 
 	Gods *OPort1;
-	bool OPort1_Connected;
-	bool OPort1_Initiated;
 
 	//metody
 
 	ItemApply();
 	void eval();
-	PortStuff tryConnect(char*);
+	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
 };
 
 class DiceThrow : public Block {
 public:
 	//I/O Porty
-	Gods *IPort1;
+	void*IPort1; //BUH
 	bool IPort1_Connected;
 	bool IPort1_Initiated;
 
 	Gods *OPort1;
-	bool OPort1_Connected;
-	bool OPort1_Initiated;
 
 	//metody
 
 	DiceThrow();
 	void eval();
-	PortStuff tryConnect(char*);
+	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
 };
 
 class ArenaSelect : public Block {
 public:
 	//I/O Porty
-	Gods *IPort1;
+	void *IPort1;	//BUH
 	bool IPort1_Connected;
 	bool IPort1_Initiated;
 
-	Gods *IPort2;
+	void *IPort2;
 	bool IPort2_Connected;
 	bool IPort2_Initiated;
 
-	Arena *OPort1;
-	bool OPort1_Connected;
-	bool OPort1_Initiated;
+	Arena *OPort1; //BUH
 
 	//metody
 
 	ArenaSelect();
 	void eval();
-	PortStuff tryConnect(char*);
+	PortStuff *tryConnect(char*);
 	char* getOut() { return "Arena"; }
 };
 
