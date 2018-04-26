@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-//#include "blocks.h"
+#include "mylabel.h"
 
 #include <QPushButton>
 #include <QWidget>
@@ -42,20 +42,13 @@ void MainWindow::printHelp(){
 }
 
 void MainWindow::addCombat(){
-/*
-    blocks* combat = new blocks(this);
-    combat->setGeometry(100,100,100,100);
-   // combat->show();
-*/
-
-
-    label = new QLabel(this);
-   // blocks[block_count] = label;
-    block_count++;
-    label->setGeometry(100,100,100,100);
+    MyLabel* ano = new MyLabel(this);
+    connect(ano , SIGNAL(mousePress()), this, SLOT(mousePress()));
+//    connect(ano , SIGNAL(mouseRelease(ano)), this, SLOT(mouseRelease(MyLabel* label)));
+    ano->setGeometry(100,100,100,100);
     QPixmap pixmap(":combat.jpg");
-    label->setPixmap(pixmap);
-    label->show();
+    ano->setPixmap(pixmap);
+    ano->show();
 
 }
 
@@ -99,6 +92,17 @@ void MainWindow::addRest(){
     label->show();
 }
 
+void MainWindow::mousePress(){
+    //setMovingtrue();
+    std::cout<<"ano\n";
+}
+/*
+void MainWindow::mouseRelease(MyLabel* label){
+    QPoint place = QCursor::pos();
+    label->setGeometry(100, 100, place.x(), place.y());
+
+}
+*/
 
 
 
