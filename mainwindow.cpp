@@ -50,7 +50,7 @@ void MainWindow::addCombat(){
     block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
-    QPixmap pixmap(":combat.png");
+    QPixmap pixmap(":combat.gif");
     block->setPixmap(pixmap);
     block->show();
 
@@ -60,9 +60,10 @@ void MainWindow::addDice_throw(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
-    QPixmap pixmap(":icons/dice.png");
+    QPixmap pixmap(":dice.png");
     block->setPixmap(pixmap);
     block->show();
 }
@@ -71,9 +72,10 @@ void MainWindow::addItem_apply(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
-    QPixmap pixmap(":itemSelect.png");
+    QPixmap pixmap(":itemSelect.gif");
     block->setPixmap(pixmap);
     block->show();
 }
@@ -82,9 +84,10 @@ void MainWindow::addArena_select(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
-    QPixmap pixmap(":arenaSelect.png");
+    QPixmap pixmap(":arenaSelect.gif");
     block->setPixmap(pixmap);
     block->show();
 }
@@ -93,9 +96,10 @@ void MainWindow::addRest(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
-    QPixmap pixmap(":rest.png");
+    QPixmap pixmap(":rest.gif");
     block->setPixmap(pixmap);
     block->show();
 }
