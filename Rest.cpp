@@ -14,6 +14,9 @@ extern Execute Program;
 Execute::Execute() {
 	this->Blocks = new Blocklist;
 	Block_count = 0;
+	Done = 0;
+	NotReadyInRow = 0;
+	Completed = false;
 }
 
 // Konstruktory bloku, portum jsou nastaveny pocatecni hodnoty (nullptr, false)
@@ -476,7 +479,7 @@ Connect::Connect(Block* Blok1, Block *Blok2) {
 
 void Connect::DistributeResult(void* value){
 	transfered = true;
-	std::cout<<"\n"<<value << "\n";
+	std::cout<<"\n zdeeeee "<<value << "\n";
 	*(reaction->init) = true;
 	if (this->in->getOut() == "Gods") {
 		Gods **tmp = (Gods**)reaction->value;
@@ -507,15 +510,14 @@ void Execute::AddBlock(Block* blok) {
 }
 
 void Execute::Run() {
-	int Done = 0;
-	int NotReadyInRow = 0;
 	bool Ready;
 	BlocklistElem * data = this->Blocks->getFirst();
 	
 	while (1) {
-		if (Done == this->Block_count) {
+		if (Done == this->Block_count || Completed) {
 			std::cout << "Juch juch";
-			return;
+			Completed = true;
+			return;			
 		}
 		Ready = data->Data->askReady();
 		std::cout << "moje redy: " << Ready;
@@ -528,11 +530,131 @@ void Execute::Run() {
 			NotReadyInRow += 1;
 			if (NotReadyInRow == this->Block_count) {
 				std::cout << "Nach nach";
+				Completed = true;
 				return;
 			}
 			data = data->next;
 			if (data == nullptr)
 				data = this->Blocks->getFirst();
 		}
+	}
+}
+
+void Execute::Step() {
+	bool Ready;
+	BlocklistElem * data = this->Blocks->getFirst();
+
+	while (1) {
+		if (Done == this->Block_count || Completed) {
+			std::cout << "Juch juch";
+			Completed = true;
+			return;
+		}
+		Ready = data->Data->askReady();
+		std::cout << "moje redy: " << Ready;
+		if (Ready) {
+			data->Data->eval();
+			Done += 1;
+			NotReadyInRow = 0;
+			if (Done == this->Block_count || Completed) {
+				//byl dodelan posledni blok
+				std::cout << "Juch juch\n";
+				Completed = true;
+				return;
+			}
+			//jsou jeste bloky k udelani
+			std::cout << "Jeste zbyva \n";
+			return;
+			
+		}
+		else {
+			NotReadyInRow += 1;
+			std::cout<<" " << NotReadyInRow<<" "<< this->Block_count<<"\n";
+			if (NotReadyInRow == this->Block_count) {
+				std::cout << "Nach nach\n";
+				Completed = true;
+				return;
+			}
+			data = data->next;
+			if (data == nullptr)
+				data = this->Blocks->getFirst();
+		}
+	}
+}
+
+void Execute::Reset() {
+	Done = 0;
+	NotReadyInRow = 0;
+	Completed = 0;
+	BlocklistElem *Blok = this->Blocks->getFirst();
+
+	while (Blok != nullptr) {
+		Blok->Data->Reset();
+		Blok = Blok->next;
+	}
+
+}
+
+void Rest::Reset() {
+	this->OPort1_Initiated = false;
+	this->OPort1 = nullptr;
+	this->IPort1_Initiated = false;
+
+	ListItem * Connection = this->subscriptions->getFirst();
+	while (Connection != nullptr) {
+		Connection->data->transfered = false;
+		Connection = Connection->next;
+	}
+}
+
+void Combat::Reset() {
+	this->OPort1_Initiated = false;
+	this->OPort1 = nullptr;
+	this->IPort2_Initiated = false;
+	this->IPort3_Initiated = false;
+	this->IPort1_Initiated = false;
+
+	ListItem * Connection = this->subscriptions->getFirst();
+	while (Connection != nullptr) {
+		Connection->data->transfered = false;
+		Connection = Connection->next;
+	}
+}
+
+void ItemApply::Reset() {
+	this->OPort1_Initiated = false;
+	this->OPort1 = nullptr;
+	this->IPort2_Initiated = false;
+	this->IPort1_Initiated = false;
+
+	ListItem * Connection = this->subscriptions->getFirst();
+	while (Connection != nullptr) {
+		Connection->data->transfered = false;
+		Connection = Connection->next;
+	}
+}
+
+void DiceThrow::Reset() {
+	this->OPort1_Initiated = false;
+	this->OPort1 = nullptr;
+	this->IPort1_Initiated = false;
+
+	ListItem * Connection = this->subscriptions->getFirst();
+	while (Connection != nullptr) {
+		Connection->data->transfered = false;
+		Connection = Connection->next;
+	}
+}
+
+void ArenaSelect::Reset() {
+	this->OPort1_Initiated = false;
+	this->OPort1 = nullptr;
+	this->IPort2_Initiated = false;
+	this->IPort1_Initiated = false;
+
+	ListItem * Connection = this->subscriptions->getFirst();
+	while (Connection != nullptr) {
+		Connection->data->transfered = false;
+		Connection = Connection->next;
 	}
 }

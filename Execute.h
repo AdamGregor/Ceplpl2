@@ -17,7 +17,9 @@ public:
 
 class Execute{
 	Blocklist *Blocks;
-	
+	int Done;
+	int NotReadyInRow;
+	bool Completed;
 
 public:
 	int Block_count;
@@ -25,9 +27,8 @@ public:
 	Execute();
 	void AddBlock(Block *);
 	void Run();
-	/*void Step();
+	void Step();
 	void Reset();
-	*/
 };
 
 

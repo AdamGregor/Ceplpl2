@@ -22,7 +22,6 @@ public:
 
 	Connect(Block *blok, Block *blok2);
 	void DistributeResult(void *);
-
 };
 
 struct ListItem {

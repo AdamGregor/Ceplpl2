@@ -20,8 +20,13 @@ int main() {
 	DiceThrow *hod = new DiceThrow;
 	Rest *spi = new Rest;
 	Connect spoj(hod, spi);
+	//Connect propoj(spi, hod);
 	hod->IPort1 = (void*)&vod;
 	std::cout << "\n" << Program.Block_count << "   \n";
+	Program.Run();
+	std::cout << "Mala komercni pauza! \n\n\n\n\n\n\n";
+	Program.Run();
+	Program.Reset();
 	Program.Run();
 	/*std::cout << spi->IPort1 << " " << spi->IPort1_Connected << " " << spi->IPort1_Initiated << " " << "\n";
 	
@@ -32,7 +37,7 @@ int main() {
 	spi->eval();
 	std::cout << spi->OPort1_Connected;
 	*/
- 	std::cout << "KONEC TESTU\n\n\n\n";
+ 	std::cout << "\nKONEC TESTU\n\n\n\n";
 	Zeus DIE;
 	Athena Aty;
 	Poseidon Pos;
