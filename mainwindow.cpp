@@ -12,7 +12,8 @@
 #include <QEvent>
 #include <QGraphicsView>
 #include <QGraphicsScene>
-//#include <QGraphicsLineItem>
+#include <QPen>
+#include <QGraphicsLineItem>
 
 #include <iostream>
 
@@ -21,6 +22,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    scene = new QGraphicsScene;
+ /*   pen.setWidth(5);
+    ui->graphicsView->setScene(scene);
+    QGraphicsLineItem* lajn = new QGraphicsLineItem;
+    lajn->setLine(50,50,100,100);
+    scene->addItem(lajn);*/
     block_count = 0;
     this->Spawn_x = 12;
     this->Spawn_y = 67;
@@ -122,9 +129,14 @@ void MainWindow::checkPlacement(int* x, int* y){
     if(*x < 12){         //12 -> hranice povoleneho okna, 50 -> polovina bloku
         *x = 12;
     }
+    else if(*x+110 > this->size().width())
+        *x = this->size().width() - 111;
 
     if(*y < 67){
         *y = 67;
+    }
+    else if(*y+110 > this->size().height()){
+        *y = this->size().height() - 111;
     }
 
     return;

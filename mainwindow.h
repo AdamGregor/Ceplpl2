@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QObject>
 #include <QLabel>
+#include <QGraphicsScene>
+#include <QPen>
 #include "mylabel.h"
 
 namespace Ui {
@@ -23,6 +25,8 @@ public:
 
 private:
     int Spawn_x,Spawn_y;
+    QGraphicsScene* scene;
+    QPen pen;
     Ui::MainWindow *ui;
     int block_count;
 
