@@ -13,21 +13,16 @@ class MyLabel : public QLabel{
 private:
     int x;
     int y;
-    bool moving;
 
 public:
     MyLabel(QWidget *parent = 0);
 
 public:
-    void mousePressEvent(QMouseEvent *event);
-   // void mouseReleaseEvent(QMouseEvent *event);
-    void setMovingtrue();
-    void setMovingfalse();
+    void mouseReleaseEvent(QMouseEvent *event);
 
 
 signals:
-    void mousePress();
-   // void mouseRelease(MyLabel* label);
+    void mouseRelease(MyLabel* label);
 
 };
 

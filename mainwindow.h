@@ -14,16 +14,17 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+
 public:
+
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void checkPlacement(int* x, int* y);
 
 private:
+    int Spawn_x,Spawn_y;
     Ui::MainWindow *ui;
     int block_count;
-    QLabel *label;
-   // QLabel *blocks[100];
-    QPixmap image;
 
 private slots:
     void printHelp();
@@ -32,8 +33,7 @@ private slots:
     void addItem_apply();
     void addArena_select();
     void addRest();
-    void mousePress();
-   // void mouseRelease(MyLabel* label);
+    void mouseRelease(MyLabel* block);
 };
 
 #endif // MAINWINDOW_H

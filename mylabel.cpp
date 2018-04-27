@@ -8,20 +8,9 @@ MyLabel::MyLabel(QWidget *parent) : QLabel(parent){
     this->setMouseTracking(true);
 }
 
-void MyLabel::mousePressEvent(QMouseEvent *event){
-   // setMovingtrue();
-    emit mousePress();
-}
-
-/*
 void MyLabel::mouseReleaseEvent(QMouseEvent *event){
-    emit mouseRelease(this);
-}*/
-
-void MyLabel::setMovingtrue(){
-    moving = true;
+    if(event->button() == Qt::LeftButton){
+        emit mouseRelease(this);
+    }
 }
 
-void MyLabel::setMovingfalse(){
-    moving = false;
-}
