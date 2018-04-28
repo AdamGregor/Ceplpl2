@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mylabel.h"
+#include "connection.h"
 
 #include <QPushButton>
 #include <QWidget>
@@ -23,12 +24,19 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     scene = new QGraphicsScene;
- /*   pen.setWidth(5);
+    ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
-    QGraphicsLineItem* lajn = new QGraphicsLineItem;
-    lajn->setLine(50,50,100,100);
-    scene->addItem(lajn);*/
+
+
+    QGraphicsLineItem* item = new QGraphicsLineItem;
+    item->setLine(0,0,1,1);
+    scene->addItem(item);
+
+    pen = new QPen;
+    pen->setWidth(4);
+
     block_count = 0;
+    active_connection = NULL;
     this->Spawn_x = 12;
     this->Spawn_y = 67;
 
@@ -53,7 +61,9 @@ void MainWindow::printHelp(){
 void MainWindow::addCombat(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
+    connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
@@ -66,7 +76,9 @@ void MainWindow::addCombat(){
 void MainWindow::addDice_throw(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
+    connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
@@ -78,7 +90,9 @@ void MainWindow::addDice_throw(){
 void MainWindow::addItem_apply(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
+    connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
@@ -90,7 +104,9 @@ void MainWindow::addItem_apply(){
 void MainWindow::addArena_select(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
+    connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
@@ -102,7 +118,9 @@ void MainWindow::addArena_select(){
 void MainWindow::addRest(){
     MyLabel* block = new MyLabel(this);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
+    connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
+    block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
@@ -120,7 +138,16 @@ void MainWindow::mouseRelease(MyLabel* block){
     x -= 50;
     y -= 50;
     checkPlacement(&x, &y);
+    block->setCoords(x, y);
     block->setGeometry(x,y,100,100);
+
+    connection* ptr = block->getOutptr();
+    if(ptr != NULL){
+       block->getCoords(&x, &y);
+       ptr->setOutcoords(&x, &y);
+       ptr->getOutcoords(&x, &y);
+       ptr->setLine(x,y,500,500);
+    }
 
 }
 
@@ -142,10 +169,44 @@ void MainWindow::checkPlacement(int* x, int* y){
     return;
 }
 
+void MainWindow::mousePress(MyLabel *block){
+    int x;
+    int y;
+    if(active_connection){
+        if(active_connection->getNumOfClicks() == 2){
+            active_connection = new connection;
+            block->setOutconnection(active_connection);
+            active_connection->setOutblock(block);
+            block->getCoords(&x, &y);
+            active_connection->setOutcoords(&x, &y);
+            active_connection->incNumOfClicks();
 
+        }
+        else{
+            if(block == active_connection->getOutBlock())
+                return;
 
+            block->setInconnection(active_connection);
+            active_connection->setInblock(block);
+            int g,h;
+            active_connection->getOutcoords(&g,&h);
+            block->getCoords(&x, &y);
+            active_connection->setPen(*pen);
+            active_connection->setLine(g,h,x+50,y);
+            scene->addItem(active_connection);
+            active_connection->incNumOfClicks();
+        }
+    }
 
-
+    else{
+        active_connection = new connection();
+        block->setOutconnection(active_connection);
+        active_connection->setOutblock(block);
+        block->getCoords(&x, &y);
+        active_connection->setOutcoords(&x, &y);
+        active_connection->incNumOfClicks();
+    }
+}
 
 
 

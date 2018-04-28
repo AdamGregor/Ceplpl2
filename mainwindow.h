@@ -7,6 +7,7 @@
 #include <QGraphicsScene>
 #include <QPen>
 #include "mylabel.h"
+#include "connection.h"
 
 namespace Ui {
 class MainWindow;
@@ -26,7 +27,8 @@ public:
 private:
     int Spawn_x,Spawn_y;
     QGraphicsScene* scene;
-    QPen pen;
+    QPen* pen;
+    connection* active_connection;
     Ui::MainWindow *ui;
     int block_count;
 
@@ -38,6 +40,7 @@ private slots:
     void addArena_select();
     void addRest();
     void mouseRelease(MyLabel* block);
+    void mousePress(MyLabel* block);
 };
 
 #endif // MAINWINDOW_H
