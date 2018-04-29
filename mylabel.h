@@ -9,6 +9,7 @@
 #include <QMouseEvent>
 
 class connection;
+class connectionList;
 
 class MyLabel : public QLabel{
 
@@ -18,8 +19,8 @@ private:
     int x;
     int y;
 
-    connection* out_connection;
-    connection* in_connection;
+    connectionList* out_List;
+    connectionList* in_List;
 
 
 public:
@@ -28,8 +29,10 @@ public:
     void getCoords(int* x, int *y);
     void setInconnection(connection* conn);
     void setOutconnection(connection* conn);
-    connection* getOutptr();
-    connection* getInptr(){return in_connection;}
+    //connection* getOutptr();
+    //connection* getInptr(){return in_connection;}
+    connectionList* getOutList();
+    connectionList* getInList();
 
 public:
     void mouseReleaseEvent(QMouseEvent* event);

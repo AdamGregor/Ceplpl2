@@ -141,19 +141,39 @@ void MainWindow::mouseRelease(MyLabel* block){
     block->setCoords(x, y);
     block->setGeometry(x,y,100,100);
 
-    connection* ptr = block->getOutptr();
-    if(ptr != NULL){
-       block->getCoords(&x, &y);
-       ptr->setOutcoords(&x, &y);
-       ptr->getOutcoords(&x, &y);
-       ptr->setLine(x,y,500,500);
+    connectionList* out = block->getOutList();
+    connectionList* in = block->getInList();
+
+    if(out->getListLenght() != 0){               // posuny spoju s out porty
+        ListItem* out_port = out->getFirst();
+        for(int i = 0; i < out->getListLenght(); i++){
+            block->getCoords(&x, &y);
+            out_port->data->setOutcoords(&x, &y);
+            out_port->data->getOutcoords(&x, &y);
+            int g, h;
+            out_port->data->getIncoords(&g, &h);
+            out_port->data->setLine(x ,y, g, h);
+            out_port = out_port->next;
+        }
     }
 
+    if(in->getListLenght() != 0){                   // posuny spoju s in porty
+        ListItem* in_port = in->getFirst();
+        for(int i = 0; i < in->getListLenght(); i++){
+            int g, h;
+            block->getCoords(&g, &h);
+            in_port->data->setIncoords(&g, &h);
+            in_port->data->getIncoords(&g, &h);
+            in_port->data->getOutcoords(&x, &y);
+            in_port->data->setLine(x, y, g, h);
+            in_port = in_port->next;
+        }
+    }
 }
 
 
 void MainWindow::checkPlacement(int* x, int* y){
-    if(*x < 12){         //12 -> hranice povoleneho okna, 50 -> polovina bloku
+    if(*x < 12){         //12 -> hranice povoleneho okna
         *x = 12;
     }
     else if(*x+110 > this->size().width())
@@ -172,10 +192,11 @@ void MainWindow::checkPlacement(int* x, int* y){
 void MainWindow::mousePress(MyLabel *block){
     int x;
     int y;
+
     if(active_connection){
         if(active_connection->getNumOfClicks() == 2){
             active_connection = new connection;
-            block->setOutconnection(active_connection);
+         //   block->setOutconnection(active_connection);
             active_connection->setOutblock(block);
             block->getCoords(&x, &y);
             active_connection->setOutcoords(&x, &y);
@@ -183,24 +204,31 @@ void MainWindow::mousePress(MyLabel *block){
 
         }
         else{
-            if(block == active_connection->getOutBlock())
+            if(block == active_connection->getOutBlock())       //nelze vytvorit spojeni na jednom bloku
                 return;
 
-            block->setInconnection(active_connection);
+          //  block->setInconnection(active_connection);
             active_connection->setInblock(block);
+            connectionList* in = block->getInList();
+            MyLabel* temp = active_connection->getOutBlock();
+            connectionList* out = temp->getOutList();
             int g,h;
             active_connection->getOutcoords(&g,&h);
             block->getCoords(&x, &y);
             active_connection->setPen(*pen);
-            active_connection->setLine(g,h,x+50,y);
+            active_connection->setIncoords(&x, &y);
+            active_connection->getIncoords(&x, &y);
+            active_connection->setLine(g,h, x, y);
             scene->addItem(active_connection);
             active_connection->incNumOfClicks();
+            in->insert(active_connection);
+            out->insert(active_connection);
         }
     }
 
     else{
         active_connection = new connection();
-        block->setOutconnection(active_connection);
+       // block->setOutconnection(active_connection);
         active_connection->setOutblock(block);
         block->getCoords(&x, &y);
         active_connection->setOutcoords(&x, &y);
