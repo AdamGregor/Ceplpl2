@@ -11,6 +11,14 @@ MyLabel::MyLabel(QWidget *parent) : QLabel(parent){
     out_List = new connectionList;
 }
 
+void MyLabel::setType(blockType typ){
+    type = typ;
+}
+
+blockType MyLabel::getType(){
+    return type;
+}
+
 void MyLabel::mouseReleaseEvent(QMouseEvent *event){
     if(event->button() == Qt::LeftButton){
         emit mouseRelease(this);
@@ -22,6 +30,11 @@ void MyLabel::mousePressEvent(QMouseEvent *event){
         emit mousePress(this);
     }
 }
+/*
+void MyLabel::mouseDoubleClickEvent(QMouseEvent *event){
+    emit mouseDoubleClick(this);
+
+}*/
 
 void MyLabel::setCoords(int x, int y){
     this->x = x;
@@ -32,14 +45,6 @@ void MyLabel::getCoords(int *x, int *y){
     *x = this->x;
     *y = this->y;
 }
-/*
-void MyLabel::setInconnection(connection *conn){
-    this->in_connection = conn;
-}
-
-void MyLabel::setOutconnection(connection *conn){
-    this->out_connection = conn;
-}*/
 
 connectionList *MyLabel::getOutList(){
     return out_List;
@@ -50,11 +55,5 @@ connectionList *MyLabel::getInList(){
     return in_List;
 
 }
-/*
-connection* MyLabel::getOutptr(){
-    if(out_connection)
-        return out_connection;
-    else
-        return NULL;
-}*/
+
 

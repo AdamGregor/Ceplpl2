@@ -8,7 +8,6 @@ connection::connection(QWidget* parent){
     num_of_clicks = 0;
     outBlock = NULL;
     inBlock = NULL;
-    //next = NULL;
   //  this->setAcceptHoverEvents(true);
 
 }
@@ -54,10 +53,6 @@ MyLabel *connection::getOutBlock(){
     return outBlock;
 }
 
-/*void connection::setNext(connection *conn){
-    next = conn;
-}*/
-
 
 //  CONNECTIONLIST
 connectionList::connectionList(){
@@ -80,7 +75,6 @@ int connectionList::getListLenght(){
 
 ListItem* connectionList::getFirst(){
     return first;
-
 }
 
 

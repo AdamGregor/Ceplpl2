@@ -10,13 +10,13 @@
 #include <QHoverEvent>
 
 class connection;
+class MyLabel;
+
 
 struct ListItem{
     connection* data;
     ListItem* next;
 };
-
-class MyLabel;
 
 class connection : public QGraphicsLineItem{
 
@@ -43,9 +43,6 @@ public:
     int getNumOfClicks();
     MyLabel* getOutBlock();
     MyLabel* getInBlock(){return inBlock;}
-   // void setNext(connection* conn);
-    //connection* getNext(){return next;}
-
 };
 
 class connectionList{

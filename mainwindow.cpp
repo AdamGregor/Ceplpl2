@@ -7,7 +7,6 @@
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
-
 #include <QDebug>
 #include <QMouseEvent>
 #include <QEvent>
@@ -15,6 +14,11 @@
 #include <QGraphicsScene>
 #include <QPen>
 #include <QGraphicsLineItem>
+#include <QDialog>
+#include <QInputDialog>
+
+
+#include <QMessageBox>
 
 #include <iostream>
 
@@ -23,13 +27,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("BlockEditor");
     scene = new QGraphicsScene;
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
 
 
     QGraphicsLineItem* item = new QGraphicsLineItem;
-    item->setLine(0,0,1,1);
+    item->setLine(0,0,0.01,0.01);
     scene->addItem(item);
 
     pen = new QPen;
@@ -45,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionArena_select, SIGNAL(triggered()), this, SLOT(addArena_select()));
     connect(ui->actionItem_apply, SIGNAL(triggered()), this, SLOT(addItem_apply()));
     connect(ui->actionRest, SIGNAL(triggered()), this, SLOT(addRest()));
+    connect(ui->actionRun, SIGNAL(triggered()), this, SLOT(run()));
+    connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(printHelp()));
 
 }
 
@@ -52,16 +59,12 @@ MainWindow::~MainWindow(){
     delete ui;
 }
 
-void MainWindow::printHelp(){
-    std::cout<<"HELP\n";
-   // QGraphicsLineItem* item;
-  //  item->
-}
-
 void MainWindow::addCombat(){
     MyLabel* block = new MyLabel(this);
+    block->setType(COMBAT);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
+  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
@@ -75,11 +78,12 @@ void MainWindow::addCombat(){
 
 void MainWindow::addDice_throw(){
     MyLabel* block = new MyLabel(this);
+    block->setType(DICE);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
+  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
     QPixmap pixmap(":dice.png");
@@ -89,11 +93,12 @@ void MainWindow::addDice_throw(){
 
 void MainWindow::addItem_apply(){
     MyLabel* block = new MyLabel(this);
+    block->setType(ITEM);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
+  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
     QPixmap pixmap(":itemSelect.gif");
@@ -103,11 +108,12 @@ void MainWindow::addItem_apply(){
 
 void MainWindow::addArena_select(){
     MyLabel* block = new MyLabel(this);
+    block->setType(ARENA);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
+  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
     QPixmap pixmap(":arenaSelect.gif");
@@ -117,11 +123,12 @@ void MainWindow::addArena_select(){
 
 void MainWindow::addRest(){
     MyLabel* block = new MyLabel(this);
+    block->setType(REST);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
+  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
     QPixmap pixmap(":rest.gif");
@@ -196,7 +203,6 @@ void MainWindow::mousePress(MyLabel *block){
     if(active_connection){
         if(active_connection->getNumOfClicks() == 2){
             active_connection = new connection;
-         //   block->setOutconnection(active_connection);
             active_connection->setOutblock(block);
             block->getCoords(&x, &y);
             active_connection->setOutcoords(&x, &y);
@@ -207,7 +213,6 @@ void MainWindow::mousePress(MyLabel *block){
             if(block == active_connection->getOutBlock())       //nelze vytvorit spojeni na jednom bloku
                 return;
 
-          //  block->setInconnection(active_connection);
             active_connection->setInblock(block);
             connectionList* in = block->getInList();
             MyLabel* temp = active_connection->getOutBlock();
@@ -228,13 +233,47 @@ void MainWindow::mousePress(MyLabel *block){
 
     else{
         active_connection = new connection();
-       // block->setOutconnection(active_connection);
         active_connection->setOutblock(block);
         block->getCoords(&x, &y);
         active_connection->setOutcoords(&x, &y);
         active_connection->incNumOfClicks();
     }
 }
+/*
+void MainWindow::mouseDoubleClick(MyLabel *block){
+    blockType type = block->getType();
+        // TODO zjisti kolik vstupu potrebujes
+    if (type == COMBAT){
+        bool ok;
+        QString text = QInputDialog::getText(this, "Input", "Enter an input God", QLineEdit::Normal, "", &ok);
+      //  QDebug << text <<" jet ocombat\n";
+    }
+}*/
+
+
+void MainWindow::run(){
+
+
+}
+
+void MainWindow::printHelp(){
+    QMessageBox help;
+    help.setWindowTitle("Block Editor - Help");
+    help.setText(QString("Move a block:\n   - Press, move and release left mouse button\n") +
+                 QString("Make a connection:\n   - Click on a blocks you want to connect with right mouse button\n") +
+                 QString("Run editor:\n   - Press Run\n"));
+    help.exec();
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

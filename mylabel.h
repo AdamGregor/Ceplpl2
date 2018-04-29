@@ -11,11 +11,14 @@
 class connection;
 class connectionList;
 
+enum blockType {COMBAT, ITEM, DICE, REST, ARENA};
+
 class MyLabel : public QLabel{
 
     Q_OBJECT
 
 private:
+    blockType type;
     int x;
     int y;
 
@@ -25,23 +28,25 @@ private:
 
 public:
     MyLabel(QWidget *parent = 0);
+    void setType(blockType typ);
+    blockType getType();
     void setCoords(int x, int y);
     void getCoords(int* x, int *y);
     void setInconnection(connection* conn);
     void setOutconnection(connection* conn);
-    //connection* getOutptr();
-    //connection* getInptr(){return in_connection;}
     connectionList* getOutList();
     connectionList* getInList();
 
 public:
     void mouseReleaseEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
+  //  void mouseDoubleClickEvent(QMouseEvent* event);
 
 
 signals:
     void mouseRelease(MyLabel* label);
     void mousePress(MyLabel* label);
+    void mouseDoubleClick(MyLabel* label);
 
 };
 
