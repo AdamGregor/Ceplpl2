@@ -2,5 +2,19 @@
 CC=g++
 CFLAGS= -Wall -Werror -Wextra
 
-all:
-	$(CC) $(CFLAGS) main.cpp -o test
+all: beditor
+
+beditor:
+	@cd src && qmake -o Makefile && make
+	mv src/blockeditor ./
+
+clean:
+	rm src/*.o -rf
+	rm src/Makefile -rf
+	rm ./blockeditor -rf	
+
+run: beditor
+	./blockeditor
+
+doxygen:
+	doxygen src/Doxyfile
