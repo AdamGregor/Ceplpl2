@@ -21,13 +21,11 @@
 #include <QPen>
 #include <QGraphicsLineItem>
 #include <QDialog>
-#include <QInputDialog>
 #include <QFileDialog>
-
-
 #include <QMessageBox>
 
 #include <iostream>
+#include <fstream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -39,6 +37,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
 
+    ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->graphicsView->setEnabled(false);
     QGraphicsLineItem* item = new QGraphicsLineItem;
     item->setLine(0,0,0.01,0.01);
     scene->addItem(item);
@@ -48,10 +49,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     blocks_ID = 0;
     active_connection = NULL;
+    filename = QString();
     this->blocks = new BlockList;
+    this->listConn = new blockConnect;
     this->Spawn_x = 12;
     this->Spawn_y = 67;
 
+    connect(this, SIGNAL(resized()), this, SLOT(doResized()));
     connect(ui->actionCombat, SIGNAL(triggered()), this, SLOT(addCombat()));
     connect(ui->actionDice_throw, SIGNAL(triggered()), this, SLOT(addDice_throw()));
     connect(ui->actionArena_select, SIGNAL(triggered()), this, SLOT(addArena_select()));
@@ -60,7 +64,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionRun, SIGNAL(triggered()), this, SLOT(run()));
     connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(printHelp()));
     connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(load()));
+    connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(save_as()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newScheme()));
+    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(save_as()));
 
 }
 
@@ -223,6 +229,10 @@ void MainWindow::checkPlacement(int* x, int* y){
     return;
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event){
+    emit resized();
+}
+
 void MainWindow::mousePress(MyLabel *block){
     int x;
     int y;
@@ -255,6 +265,7 @@ void MainWindow::mousePress(MyLabel *block){
             active_connection->incNumOfClicks();
             in->insert(active_connection);
             out->insert(active_connection);
+            listConn->insert(active_connection->getOutBlock()->getID(), active_connection->getInBlock()->getID());
         }
     }
 
@@ -269,7 +280,6 @@ void MainWindow::mousePress(MyLabel *block){
 
 void MainWindow::deleteSlot(MyLabel *block){
     if(ui->actionDelete->isChecked()){
-        // muzes deletovat
         active_connection = NULL;
         connectionList* out_list = block->getOutList();
         connectionList* in_list = block->getInList();
@@ -280,6 +290,7 @@ void MainWindow::deleteSlot(MyLabel *block){
             other_block = item->data->getInBlock();
             other_block->getInList()->deleteConnection(block->getID(), true);
             item = item->next;
+            listConn->deleteConn(block->getID(), other_block->getID());
         }
 
         item = in_list->getFirst();
@@ -287,6 +298,7 @@ void MainWindow::deleteSlot(MyLabel *block){
             other_block = item->data->getOutBlock();
             other_block->getOutList()->deleteConnection(block->getID(), false);
             item = item->next;
+            listConn->deleteConn(other_block->getID(), block->getID());
         }
 
         blocks->deleteBlock(block->getID());
@@ -296,19 +308,6 @@ void MainWindow::deleteSlot(MyLabel *block){
         return;
     }
 }
-
-
-/*
-void MainWindow::mouseDoubleClick(MyLabel *block){
-    blockType type = block->getType();
-        // TODO zjisti kolik vstupu potrebujes
-    if (type == COMBAT){
-        bool ok;
-        QString text = QInputDialog::getText(this, "Input", "Enter an input God", QLineEdit::Normal, "", &ok);
-      //  QDebug << text <<" jet ocombat\n";
-    }
-}*/
-
 
 void MainWindow::run(){
 
@@ -331,6 +330,7 @@ void MainWindow::newScheme(){
         for(int i = 0; i < out_list->getListLenght(); i++){
             other_block = item->data->getInBlock();
             other_block->getInList()->deleteConnection(tmp->data->getID(), true);
+            listConn->deleteConn(tmp->data->getID(), other_block->getID());
             item = item->next;
         }
 
@@ -338,6 +338,7 @@ void MainWindow::newScheme(){
         for(int i = 0; i < in_list->getListLenght(); i++){
             other_block = item->data->getOutBlock();
             other_block->getOutList()->deleteConnection(tmp->data->getID(), false);
+            listConn->deleteConn(other_block->getID(), tmp->data->getID());
             item = item->next;
         }
 
@@ -346,6 +347,7 @@ void MainWindow::newScheme(){
     }
 
     delete blocks;
+    listConn = new blockConnect;
     blocks = new BlockList;
 }
 
@@ -356,15 +358,235 @@ void MainWindow::printHelp(){
                  QString("Make a connection:\n   - Click on a blocks you want to connect with right mouse button\n\n") +
                  QString("Run editor:\n   - Press Run\n\n") +
                  QString("Enter a God:\n   - Zeus, Odin, Athena, Njord, Mimir, Poseidon\n\n") +
-                 QString("Delete block or connection:\n   - Toggle Delete button and press on block/connection \n      you want to delete with left mouse button\n\n"));
+                 QString("Delete block:\n   - Toggle Delete button and press on block/connection \n      you want to delete with left mouse button\n\n"));
     help.exec();
 }
 
 void MainWindow::load(){
-    QString filename;
-    filename = QFileDialog::getOpenFileName(this, "Load a scheme", "/home/", "Scheme (*.bla)");
-    qDebug() << filename;
+    filename = QFileDialog::getOpenFileName(this, "Open scheme", "./", "Scheme (*.az)");
+    if(filename.isEmpty())
+        return;
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::information(this, "Unable to open file", file.errorString());
+        return;
+    }
+
+    this->Spawn_x = 12;
+    this->Spawn_y = 67;
+    blocks_ID = 0;
+    Listblock* tmp = blocks->getFirst();
+    int lenght = blocks->getListLenght();
+    active_connection = NULL;
+    for(int i = 0; i < lenght; i++){
+        connectionList* out_list = tmp->data->getOutList();
+        connectionList* in_list = tmp->data->getInList();
+        ListItem* item = out_list->getFirst();
+        MyLabel* other_block;
+
+        for(int i = 0; i < out_list->getListLenght(); i++){
+            other_block = item->data->getInBlock();
+            other_block->getInList()->deleteConnection(tmp->data->getID(), true);
+            listConn->deleteConn(tmp->data->getID(), other_block->getID());
+            item = item->next;
+        }
+
+        item = in_list->getFirst();
+        for(int i = 0; i < in_list->getListLenght(); i++){
+            other_block = item->data->getOutBlock();
+            other_block->getOutList()->deleteConnection(tmp->data->getID(), false);
+            listConn->deleteConn(other_block->getID(), tmp->data->getID());
+            item = item->next;
+        }
+
+        blocks->deleteBlock(tmp->data->getID());
+        tmp = tmp->next;
+    }
+
+    delete blocks;
+    listConn = new blockConnect;
+    blocks = new BlockList;
+
+    QTextStream read(&file);
+    bool ok;
+    int count = 0;
+    int ID, x, y;   //pro nove bloky
+    blockType typ;
+    QString combat = "COMBAT"; QString dice = "DICE"; QString item = "ITEM";
+    QString arena = "ARENA"; QString rest = "REST";
+
+    QString line = read.readLine();
+    if(line.isEmpty()){
+        file.close();
+        return;
+    }
+
+    count = line.toInt(&ok, 10);
+    for(int i = 0; i < count; i++){
+        line = read.readLine();
+        QStringList items = line.split(" ");
+        for(int j = 0; j < items.size(); j++){
+            if(j == 0){
+                QString tmp = items.at(j);
+                ID = tmp.toInt(&ok, 10);
+                if(blocks_ID <= ID)
+                    blocks_ID = ID + 1;
+            }
+            else if(j == 1){
+                QString tmp = items.at(j);
+                if(QString::compare(tmp, combat) == 0)
+                    typ = COMBAT;
+                else if(QString::compare(tmp, dice) == 0)
+                    typ = DICE;
+                else if(QString::compare(tmp, item) == 0)
+                    typ = ITEM;
+                else if(QString::compare(tmp, arena) == 0)
+                    typ = ARENA;
+                else if(QString::compare(tmp, rest) == 0)
+                    typ = REST;
+            }
+            else if(j == 2){
+                QString tmp = items.at(j);
+                x = tmp.toInt(&ok, 10);
+            }
+            else if(j == 3){
+                QString tmp = items.at(j);
+                y = tmp.toInt(&ok, 10);
+            }
+        }
+
+        MyLabel* newblock = new MyLabel(this);
+        newblock->setID(ID);
+        newblock->setType(typ);
+        checkPlacement(&x, &y);
+        newblock->setCoords(x, y);
+        newblock->getCoords(&x, &y);
+        connect(newblock , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
+        connect(newblock, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
+        connect(newblock, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
+        newblock->setGeometry(x, y, 100, 100);
+        if(typ == COMBAT){
+            QPixmap pixmap(":combat.gif");
+            newblock->setPixmap(pixmap);
+        }
+        else if(typ == ARENA){
+            QPixmap pixmap(":arenaSelect.gif");
+            newblock->setPixmap(pixmap);
+        }
+        else if(typ == DICE){
+            QPixmap pixmap(":dice.png");
+            newblock->setPixmap(pixmap);
+        }
+        else if(typ == ITEM){
+            QPixmap pixmap(":itemSelect.gif");
+            newblock->setPixmap(pixmap);
+        }
+        else if(typ == REST){
+            QPixmap pixmap(":rest.gif");
+            newblock->setPixmap(pixmap);
+        }
+
+        blocks->insert(newblock);
+        newblock->show();
+    }
+
+    line = read.readLine();
+    if(line.isEmpty()){
+        file.close();
+        return;
+    }
+
+    count = line.toInt(&ok, 10);
+    qDebug() << blocks->getListLenght();
+
+    file.close();
 }
+
+void MainWindow::save_as(){
+
+    if(filename.isEmpty() == true){
+      filename = QFileDialog::getSaveFileName(this, "Save File", "./untitled.az", "Scheme (*.az)");
+    }
+
+    if(filename.isEmpty() == true){
+        return;
+    }
+
+    QFile file(filename);
+    file.open( QIODevice::WriteOnly);
+    QTextStream stream(&file);
+    stream << blocks->getListLenght() << endl;
+    Listblock* block = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        stream << block->data->getID();
+        if(block->data->getType() == COMBAT){
+            stream << " COMBAT ";
+        }
+        else if(block->data->getType() == DICE){
+            stream << " DICE ";
+        }
+        else if (block->data->getType() == ITEM){
+            stream << " ITEM ";
+        }
+        else if (block->data->getType() == REST){
+            stream << " REST ";
+        }
+        else if (block->data->getType() == ARENA){
+            stream << " ARENA ";
+        }
+
+        int x,y;
+        block->data->getCoords(&x, &y);
+        stream << x << " " << y << endl;
+
+        block = block->next;
+    }
+
+    stream << listConn->getListlenght() << endl;
+    blockConn* item = listConn->getFirst();
+    for(int i = 0; i < listConn->getListlenght(); i++){
+        stream << item->first_ID << " " << item->second_ID << endl;
+        item = item->next;
+    }
+
+    file.close();
+}
+
+void MainWindow::doResized(){
+    Listblock* tmp = blocks->getFirst();
+    connectionList* list;
+    int x, y, g, h;
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        tmp->data->getCoords(&x, &y);
+        checkPlacement(&x, &y);
+        tmp->data->setCoords(x, y);
+        tmp->data->setGeometry(x, y, 100, 100);
+        list = tmp->data->getOutList();
+        ListItem* item = list->getFirst();
+        for(int j = 0; j < list->getListLenght(); j++){
+            item->data->setOutcoords(&x, &y);
+            item->data->getOutcoords(&x, &y);
+            item->data->getIncoords(&g, &h);
+            item->data->setLine(x, y, g, h);
+            item = item->next;
+        }
+
+        list = tmp->data->getInList();
+        item = list->getFirst();
+        for(int j = 0; j < list->getListLenght(); j++){
+            item->data->setIncoords(&x, &y);
+            item->data->getIncoords(&x, &y);
+            item->data->getOutcoords(&g, &h);
+            item->data->setLine(g, h, x, y);
+            item = item->next;
+        }
+        tmp = tmp->next;
+    }
+}
+
+
+
+
 
 
 

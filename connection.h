@@ -28,6 +28,15 @@ struct ListItem{
 };
 
 /**
+ * @brief Structure for list of IDs of blocks, that are connectet
+ */
+struct blockConn{
+    int first_ID;
+    int second_ID;
+    blockConn* next;
+};
+
+/**
  * @brief The connection class, inherits from QGraphicsLineItem
  */
 
@@ -169,6 +178,47 @@ public:
      */
     ListItem* getFirst();
 };
+
+
+
+class blockConnect{
+    blockConn* first;
+    int lenght;
+
+public:
+    /**
+     * @brief constructor
+     */
+    blockConnect();
+
+    /**
+     * @brief insert IDs of blocks that are connected
+     * @param first ID
+     * @param second ID
+     */
+    void insert(int first_ID, int second_ID);
+
+    /**
+     * @brief getFirst
+     * @return pointer to first item of list of IDs pf blocks that are connected
+     */
+    blockConn* getFirst();
+
+    /**
+     * @brief delete item of list, that has same IDs as those given by parametres
+     * @param first ID
+     * @param second ID
+     */
+    void deleteConn(int first_ID, int second_ID);
+
+    /**
+     * @brief returns lenght of list of blocks that are connected
+     * @return int
+     */
+    int getListlenght();
+};
+
+
 
 #endif // CONNECTION_H
 

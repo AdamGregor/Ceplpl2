@@ -86,6 +86,7 @@ void connectionList::deleteConnection(unsigned int block_ID, bool out){
                 if(tmp->data == first->data){
                     first = tmp->next;
                     delete tmp->data;
+                    delete tmp;
                     lenght--;
                     return;
                 }
@@ -93,6 +94,7 @@ void connectionList::deleteConnection(unsigned int block_ID, bool out){
                     old_next->next = tmp->next;
                     delete tmp->data;
                     tmp->next = NULL;
+                    delete tmp;
                     lenght--;
                     return;
                 }
@@ -107,6 +109,7 @@ void connectionList::deleteConnection(unsigned int block_ID, bool out){
                 if(tmp->data == first->data){
                     first = tmp->next;
                     delete tmp->data;
+                    delete tmp;
                     lenght--;
                     return;
                 }
@@ -115,6 +118,7 @@ void connectionList::deleteConnection(unsigned int block_ID, bool out){
                     delete tmp->data;
                     tmp->next = NULL;
                     lenght--;
+                    delete tmp;
                     return;
                 }
             }
@@ -132,4 +136,51 @@ int connectionList::getListLenght(){
 
 ListItem* connectionList::getFirst(){
     return first;
+}
+
+blockConnect::blockConnect(){
+    this->first = NULL;
+    this->lenght = 0;
+}
+
+void blockConnect::insert(int first_ID, int second_ID){
+    blockConn* nove = new blockConn;
+    blockConn* prvni = this->getFirst();
+    nove->first_ID = first_ID;
+    nove->second_ID = second_ID;
+    nove->next = prvni;
+    first = nove;
+    lenght++;
+}
+
+blockConn *blockConnect::getFirst(){
+    return first;
+}
+
+void blockConnect::deleteConn(int first_ID, int second_ID){
+    blockConn* tmp = first;
+    blockConn* old_next = first;
+    for(int i = 0; i < lenght; i++){
+        if(tmp->first_ID == first_ID && tmp->second_ID == second_ID){
+            if(tmp == first){
+                first = tmp->next;
+                lenght--;
+                delete tmp;
+                return;
+            }
+            else{
+                old_next->next = tmp->next;
+                delete tmp;
+                lenght--;
+            }
+        }
+        else{
+            old_next = tmp;
+            tmp = tmp->next;
+        }
+    }
+}
+
+int blockConnect::getListlenght(){
+    return lenght;
 }

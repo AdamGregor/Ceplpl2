@@ -40,6 +40,12 @@ public:
      */
     void checkPlacement(int* x, int* y);
 
+    /**
+     * @brief emits signal if window is resized
+     * @param event
+     */
+    void resizeEvent(QResizeEvent* event);
+
 private:
     /**
      * @brief X coordinate of spawn point
@@ -68,6 +74,11 @@ private:
     BlockList* blocks;
 
     /**
+     * @brief list of existing connections
+     */
+    blockConnect* listConn;
+
+    /**
      * @brief ui
      */
     Ui::MainWindow *ui;
@@ -75,6 +86,11 @@ private:
      * @brief this will generate ID for blocks
      */
     unsigned int blocks_ID;
+
+    /**
+     * @brief name of saved file
+     */
+    QString filename;
 
 private slots:
     /**
@@ -131,6 +147,20 @@ private slots:
      * @brief load a scheme
      */
     void load();
+
+    /**
+     * @brief save a scheme under given name
+     */
+    void save_as();
+
+    /**
+     * @brief changes placement of blocks in order to be in window
+     */
+    void doResized();
+
+signals:
+    void resized();
+
 };
 
 #endif // MAINWINDOW_H

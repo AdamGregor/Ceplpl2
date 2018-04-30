@@ -76,6 +76,9 @@
    <property name="text">
     <string>New</string>
    </property>
+   <property name="toolTip">
+    <string>New scheme</string>
+   </property>
   </action>
   <action name="actionSave_as">
    <property name="text">
@@ -149,7 +152,7 @@
     <string>Delete</string>
    </property>
    <property name="toolTip">
-    <string>Delete a block or connection</string>
+    <string>Delete a block</string>
    </property>
   </action>
  </widget>
