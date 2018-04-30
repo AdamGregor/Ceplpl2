@@ -1,8 +1,16 @@
+/**
+ *@file connection.cpp
+ *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
+ *@brief  connection between blocks for gui
+ */
+
 #include "connection.h"
 #include <QGraphicsLineItem>
 #include <QWidget>
 #include <QGraphicsItem>
 #include "mainwindow.h"
+
+#include <iostream>
 
 connection::connection(QWidget* parent){
     num_of_clicks = 0;
@@ -69,6 +77,55 @@ void connectionList::insert(connection* item){
     lenght++;
 }
 
+void connectionList::deleteConnection(unsigned int block_ID, bool out){
+    ListItem* tmp = first;
+    ListItem* old_next;
+    for(int i = 0; i < lenght; i++){
+        if(out){
+            if(block_ID == tmp->data->getOutBlock()->getID()){
+                if(tmp->data == first->data){
+                    first = tmp->next;
+                    delete tmp->data;
+                    lenght--;
+                    return;
+                }
+                else{
+                    old_next->next = tmp->next;
+                    delete tmp->data;
+                    tmp->next = NULL;
+                    lenght--;
+                    return;
+                }
+            }
+            else{
+                old_next = tmp;
+                tmp = tmp->next;
+            }
+        }
+        else{
+            if(block_ID == tmp->data->getInBlock()->getID()){
+                if(tmp->data == first->data){
+                    first = tmp->next;
+                    delete tmp->data;
+                    lenght--;
+                    return;
+                }
+                else{
+                    old_next->next = tmp->next;
+                    delete tmp->data;
+                    tmp->next = NULL;
+                    lenght--;
+                    return;
+                }
+            }
+            else{
+                old_next = tmp;
+                tmp = tmp->next;
+            }
+        }
+    }
+}
+
 int connectionList::getListLenght(){
     return lenght;
 }
@@ -76,23 +133,3 @@ int connectionList::getListLenght(){
 ListItem* connectionList::getFirst(){
     return first;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

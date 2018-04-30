@@ -1,3 +1,9 @@
+/**
+ *@file mainwindow.cpp
+ *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
+ *@brief mainwindow of app
+ */
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mylabel.h"
@@ -16,6 +22,7 @@
 #include <QGraphicsLineItem>
 #include <QDialog>
 #include <QInputDialog>
+#include <QFileDialog>
 
 
 #include <QMessageBox>
@@ -32,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
 
-
     QGraphicsLineItem* item = new QGraphicsLineItem;
     item->setLine(0,0,0.01,0.01);
     scene->addItem(item);
@@ -40,8 +46,9 @@ MainWindow::MainWindow(QWidget *parent) :
     pen = new QPen;
     pen->setWidth(4);
 
-    block_count = 0;
+    blocks_ID = 0;
     active_connection = NULL;
+    this->blocks = new BlockList;
     this->Spawn_x = 12;
     this->Spawn_y = 67;
 
@@ -52,6 +59,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionRest, SIGNAL(triggered()), this, SLOT(addRest()));
     connect(ui->actionRun, SIGNAL(triggered()), this, SLOT(run()));
     connect(ui->actionHelp, SIGNAL(triggered()), this, SLOT(printHelp()));
+    connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(load()));
+    connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newScheme()));
 
 }
 
@@ -61,10 +70,12 @@ MainWindow::~MainWindow(){
 
 void MainWindow::addCombat(){
     MyLabel* block = new MyLabel(this);
+    block->setID(blocks_ID);
+    blocks_ID++;
     block->setType(COMBAT);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
-  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
+    connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
     block->setStyleSheet("QLabel { background-color : red;}");
@@ -73,15 +84,18 @@ void MainWindow::addCombat(){
     QPixmap pixmap(":combat.gif");
     block->setPixmap(pixmap);
     block->show();
+    blocks->insert(block);
 
 }
 
 void MainWindow::addDice_throw(){
     MyLabel* block = new MyLabel(this);
+    block->setID(blocks_ID);
+    blocks_ID++;
     block->setType(DICE);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
-  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
+    connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
     Spawn_x +=10;
@@ -89,14 +103,17 @@ void MainWindow::addDice_throw(){
     QPixmap pixmap(":dice.png");
     block->setPixmap(pixmap);
     block->show();
+    blocks->insert(block);
 }
 
 void MainWindow::addItem_apply(){
     MyLabel* block = new MyLabel(this);
+    block->setID(blocks_ID);
+    blocks_ID++;
     block->setType(ITEM);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
-  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
+    connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
     Spawn_x +=10;
@@ -104,14 +121,17 @@ void MainWindow::addItem_apply(){
     QPixmap pixmap(":itemSelect.gif");
     block->setPixmap(pixmap);
     block->show();
+    blocks->insert(block);
 }
 
 void MainWindow::addArena_select(){
     MyLabel* block = new MyLabel(this);
+    block->setID(blocks_ID);
+    blocks_ID++;
     block->setType(ARENA);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
-  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
+    connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
     Spawn_x +=10;
@@ -119,14 +139,17 @@ void MainWindow::addArena_select(){
     QPixmap pixmap(":arenaSelect.gif");
     block->setPixmap(pixmap);
     block->show();
+    blocks->insert(block);
 }
 
 void MainWindow::addRest(){
     MyLabel* block = new MyLabel(this);
+    block->setID(blocks_ID);
+    blocks_ID++;
     block->setType(REST);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
-  //  connect(block, SIGNAL(mouseDoubleClick(MyLabel*)), this, SLOT(mouseDoubleClick(MyLabel*)));
+    connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
     Spawn_x +=10;
@@ -134,10 +157,14 @@ void MainWindow::addRest(){
     QPixmap pixmap(":rest.gif");
     block->setPixmap(pixmap);
     block->show();
+    blocks->insert(block);
 }
 
 
 void MainWindow::mouseRelease(MyLabel* block){
+    if(ui->actionDelete->isChecked())
+        return;
+
     QPoint place;
     place = this->mapFromGlobal(QCursor::pos());
     int x = place.x();
@@ -239,6 +266,38 @@ void MainWindow::mousePress(MyLabel *block){
         active_connection->incNumOfClicks();
     }
 }
+
+void MainWindow::deleteSlot(MyLabel *block){
+    if(ui->actionDelete->isChecked()){
+        // muzes deletovat
+        active_connection = NULL;
+        connectionList* out_list = block->getOutList();
+        connectionList* in_list = block->getInList();
+        ListItem* item = out_list->getFirst();
+        MyLabel* other_block;
+
+        for(int i = 0; i < out_list->getListLenght(); i++){
+            other_block = item->data->getInBlock();
+            other_block->getInList()->deleteConnection(block->getID(), true);
+            item = item->next;
+        }
+
+        item = in_list->getFirst();
+        for(int i = 0; i < in_list->getListLenght(); i++){
+            other_block = item->data->getOutBlock();
+            other_block->getOutList()->deleteConnection(block->getID(), false);
+            item = item->next;
+        }
+
+        blocks->deleteBlock(block->getID());
+    }
+
+    else{
+        return;
+    }
+}
+
+
 /*
 void MainWindow::mouseDoubleClick(MyLabel *block){
     blockType type = block->getType();
@@ -256,22 +315,56 @@ void MainWindow::run(){
 
 }
 
+void MainWindow::newScheme(){
+    this->Spawn_x = 12;
+    this->Spawn_y = 67;
+    blocks_ID = 0;
+    Listblock* tmp = blocks->getFirst();
+    int lenght = blocks->getListLenght();
+    active_connection = NULL;
+    for(int i = 0; i < lenght; i++){
+        connectionList* out_list = tmp->data->getOutList();
+        connectionList* in_list = tmp->data->getInList();
+        ListItem* item = out_list->getFirst();
+        MyLabel* other_block;
+
+        for(int i = 0; i < out_list->getListLenght(); i++){
+            other_block = item->data->getInBlock();
+            other_block->getInList()->deleteConnection(tmp->data->getID(), true);
+            item = item->next;
+        }
+
+        item = in_list->getFirst();
+        for(int i = 0; i < in_list->getListLenght(); i++){
+            other_block = item->data->getOutBlock();
+            other_block->getOutList()->deleteConnection(tmp->data->getID(), false);
+            item = item->next;
+        }
+
+        blocks->deleteBlock(tmp->data->getID());
+        tmp = tmp->next;
+    }
+
+    delete blocks;
+    blocks = new BlockList;
+}
+
 void MainWindow::printHelp(){
     QMessageBox help;
     help.setWindowTitle("Block Editor - Help");
-    help.setText(QString("Move a block:\n   - Press, move and release left mouse button\n") +
-                 QString("Make a connection:\n   - Click on a blocks you want to connect with right mouse button\n") +
-                 QString("Run editor:\n   - Press Run\n"));
+    help.setText(QString("Move a block:\n   - Press, move and release left mouse button\n\n") +
+                 QString("Make a connection:\n   - Click on a blocks you want to connect with right mouse button\n\n") +
+                 QString("Run editor:\n   - Press Run\n\n") +
+                 QString("Enter a God:\n   - Zeus, Odin, Athena, Njord, Mimir, Poseidon\n\n") +
+                 QString("Delete block or connection:\n   - Toggle Delete button and press on block/connection \n      you want to delete with left mouse button\n\n"));
     help.exec();
 }
 
-
-
-
-
-
-
-
+void MainWindow::load(){
+    QString filename;
+    filename = QFileDialog::getOpenFileName(this, "Load a scheme", "/home/", "Scheme (*.bla)");
+    qDebug() << filename;
+}
 
 
 
