@@ -2,15 +2,13 @@
 #define GODS_H
 
 
-
-
 //IMPLEMENTACE DATOVEHO TYPU GODS
 
 //Deklarace/definice tridy God. Z ni budou dedit jednotlivi bohove
 class Gods {
 protected:
 	double	Strenght;
-	char*	Name;
+    char*	Name;
 
 
 public:

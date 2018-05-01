@@ -34,7 +34,7 @@ public:
 	ListItemLogic *first;
 	int	listLenght;
 
-	SubscribeList() { this->first = nullptr;  this->listLenght = 0; }
+    SubscribeList() { this->first = nullptr ;  this->listLenght = 0; }
 	int getLenght() { return this->listLenght; }
 	ListItemLogic * getFirst() { return this->first; }
 	void InsertItem(Connect *);

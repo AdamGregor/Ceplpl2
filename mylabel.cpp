@@ -47,6 +47,14 @@ void MyLabel::mousePressEvent(QMouseEvent *event){
 
 }
 
+Block *MyLabel::getLogicblock(){
+    return this->logicBlock;
+}
+
+void MyLabel::setLogicblock(Block* logicBl){
+    this->logicBlock = logicBl;
+}
+
 void MyLabel::setCoords(int x, int y){
     this->x = x;
     this->y = y;

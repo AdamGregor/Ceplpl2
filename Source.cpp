@@ -18,7 +18,7 @@ int main() {
 	Poseidon vod;
 	int c;
 	DiceThrow *hod = new DiceThrow;
-	Block *spi = new Rest;
+	Rest *spi = new Rest;
 	Connect spoj(hod, spi);
 	//Connect propoj(spi, hod);
 	hod->IPort1 = (void*)&vod;

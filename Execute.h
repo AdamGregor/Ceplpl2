@@ -10,7 +10,7 @@ struct BlocklistElem {
 class  Blocklist {
 	BlocklistElem * first;
 public:
-	Blocklist() { first = nullptr; }
+    Blocklist() { first = nullptr; }
 	void addItem(Block*);
 	BlocklistElem*	getFirst() { return first; }
 };

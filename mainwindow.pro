@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QMAKE_CXXFLAGS += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,12 +28,19 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     mylabel.cpp \
-    connection.cpp
+    connection.cpp \
+    Rest.cpp
 
 HEADERS += \
         mainwindow.h \
     mylabel.h \
-    connection.h
+    connection.h \
+    Accessories.h \
+    Arenas.h \
+    Blocks.h \
+    Execute.h \
+    Gods.h \
+    SupportClasses.h
 
 FORMS += \
         mainwindow.ui

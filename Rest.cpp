@@ -2,6 +2,7 @@
 #include "SupportClasses.h"
 #include "Arenas.h"
 #include "Execute.h"
+#include "mainwindow.h"
 #include <iostream>
 #include <typeinfo>
 
@@ -10,6 +11,7 @@
 
 //globalni promenna, jedinacek
 extern Execute Program;
+extern MainWindow* MyWindow;
 
 Execute::Execute() {
 	this->Blocks = new Blocklist;
@@ -147,7 +149,7 @@ PortStuff * Rest::tryConnect(char* typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
-		ret->value = &(void*)(this->IPort1);
+        ret->value = &(this->IPort1);
 		//std::cout << "taaadddyyy " << ret->value <<" " << &(void*)(this->IPort1) <<"\n";
 		ret->init = &(this->IPort1_Initiated);
 		return ret;
@@ -162,7 +164,7 @@ PortStuff *DiceThrow::tryConnect(char* typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
-		ret->value = &(void*)(this->IPort1);
+        ret->value = &(this->IPort1);
 		ret->init = &(this->IPort1_Initiated);
 		return ret;
 	}
@@ -176,18 +178,18 @@ PortStuff *Combat::tryConnect(char* typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
-		ret->value = &(void*)(this->IPort1);
+        ret->value = &(this->IPort1);
 		ret->init = &(this->IPort1_Initiated);
 		return ret;
 	}
 	else if (typ == "Gods" && IPort3_Connected == false) {
 		this->IPort3_Connected = true;
-		ret->value = &(void*)(this->IPort3);
+        ret->value = &(this->IPort3);
 		ret->init = &(this->IPort3_Initiated);
 		return ret;
 	}
 	else if (typ == "Arena" && IPort2_Connected == false) {
-		ret->value = &(void*)(this->IPort2);
+        ret->value = &(this->IPort2);
 		ret->init = &(this->IPort2_Initiated);
 		return ret;
 	}
@@ -201,7 +203,7 @@ PortStuff *ItemApply::tryConnect(char* typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
-		ret->value = &(void*)(this->IPort1);
+        ret->value = &(this->IPort1);
 		ret->init = &(this->IPort1_Initiated);
 		return ret;
 	}
@@ -215,13 +217,13 @@ PortStuff* ArenaSelect::tryConnect(char* typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
-		ret->value = &(void*)(this->IPort1);
+        ret->value = &(this->IPort1);
 		ret->init = &(this->IPort1_Initiated);
 		return ret;
 	}
 	else if (typ == "Gods" && IPort2_Connected == false) {
 		this->IPort2_Connected = true;
-		ret->value = &(void*)(this->IPort2);
+        ret->value = &(this->IPort2);
 		ret->init = &(this->IPort2_Initiated);
 		return ret;
 	}
@@ -237,8 +239,8 @@ void Rest::eval() {
 	/**
 
 	*/
-	while (this->IPort1 == NULL) {
-		IPort1 = GetGod(ID_bloku);
+    while (this->IPort1 == nullptr) {
+        IPort1 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * tmp = (Gods *)IPort1;
 
@@ -258,13 +260,13 @@ void ArenaSelect::eval() {
 	//vypocteni, ci arena se pouzije
 	int random = rand() % 2;
 	
-	while (this->IPort1 == NULL) {
-		IPort1 = GetGod(ID_bloku);
+    while (this->IPort1 == nullptr) {
+        IPort1 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * tmp1 = (Gods *)IPort1;
 	
-	while (this->IPort2 == NULL) {
-		IPort2 = GetGod(ID_bloku);
+    while (this->IPort2 == nullptr) {
+        IPort2 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * tmp2 = (Gods *)IPort2;
 	//nastaveni areny podle vylosovaneho boha
@@ -297,18 +299,18 @@ void ArenaSelect::eval() {
 }
 
 void Combat::eval() {
-	while (this->IPort1 == NULL) {
-		IPort1 = GetGod(ID_bloku);
+    while (this->IPort1 == nullptr) {
+        IPort1 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * Buh1 = (Gods *)IPort1;
 
-	while (this->IPort3 == NULL) {
-		IPort3 = GetGod(ID_bloku);
+    while (this->IPort3 == nullptr) {
+        IPort3 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * Buh2 = (Gods *)IPort3;
 
-	while (this->IPort2 == NULL) {
-		IPort2 = GetArena(ID_bloku);
+    while (this->IPort2 == nullptr) {
+        IPort2 = MyWindow->getArena(ID_bloku);
 	}
 	Arena *Bojiste = (Arena*) this->IPort2;
 
@@ -401,13 +403,13 @@ void Combat::eval() {
 }
 
 void ItemApply::eval() {
-	while (this->IPort1 == NULL) {
-		IPort1 = GetGod(ID_bloku);
+    while (this->IPort1 == nullptr) {
+        IPort1 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * buh = (Gods *)IPort1;
 
-	while (this->IPort2 == NULL) {
-		IPort2 = GetAccessories(ID_bloku);
+    while (this->IPort2 == nullptr) {
+        IPort2 = MyWindow->getItem(ID_bloku);
 	}
 	Accessories * vec = (Accessories*) this->IPort2;
 
@@ -434,7 +436,7 @@ void ItemApply::eval() {
 void DiceThrow::eval() {
 	//nastavi se zivot na 90% stavajiciho
 	while (this->IPort1 == NULL) {
-		IPort1 = GetGod(ID_bloku);
+        IPort1 = MyWindow->getGod(ID_bloku);
 	}
 	Gods * Buh = (Gods *)IPort1;
 
@@ -495,8 +497,8 @@ void DiceThrow::eval() {
 }
 
 void SubscribeList::InsertItem(Connect *data) {
-	ListItemLogic *neu = new ListItem;
-	ListItem *first = this->getFirst();
+    ListItemLogic *neu = new ListItemLogic;
+    ListItemLogic *first = this->getFirst();
 	neu->data = data;
 	neu->next = first;
 	this->first = neu;

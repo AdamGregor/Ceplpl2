@@ -8,6 +8,7 @@
 #include "ui_mainwindow.h"
 #include "mylabel.h"
 #include "connection.h"
+#include "Execute.h"
 
 #include <QPushButton>
 #include <QWidget>
@@ -22,21 +23,27 @@
 #include <QGraphicsLineItem>
 #include <QDialog>
 #include <QFileDialog>
+#include <QInputDialog>
 #include <QMessageBox>
 
 #include <iostream>
 #include <fstream>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
-{
+
+Execute Program;
+MainWindow* MyWindow;
+
+
+
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
+
     ui->setupUi(this);
     this->setWindowTitle("BlockEditor");
+    MyWindow = this;
+
     scene = new QGraphicsScene;
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
-
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setEnabled(false);
@@ -91,6 +98,7 @@ void MainWindow::addCombat(){
     block->setPixmap(pixmap);
     block->show();
     blocks->insert(block);
+    block->setLogicblock(new Combat(block->getID()));
 
 }
 
@@ -110,6 +118,7 @@ void MainWindow::addDice_throw(){
     block->setPixmap(pixmap);
     block->show();
     blocks->insert(block);
+    block->setLogicblock(new DiceThrow(block->getID()));
 }
 
 void MainWindow::addItem_apply(){
@@ -128,6 +137,7 @@ void MainWindow::addItem_apply(){
     block->setPixmap(pixmap);
     block->show();
     blocks->insert(block);
+    block->setLogicblock(new ItemApply(block->getID()));
 }
 
 void MainWindow::addArena_select(){
@@ -146,6 +156,7 @@ void MainWindow::addArena_select(){
     block->setPixmap(pixmap);
     block->show();
     blocks->insert(block);
+    block->setLogicblock(new ArenaSelect(block->getID()));
 }
 
 void MainWindow::addRest(){
@@ -164,6 +175,7 @@ void MainWindow::addRest(){
     block->setPixmap(pixmap);
     block->show();
     blocks->insert(block);
+    block->setLogicblock(new Rest(block->getID()));
 }
 
 
@@ -232,6 +244,39 @@ void MainWindow::checkPlacement(int* x, int* y){
 void MainWindow::resizeEvent(QResizeEvent *event){
     emit resized();
 }
+
+Gods *MainWindow::getGod(unsigned int ID){
+    bool ok;
+    QString text = QInputDialog::getText(this, "Insert input", "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus...", &ok);
+
+    if(text.isEmpty())
+        return NULL;
+
+}
+
+Arena *MainWindow::getArena(unsigned int ID){
+    bool ok;
+    QString text = QInputDialog::getText(this, "Insert input", "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
+                                         QLineEdit::Normal, "Olymp...", &ok);
+
+    if(text.isEmpty())
+        return NULL;
+
+    return NULL;
+}
+
+Accessories *MainWindow::getItem(unsigned int ID){
+    bool ok;
+    QString text = QInputDialog::getText(this, "Insert input", "Enter item:\n-> Leviathan Axe\n-> Curse\n-> Scroll of wisdom\n-> Piety\n-> Impiety\n",
+                                         QLineEdit::Normal, "Curse...", &ok);
+
+    if(text.isEmpty())
+        return NULL;
+
+    return NULL;
+}
+
+
 
 void MainWindow::mousePress(MyLabel *block){
     int x;

@@ -8,6 +8,7 @@
 #define MYLABEL_H
 
 #include "connection.h"
+#include "Blocks.h"
 
 #include <QObject>
 #include <QWidget>
@@ -71,6 +72,11 @@ private:
      * @brief list of connections from in port
      */
     connectionList* in_List;
+
+    /**
+     * @brief actuall block
+     */
+    Block* logicBlock;
 
 
 public:
@@ -137,7 +143,17 @@ public:
      * @param event
      */
     void mousePressEvent(QMouseEvent* event);
-  //  void mouseDoubleClickEvent(QMouseEvent* event);
+
+    /**
+     * @brief get logic block
+     * @return pointer to logic block
+     */
+    Block* getLogicblock();
+
+    /**
+     * @brief set Logic block
+     */
+    void setLogicblock(Block* logicBl);
 
 
 signals:

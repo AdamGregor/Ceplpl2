@@ -14,6 +14,13 @@
 #include <QPen>
 #include "mylabel.h"
 #include "connection.h"
+#include "Arenas.h"
+#include "Accessories.h"
+#include "Blocks.h"
+#include "Gods.h"
+#include "Execute.h"
+#include "SupportClasses.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -45,6 +52,27 @@ public:
      * @param event
      */
     void resizeEvent(QResizeEvent* event);
+
+    /**
+     * @brief get God from user
+     * @param ID of block
+     * @return pointer to God
+     */
+    Gods* getGod(unsigned int ID);
+
+    /**
+     * @brief get Arena from user
+     * @param ID of block
+     * @return pointer to Arena
+     */
+    Arena* getArena(unsigned int ID);
+
+    /**
+     * @brief get Item from user
+     * @param ID of block
+     * @return pointer to Accessories
+     */
+    Accessories* getItem(unsigned int ID);
 
 private:
     /**
