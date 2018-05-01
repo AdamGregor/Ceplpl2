@@ -88,6 +88,7 @@
    <addaction name="actionDelete"/>
    <addaction name="actionReset"/>
    <addaction name="actionHelp"/>
+   <addaction name="actionAbout"/>
   </widget>
   <action name="actionNew">
    <property name="text">
@@ -181,6 +182,11 @@
    </property>
    <property name="toolTip">
     <string>Reset evaluation</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
