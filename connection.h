@@ -209,7 +209,7 @@ public:
      * @param first ID
      * @param second ID
      */
-    void deleteConn(int first_ID, int second_ID);
+    void deleteConn(unsigned int first_ID, unsigned int second_ID);
 
     /**
      * @brief returns lenght of list of blocks that are connected

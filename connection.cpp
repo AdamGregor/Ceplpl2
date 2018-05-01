@@ -79,7 +79,7 @@ void connectionList::insert(connection* item){
 
 void connectionList::deleteConnection(unsigned int block_ID, bool out){
     ListItem* tmp = first;
-    ListItem* old_next;
+    ListItem* old_next = first;
     for(int i = 0; i < lenght; i++){
         if(out){
             if(block_ID == tmp->data->getOutBlock()->getID()){
@@ -157,7 +157,7 @@ blockConn *blockConnect::getFirst(){
     return first;
 }
 
-void blockConnect::deleteConn(int first_ID, int second_ID){
+void blockConnect::deleteConn(unsigned int first_ID, unsigned int second_ID){
     blockConn* tmp = first;
     blockConn* old_next = first;
     for(int i = 0; i < lenght; i++){

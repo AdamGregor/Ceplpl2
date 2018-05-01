@@ -1,3 +1,9 @@
+/**
+ *@file main.cpp
+ *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
+ *@brief main of app
+ */
+
 #include "mainwindow.h"
 #include <QApplication>
 #include <QtGui>

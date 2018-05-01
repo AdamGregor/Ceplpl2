@@ -87,7 +87,7 @@ void BlockList::insert(MyLabel *block){
 
 void BlockList::deleteBlock(unsigned int block_ID){
     Listblock* tmp = this->getFirst();
-    Listblock* old_tmp;
+    Listblock* old_tmp = tmp;
     for(int i = 0; i < lenght; i++){
         if(tmp->data->getID() == block_ID){
             if(this->first->data->getID() == block_ID){

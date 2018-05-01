@@ -367,7 +367,7 @@ void MainWindow::printHelp(){
                  QString("Make a connection:\n   - Click on a blocks you want to connect with right mouse button\n\n") +
                  QString("Run editor:\n   - Press Run\n\n") +
                  QString("Enter a God:\n   - Zeus, Odin, Athena, Njord, Mimir, Poseidon\n\n") +
-                 QString("Delete block:\n   - Toggle Delete button and press on block/connection \n      you want to delete with left mouse button\n\n"));
+                 QString("Delete block:\n   - Toggle Delete button and press on block you want to delete\n      with left mouse button\n\n"));
     help.exec();
 }
 
@@ -438,7 +438,7 @@ void MainWindow::load(){
         for(int j = 0; j < items.size(); j++){
             if(j == 0){
                 QString tmp = items.at(j);
-                ID = tmp.toInt(&ok, 10);
+                ID = tmp.toUInt(&ok, 10);
                 if(blocks_ID <= ID)
                     blocks_ID = ID + 1;
             }
@@ -506,8 +506,52 @@ void MainWindow::load(){
         return;
     }
 
-    count = line.toInt(&ok, 10);
-    qDebug() << blocks->getListLenght();
+    count = line.toInt(&ok, 10);        // nacteni spoju
+    QStringList items;
+    MyLabel* in_block, * out_block;
+    unsigned int in = -1 , out = -1;
+    for(int i = 0; i < count; i++){
+        line = read.readLine();
+        items = line.split(" ");
+        for(int j = 0; j < items.size(); j++){
+            if(j == 0){
+                QString tmp = items.at(j);
+                out = tmp.toUInt(&ok, 10);
+            }
+            else if(j == 1){
+                QString tmp = items.at(j);
+                in = tmp.toUInt(&ok, 10);
+            }
+        }
+        Listblock* tmp_block = blocks->getFirst();
+        for(int j = 0; j < blocks->getListLenght(); j++){
+            if(tmp_block->data->getID() == out){
+                out_block = tmp_block->data;
+            }
+            else if(tmp_block->data->getID() == in){
+                in_block = tmp_block->data;
+            }
+            tmp_block = tmp_block->next;
+        }
+
+        connection* conn = new connection;
+        conn->setInblock(in_block);
+        conn->setOutblock(out_block);
+        conn->setPen(*pen);
+        int k, l, m, n;
+        out_block->getCoords(&k, &l);
+        in_block->getCoords(&m, &n);
+        conn->setIncoords(&m, &n);
+        conn->setOutcoords(&k, &l);
+        conn->getOutcoords(&k, &l);
+        conn->getIncoords(&m, &n);
+        conn->setLine(k, l, m, n);
+        scene->addItem(conn);
+        listConn->insert(conn->getOutBlock()->getID(), conn->getInBlock()->getID());
+        out_block->getOutList()->insert(conn);
+        in_block->getInList()->insert(conn);
+    }
+
 
     file.close();
 }
@@ -645,43 +689,9 @@ void MainWindow::doResized(){
                     docasne = docasne->next;
                 }
             }
-
             tmp = tmp->next;
         }
-
         temp = temp->next;
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
