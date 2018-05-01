@@ -1,3 +1,15 @@
+/*!
+	*\author	Adam Gregor
+	*\mainpage	Blokový editor 2018	
+	*\section	Úvod
+	* Tento kód vznikl v rámci projektu do pøedmìtu ICP
+	*\section	Kompilace
+	*Program se kompiluje klasicky, pøíkazem 'make'
+	\subsection Make
+	* Napište make
+*/
+
+
 #ifndef BLOCK_H
 #define BLOCK_H
 #include "Gods.h"
@@ -7,11 +19,15 @@
 #include <typeinfo>
 
 /// Hlavicky jednotlivych bloku
+/*!
+	*\brief Base class všech blokových tøíd. Obsahuje deklarace metod, jež jsou dìdìny všemi tøídami blokù.
+*/ 
 class Block {
 public:
 	SubscribeList *subscriptions;
 	bool OPort1_Connected;
 	bool OPort1_Initiated;
+	unsigned int ID_bloku;
 
 	Block() { this->subscriptions = new SubscribeList; }
 	virtual void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); this->OPort1_Connected = true; }
@@ -32,7 +48,7 @@ public:
     Gods *OPort1;
 
 
-	Rest();
+	Rest(unsigned int);
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() {return "Gods"; }
@@ -59,7 +75,7 @@ public:
 
 	//metody
 
-	Combat();
+	Combat(unsigned int);
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
@@ -84,7 +100,7 @@ public:
 
 	//metody
 
-	ItemApply();
+	ItemApply(unsigned int);
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
@@ -103,7 +119,7 @@ public:
 
 	//metody
 
-	DiceThrow();
+	DiceThrow(unsigned int);
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Gods"; }
@@ -126,7 +142,7 @@ public:
 
 	//metody
 
-	ArenaSelect();
+	ArenaSelect(unsigned int);
 	void eval();
 	PortStuff *tryConnect(char*);
 	char* getOut() { return "Arena"; }

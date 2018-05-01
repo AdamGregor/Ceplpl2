@@ -21,7 +21,9 @@ Execute::Execute() {
 
 // Konstruktory bloku, portum jsou nastaveny pocatecni hodnoty (nullptr, false)
 
-Rest::Rest() {
+Rest::Rest(unsigned int ID) {
+	this->ID_bloku = ID;
+
 	IPort1 = nullptr;
 	IPort1_Connected = false;
 	IPort1_Initiated = false;
@@ -32,7 +34,9 @@ Rest::Rest() {
 	Program.AddBlock(this);
 }
 
-DiceThrow::DiceThrow() {
+DiceThrow::DiceThrow(unsigned int ID) {
+	this->ID_bloku = ID;
+
 	IPort1 = nullptr;
 	IPort1_Connected = false;
 	IPort1_Initiated = false;
@@ -43,7 +47,9 @@ DiceThrow::DiceThrow() {
 	Program.AddBlock(this);
 }
 
-Combat::Combat() {
+Combat::Combat(unsigned int ID) {
+	this->ID_bloku = ID;
+
 	IPort1 = nullptr;
 	IPort1_Connected = false;
 	IPort1_Initiated = false;
@@ -63,7 +69,9 @@ Combat::Combat() {
 	Program.AddBlock(this);
 }
 
-ItemApply::ItemApply() {
+ItemApply::ItemApply(unsigned int ID) {
+	this->ID_bloku = ID;
+	
 	IPort1 = nullptr;
 	IPort1_Connected = false;
 	IPort1_Initiated = false;
@@ -77,7 +85,9 @@ ItemApply::ItemApply() {
 	Program.AddBlock(this);
 }
 
-ArenaSelect::ArenaSelect() {
+ArenaSelect::ArenaSelect(unsigned int ID) {
+	this->ID_bloku = ID;
+	
 	IPort1 = nullptr;
 	IPort1_Connected = false;
 	IPort1_Initiated = false;
@@ -224,11 +234,18 @@ PortStuff* ArenaSelect::tryConnect(char* typ) {
 
 //eval bloku REST
 void Rest::eval() {
-	Gods *tmp = (Gods*) this->IPort1;
+	/**
+
+	*/
+	while (this->IPort1 == NULL) {
+		IPort1 = GetGod(ID_bloku);
+	}
+	Gods * tmp = (Gods *)IPort1;
+
 	this->OPort1 = tmp->setStrenght(tmp->getOriginalStrenght());
 	OPort1_Initiated = true;
 	//distribuce vysledku
-	ListItem *subscribes = this->subscriptions->getFirst();
+	ListItemLogic *subscribes = this->subscriptions->getFirst();
 	while (subscribes != nullptr) {
 		subscribes->data->DistributeResult((void*) this->OPort1);
 		subscribes = subscribes->next;
@@ -240,8 +257,16 @@ void ArenaSelect::eval() {
 	char *name;
 	//vypocteni, ci arena se pouzije
 	int random = rand() % 2;
-	Gods *tmp1 = (Gods *) this->IPort1;
-	Gods *tmp2 = (Gods *) this->IPort2;
+	
+	while (this->IPort1 == NULL) {
+		IPort1 = GetGod(ID_bloku);
+	}
+	Gods * tmp1 = (Gods *)IPort1;
+	
+	while (this->IPort2 == NULL) {
+		IPort2 = GetGod(ID_bloku);
+	}
+	Gods * tmp2 = (Gods *)IPort2;
 	//nastaveni areny podle vylosovaneho boha
 	if (random == 0)
 		name = tmp1->getName();
@@ -263,7 +288,7 @@ void ArenaSelect::eval() {
 
 	OPort1_Initiated = true;
 	//distribuce vysledku
-	ListItem *subscribes = this->subscriptions->getFirst();
+	ListItemLogic *subscribes = this->subscriptions->getFirst();
 	while (subscribes != nullptr) {
 		subscribes->data->DistributeResult((void*) this->OPort1);
 		subscribes = subscribes->next;
@@ -272,8 +297,19 @@ void ArenaSelect::eval() {
 }
 
 void Combat::eval() {
-	Gods *Buh1 = (Gods*) this->IPort1;
-	Gods *Buh2 = (Gods*) this->IPort3;
+	while (this->IPort1 == NULL) {
+		IPort1 = GetGod(ID_bloku);
+	}
+	Gods * Buh1 = (Gods *)IPort1;
+
+	while (this->IPort3 == NULL) {
+		IPort3 = GetGod(ID_bloku);
+	}
+	Gods * Buh2 = (Gods *)IPort3;
+
+	while (this->IPort2 == NULL) {
+		IPort2 = GetArena(ID_bloku);
+	}
 	Arena *Bojiste = (Arena*) this->IPort2;
 
 	double effect = Bojiste->getEffect();
@@ -357,7 +393,7 @@ void Combat::eval() {
 	}
 	OPort1_Initiated = true;
 	//distribuce vysledku
-	ListItem *subscribes = this->subscriptions->getFirst();
+	ListItemLogic *subscribes = this->subscriptions->getFirst();
 	while (subscribes != nullptr) {
 		subscribes->data->DistributeResult((void*) this->OPort1);
 		subscribes = subscribes->next;
@@ -365,10 +401,18 @@ void Combat::eval() {
 }
 
 void ItemApply::eval() {
-	Accessories * vec = (Accessories*) this->IPort2;
-	Gods * buh = (Gods*) this->IPort1;
-	double effect = vec->getEffect();
+	while (this->IPort1 == NULL) {
+		IPort1 = GetGod(ID_bloku);
+	}
+	Gods * buh = (Gods *)IPort1;
 
+	while (this->IPort2 == NULL) {
+		IPort2 = GetAccessories(ID_bloku);
+	}
+	Accessories * vec = (Accessories*) this->IPort2;
+
+
+	double effect = vec->getEffect();
 	effect *= (double)((rand() % 155) - 25) / 100.0;
 
 	buh->addStrenght(effect);
@@ -378,7 +422,7 @@ void ItemApply::eval() {
 	this->OPort1 = buh;
 	OPort1_Initiated = true;
 	//distribuce vysledku
-	ListItem *subscribes = this->subscriptions->getFirst();
+	ListItemLogic *subscribes = this->subscriptions->getFirst();
 	while (subscribes != nullptr) {
 		subscribes->data->DistributeResult((void*) this->OPort1);
 		subscribes = subscribes->next;
@@ -389,7 +433,11 @@ void ItemApply::eval() {
 //Bohovi bude sebrano 10% zdravi a za to dostane nahodny predmet
 void DiceThrow::eval() {
 	//nastavi se zivot na 90% stavajiciho
-	Gods * Buh = (Gods *) this->IPort1;
+	while (this->IPort1 == NULL) {
+		IPort1 = GetGod(ID_bloku);
+	}
+	Gods * Buh = (Gods *)IPort1;
+
 	double strenght = Buh->getStrenght();
 	strenght *= 0.9;
 
@@ -439,7 +487,7 @@ void DiceThrow::eval() {
 	OPort1_Initiated = true;
 
 	//distribuce vysledku
-	ListItem *subscribes = this->subscriptions->getFirst();
+	ListItemLogic *subscribes = this->subscriptions->getFirst();
 	while (subscribes != nullptr) {
 		subscribes->data->DistributeResult((void*) this->OPort1);
 		subscribes = subscribes->next;
@@ -447,7 +495,7 @@ void DiceThrow::eval() {
 }
 
 void SubscribeList::InsertItem(Connect *data) {
-	ListItem *neu = new ListItem;
+	ListItemLogic *neu = new ListItem;
 	ListItem *first = this->getFirst();
 	neu->data = data;
 	neu->next = first;
@@ -595,12 +643,14 @@ void Execute::Reset() {
 
 }
 
+
+
 void Rest::Reset() {
 	this->OPort1_Initiated = false;
 	this->OPort1 = nullptr;
 	this->IPort1_Initiated = false;
 
-	ListItem * Connection = this->subscriptions->getFirst();
+	ListItemLogic * Connection = this->subscriptions->getFirst();
 	while (Connection != nullptr) {
 		Connection->data->transfered = false;
 		Connection = Connection->next;
@@ -614,7 +664,7 @@ void Combat::Reset() {
 	this->IPort3_Initiated = false;
 	this->IPort1_Initiated = false;
 
-	ListItem * Connection = this->subscriptions->getFirst();
+	ListItemLogic * Connection = this->subscriptions->getFirst();
 	while (Connection != nullptr) {
 		Connection->data->transfered = false;
 		Connection = Connection->next;
@@ -627,7 +677,7 @@ void ItemApply::Reset() {
 	this->IPort2_Initiated = false;
 	this->IPort1_Initiated = false;
 
-	ListItem * Connection = this->subscriptions->getFirst();
+	ListItemLogic * Connection = this->subscriptions->getFirst();
 	while (Connection != nullptr) {
 		Connection->data->transfered = false;
 		Connection = Connection->next;
@@ -639,7 +689,7 @@ void DiceThrow::Reset() {
 	this->OPort1 = nullptr;
 	this->IPort1_Initiated = false;
 
-	ListItem * Connection = this->subscriptions->getFirst();
+	ListItemLogic * Connection = this->subscriptions->getFirst();
 	while (Connection != nullptr) {
 		Connection->data->transfered = false;
 		Connection = Connection->next;
@@ -652,7 +702,7 @@ void ArenaSelect::Reset() {
 	this->IPort2_Initiated = false;
 	this->IPort1_Initiated = false;
 
-	ListItem * Connection = this->subscriptions->getFirst();
+	ListItemLogic * Connection = this->subscriptions->getFirst();
 	while (Connection != nullptr) {
 		Connection->data->transfered = false;
 		Connection = Connection->next;

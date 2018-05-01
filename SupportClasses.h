@@ -24,19 +24,19 @@ public:
 	void DistributeResult(void *);
 };
 
-struct ListItem {
+struct ListItemLogic {
 	Connect *data;
-	ListItem *next;
+	ListItemLogic *next;
 };
 
 class SubscribeList {
 public:
-	ListItem *first;
+	ListItemLogic *first;
 	int	listLenght;
 
 	SubscribeList() { this->first = nullptr;  this->listLenght = 0; }
 	int getLenght() { return this->listLenght; }
-	ListItem * getFirst() { return this->first; }
+	ListItemLogic * getFirst() { return this->first; }
 	void InsertItem(Connect *);
 
 
