@@ -58,21 +58,21 @@ public:
      * @param ID of block
      * @return pointer to God
      */
-    Gods* getGod(unsigned int ID);
+    void* getGod(unsigned int ID);
 
     /**
      * @brief get Arena from user
      * @param ID of block
      * @return pointer to Arena
      */
-    Arena* getArena(unsigned int ID);
+    void* getArena(unsigned int ID);
 
     /**
      * @brief get Item from user
      * @param ID of block
      * @return pointer to Accessories
      */
-    Accessories* getItem(unsigned int ID);
+    void* getItem(unsigned int ID);
 
 private:
     /**
@@ -191,6 +191,17 @@ private slots:
      * @brief changes placement of blocks in order to be in window
      */
     void doResized();
+
+    /**
+     * @brief resets evaluation
+     */
+    void resetIt();
+
+    /**
+     * @brief shows data in block, if mouse cursor is above connection
+     * @param connection between blocks
+     */
+  //  void showData(connection* conn);
 
 signals:
     void resized();

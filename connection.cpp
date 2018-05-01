@@ -5,6 +5,7 @@
  */
 
 #include "connection.h"
+#include <QObject>
 #include <QGraphicsLineItem>
 #include <QWidget>
 #include <QGraphicsItem>
@@ -12,12 +13,12 @@
 
 #include <iostream>
 
+
 connection::connection(QWidget* parent){
     num_of_clicks = 0;
     outBlock = NULL;
     inBlock = NULL;
-  //  this->setAcceptHoverEvents(true);
-
+    this->setAcceptHoverEvents(true);
 }
 
 void connection::setOutblock(MyLabel *block){
@@ -59,6 +60,11 @@ int connection::getNumOfClicks(){
 
 MyLabel *connection::getOutBlock(){
     return outBlock;
+}
+
+void connection::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
+    QString id = QString::number(this->getOutBlock()->getID());
+
 }
 
 
@@ -184,3 +190,4 @@ void blockConnect::deleteConn(unsigned int first_ID, unsigned int second_ID){
 int blockConnect::getListlenght(){
     return lenght;
 }
+

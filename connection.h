@@ -72,7 +72,9 @@ class connection : public QGraphicsLineItem{
      * @brief Number of clicks, if ==2, it will make a connection
      */
     int num_of_clicks;
-
+/*
+signals:
+    void showDat(connection*);*/
 
 public:
     /**
@@ -85,6 +87,7 @@ public:
      * @param block
      */
     void setOutblock(MyLabel* block);
+
     /**
      * @brief Sets in block
      * @param block
@@ -133,6 +136,13 @@ public:
      * @return in block
      */
     MyLabel* getInBlock(){return inBlock;}
+
+    /**
+     * @brief emits signal if mouse cursor is above connection
+     * @param event
+     */
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+
 };
 
 /**

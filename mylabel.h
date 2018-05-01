@@ -167,7 +167,7 @@ signals:
      * @param block
      */
     void mousePress(MyLabel* label);
-   // void mouseDoubleClick(MyLabel* label);
+
     /**
      * @brief delete a block
      * @param block

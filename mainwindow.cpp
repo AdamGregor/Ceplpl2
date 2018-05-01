@@ -11,6 +11,7 @@
 #include "Execute.h"
 
 #include <QPushButton>
+#include <QObject>
 #include <QWidget>
 #include <QLabel>
 #include <QPixmap>
@@ -74,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(save_as()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newScheme()));
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(quickSave()));
+    connect(ui->actionReset, SIGNAL(triggered()), this, SLOT(resetIt()));
 
 }
 
@@ -91,7 +93,6 @@ void MainWindow::addCombat(){
     connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    block->setStyleSheet("QLabel { background-color : red;}");
     Spawn_x +=10;
     Spawn_y +=10;
     QPixmap pixmap(":combat.gif");
@@ -99,7 +100,6 @@ void MainWindow::addCombat(){
     block->show();
     blocks->insert(block);
     block->setLogicblock(new Combat(block->getID()));
-
 }
 
 void MainWindow::addDice_throw(){
@@ -245,35 +245,182 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     emit resized();
 }
 
-Gods *MainWindow::getGod(unsigned int ID){
-    bool ok;
-    QString text = QInputDialog::getText(this, "Insert input", "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus...", &ok);
+void* MainWindow::getGod(unsigned int ID){
 
-    if(text.isEmpty())
-        return NULL;
+    Listblock* bloc = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        if(bloc->data->getID() == ID){
+            bloc->data->setStyleSheet("QLabel { background-color : blue;}");
+            break;
+        }
+        bloc = bloc->next;
+    }
+
+    bool ok;
+    QString zeus = "Zeus";
+    QString odin = "Odin";
+    QString athena = "Athena";
+    QString njord = "Njord";
+    QString poseidon = "Poseidon";
+    QString mimir = "Mimir";
+
+    QString god = QInputDialog::getText(this, "Insert input", "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus...", &ok);
+    bloc->data->setStyleSheet("QLabel { background-color : ;}");
+
+    if(!ok){
+        return nullptr;
+    }
+
+    if(god.isEmpty()){
+        return nullptr;
+    }
+    else if(QString::compare(god, zeus, Qt::CaseInsensitive) == 0){
+        Zeus* tmp = new Zeus;
+        return (void*)tmp;
+    }
+    else if(QString::compare(god, odin, Qt::CaseInsensitive) == 0){
+        Odin* tmp = new Odin;
+        return (void*)tmp;
+    }
+    else if(QString::compare(god, athena, Qt::CaseInsensitive) == 0){
+        Athena* tmp = new Athena;
+        return (void*)tmp;
+    }
+    else if(QString::compare(god, njord, Qt::CaseInsensitive) == 0){
+        Njord* tmp = new Njord;
+        return (void*)tmp;
+    }
+    else if(QString::compare(god, poseidon, Qt::CaseInsensitive) == 0){
+        Poseidon* tmp = new Poseidon;
+        return (void*)tmp;
+    }
+    else if(QString::compare(god, mimir, Qt::CaseInsensitive) == 0){
+        Mimir* tmp = new Mimir;
+        return (void*)tmp;
+    }
+    else{
+        return nullptr;
+    }
+
+    return nullptr;
 
 }
 
-Arena *MainWindow::getArena(unsigned int ID){
+void* MainWindow::getArena(unsigned int ID){
+    Listblock* bloc = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        if(bloc->data->getID() == ID){
+            bloc->data->setStyleSheet("QLabel { background-color : blue;}");
+            break;
+        }
+        bloc = bloc->next;
+    }
+
     bool ok;
-    QString text = QInputDialog::getText(this, "Insert input", "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
+    QString olymp = "Olymp";
+    QString aegean = "Aegean sea";
+    QString library = "Library of Alexandria";
+    QString asgard = "Asgardt";
+    QString norwegian = "Norwegian sea";
+    QString alfheim = "Alfheim";
+    QString valley = "Valley of the kings";
+    QString place = QInputDialog::getText(this, "Insert input", "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
                                          QLineEdit::Normal, "Olymp...", &ok);
+    bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
-    if(text.isEmpty())
-        return NULL;
+    if(place.isEmpty())
+        return nullptr;
 
-    return NULL;
+    if(place.isEmpty()){
+        return nullptr;
+    }
+    else if(QString::compare(place, olymp, Qt::CaseInsensitive) == 0){
+        Olymp* tmp = new Olymp;
+        return (void*)tmp;
+    }
+    else if(QString::compare(place, aegean, Qt::CaseInsensitive) == 0){
+        AegeanSea* tmp = new AegeanSea;
+        return (void*)tmp;
+    }
+    else if(QString::compare(place, library, Qt::CaseInsensitive) == 0){
+        LibraryOfAlexandria* tmp = new LibraryOfAlexandria;
+        return (void*)tmp;
+    }
+    else if(QString::compare(place, asgard, Qt::CaseInsensitive) == 0){
+        Asgartd* tmp = new Asgartd;
+        return (void*)tmp;
+    }
+    else if(QString::compare(place, norwegian, Qt::CaseInsensitive) == 0){
+        NorwegianSea* tmp = new NorwegianSea;
+        return (void*)tmp;
+    }
+    else if(QString::compare(place, alfheim, Qt::CaseInsensitive) == 0){
+        Alfheim* tmp = new Alfheim;
+        return (void*)tmp;
+    }
+    else if(QString::compare(place, valley, Qt::CaseInsensitive) == 0){
+        ValleyOfTheKings* tmp = new ValleyOfTheKings;
+        return (void*)tmp;
+    }
+
+    else{
+        return nullptr;
+    }
+
+    return nullptr;
 }
 
-Accessories *MainWindow::getItem(unsigned int ID){
-    bool ok;
-    QString text = QInputDialog::getText(this, "Insert input", "Enter item:\n-> Leviathan Axe\n-> Curse\n-> Scroll of wisdom\n-> Piety\n-> Impiety\n",
-                                         QLineEdit::Normal, "Curse...", &ok);
+void* MainWindow::getItem(unsigned int ID){
+    Listblock* bloc = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        if(bloc->data->getID() == ID){
+            bloc->data->setStyleSheet("QLabel { background-color : blue;}");
+            break;
+        }
+        bloc = bloc->next;
+    }
 
-    if(text.isEmpty())
+    bool ok;
+    QString axe = "Leviathan Axe";
+    QString curse = "Curse";
+    QString scroll = "Scroll of wisdom";
+    QString piety = "Piety";
+    QString impiety = "Impiety";
+    QString item = QInputDialog::getText(this, "Insert input", "Enter item:\n-> Leviathan Axe\n-> Curse\n-> Scroll of wisdom\n-> Piety\n-> Impiety\n",
+                                         QLineEdit::Normal, "Curse...", &ok);
+    bloc->data->setStyleSheet("QLabel { background-color : ;}");
+
+    if(!ok){
+        return nullptr;
+    }
+    if(item.isEmpty())
         return NULL;
 
-    return NULL;
+    else if(QString::compare(item, axe, Qt::CaseInsensitive) == 0){
+        LeviathanAxe* tmp = new LeviathanAxe;
+        return (void*)tmp;
+    }
+    else if(QString::compare(item, curse, Qt::CaseInsensitive) == 0){
+        Curse* tmp = new Curse;
+        return (void*)tmp;
+    }
+    else if(QString::compare(item, scroll, Qt::CaseInsensitive) == 0){
+        ScrollOfWisdom* tmp = new ScrollOfWisdom;
+        return (void*)tmp;
+    }
+    else if(QString::compare(item, piety, Qt::CaseInsensitive) == 0){
+        Piety* tmp = new Piety;
+        return (void*)tmp;
+    }
+    else if(QString::compare(item, impiety, Qt::CaseInsensitive) == 0){
+        Impiety* tmp = new Impiety;
+        return (void*)tmp;
+    }
+    else{
+        return nullptr;
+    }
+
+    return nullptr;
 }
 
 
@@ -320,6 +467,7 @@ void MainWindow::mousePress(MyLabel *block){
             in->insert(active_connection);
             out->insert(active_connection);
             listConn->insert(active_connection->getOutBlock()->getID(), active_connection->getInBlock()->getID());
+           // connect(active_connection, SIGNAL(showDat(connection*)), this, SLOT(showData(connection*)));
         }
     }
 
@@ -364,7 +512,7 @@ void MainWindow::deleteSlot(MyLabel *block){
 }
 
 void MainWindow::run(){
-
+    // volat adama na run
 
 }
 
@@ -372,6 +520,7 @@ void MainWindow::newScheme(){
     this->Spawn_x = 12;
     this->Spawn_y = 67;
     blocks_ID = 0;
+    filename = QString();
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
     active_connection = NULL;
@@ -595,6 +744,7 @@ void MainWindow::load(){
         listConn->insert(conn->getOutBlock()->getID(), conn->getInBlock()->getID());
         out_block->getOutList()->insert(conn);
         in_block->getInList()->insert(conn);
+       // connect(conn, SIGNAL(showDat(connection*)), this, SLOT(showData(connection*)));
     }
 
 
@@ -739,4 +889,34 @@ void MainWindow::doResized(){
         temp = temp->next;
     }
 }
+
+void MainWindow::resetIt(){
+    Program.Reset();
+}
+/*
+void MainWindow::showData(connection *conn){
+
+    QString id = QString::number(conn->getOutBlock()->getID());
+
+    conn->setToolTip(id);
+
+}*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -79,6 +79,7 @@
    <addaction name="actionRun"/>
    <addaction name="actionStep"/>
    <addaction name="actionDelete"/>
+   <addaction name="actionReset"/>
    <addaction name="actionHelp"/>
   </widget>
   <action name="actionNew">
@@ -165,6 +166,14 @@
    </property>
    <property name="toolTip">
     <string>Delete a block</string>
+   </property>
+  </action>
+  <action name="actionReset">
+   <property name="text">
+    <string>Reset</string>
+   </property>
+   <property name="toolTip">
+    <string>Reset evaluation</string>
    </property>
   </action>
  </widget>
