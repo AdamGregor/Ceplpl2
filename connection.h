@@ -40,8 +40,9 @@ struct blockConn{
  * @brief The connection class, inherits from QGraphicsLineItem
  */
 
-class connection : public QGraphicsLineItem{
+class connection : public QObject, public QGraphicsLineItem{
 
+    Q_OBJECT
     /**
      * @brief This blocks out port is connected
      */
@@ -72,16 +73,16 @@ class connection : public QGraphicsLineItem{
      * @brief Number of clicks, if ==2, it will make a connection
      */
     int num_of_clicks;
-/*
+
 signals:
-    void showDat(connection*);*/
+    void showDat(connection*);
 
 public:
     /**
      * @brief Construktor
      * @param parent
      */
-    connection(QWidget* parent = 0);
+    connection();
     /**
      * @brief Sets out block
      * @param block

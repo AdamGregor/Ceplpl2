@@ -10,14 +10,15 @@
 #include <QWidget>
 #include <QGraphicsItem>
 #include "mainwindow.h"
+#include <QDebug>
 
 #include <iostream>
 
 
-connection::connection(QWidget* parent){
+connection::connection(){
     num_of_clicks = 0;
-    outBlock = NULL;
-    inBlock = NULL;
+    outBlock = nullptr;
+    inBlock = nullptr;
     this->setAcceptHoverEvents(true);
 }
 
@@ -63,15 +64,36 @@ MyLabel *connection::getOutBlock(){
 }
 
 void connection::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
-    QString id = QString::number(this->getOutBlock()->getID());
+    unsigned int id = this->getOutBlock()->getID();
+    QString ID = QString::number(id);
+    blockType type;
+    type = this->getOutBlock()->getType();
+    QString blocktype = " ?";
+    if(type == DICE)
+        blocktype = "DICE";
+    else if(type == COMBAT)
+        blocktype = "COMBAT";
+    else if(type == ARENA)
+        blocktype = "ARENA";
+    else if(type == ITEM)
+        blocktype = "ITEM";
+    else if(type == REST)
+        blocktype = "REST";
+    int x, y;
+    this->getOutBlock()->getCoords(&x, &y);
+    QString posX = QString::number(x);
+    QString posY = QString::number(y);
 
+    this->setToolTip("Block ID: " + ID + "\n"
+                     "Block Type: " + blocktype + "\n"
+                     "Position: " + posX + ", " + posY + "\n");
 }
 
 
 //  CONNECTIONLIST
 connectionList::connectionList(){
     lenght = 0;
-    first = NULL;
+    first = nullptr;
 }
 
 void connectionList::insert(connection* item){
@@ -99,7 +121,7 @@ void connectionList::deleteConnection(unsigned int block_ID, bool out){
                 else{
                     old_next->next = tmp->next;
                     delete tmp->data;
-                    tmp->next = NULL;
+                    tmp->next = nullptr;
                     delete tmp;
                     lenght--;
                     return;
@@ -122,7 +144,7 @@ void connectionList::deleteConnection(unsigned int block_ID, bool out){
                 else{
                     old_next->next = tmp->next;
                     delete tmp->data;
-                    tmp->next = NULL;
+                    tmp->next = nullptr;
                     lenght--;
                     delete tmp;
                     return;
@@ -145,7 +167,7 @@ ListItem* connectionList::getFirst(){
 }
 
 blockConnect::blockConnect(){
-    this->first = NULL;
+    this->first = nullptr;
     this->lenght = 0;
 }
 

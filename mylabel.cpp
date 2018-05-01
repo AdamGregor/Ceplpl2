@@ -81,7 +81,7 @@ connectionList *MyLabel::getInList(){
 
 BlockList::BlockList(){
     lenght = 0;
-    first = NULL;
+    first = nullptr;
 }
 
 void BlockList::insert(MyLabel *block){

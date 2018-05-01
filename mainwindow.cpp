@@ -43,11 +43,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     MyWindow = this;
 
     scene = new QGraphicsScene;
+    this->setFixedSize(1700, 900);
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->graphicsView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->graphicsView->setEnabled(false);
+   // ui->graphicsView->setEnabled(false);
+
     QGraphicsLineItem* item = new QGraphicsLineItem;
     item->setLine(0,0,0.01,0.01);
     scene->addItem(item);
@@ -56,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pen->setWidth(4);
 
     blocks_ID = 0;
-    active_connection = NULL;
+    active_connection = nullptr;
     filename = QString();
     this->blocks = new BlockList;
     this->listConn = new blockConnect;
@@ -394,7 +396,7 @@ void* MainWindow::getItem(unsigned int ID){
         return nullptr;
     }
     if(item.isEmpty())
-        return NULL;
+        return nullptr;
 
     else if(QString::compare(item, axe, Qt::CaseInsensitive) == 0){
         LeviathanAxe* tmp = new LeviathanAxe;
@@ -443,10 +445,10 @@ void MainWindow::mousePress(MyLabel *block){
                 return;
 
             blockConn* tmp = listConn->getFirst();
-            if(tmp != NULL){
+            if(tmp != nullptr){
                 for(int i = 0; i < listConn->getListlenght(); i++){   // staci jedno stejne spojeni
                     if(active_connection->getOutBlock()->getID() == tmp->first_ID && block->getID() == tmp->second_ID){
-                        active_connection = NULL;
+                        active_connection = nullptr;
                         return;
                     }
                 }
@@ -482,7 +484,7 @@ void MainWindow::mousePress(MyLabel *block){
 
 void MainWindow::deleteSlot(MyLabel *block){
     if(ui->actionDelete->isChecked()){
-        active_connection = NULL;
+        active_connection = nullptr;
         connectionList* out_list = block->getOutList();
         connectionList* in_list = block->getInList();
         ListItem* item = out_list->getFirst();
@@ -523,7 +525,7 @@ void MainWindow::newScheme(){
     filename = QString();
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
-    active_connection = NULL;
+    active_connection = nullptr;
     for(int i = 0; i < lenght; i++){
         connectionList* out_list = tmp->data->getOutList();
         connectionList* in_list = tmp->data->getInList();
@@ -580,7 +582,7 @@ void MainWindow::load(){
     blocks_ID = 0;
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
-    active_connection = NULL;
+    active_connection = nullptr;
     for(int i = 0; i < lenght; i++){
         connectionList* out_list = tmp->data->getOutList();
         connectionList* in_list = tmp->data->getInList();
