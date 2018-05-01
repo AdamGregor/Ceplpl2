@@ -66,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionLoad, SIGNAL(triggered()), this, SLOT(load()));
     connect(ui->actionSave_as, SIGNAL(triggered()), this, SLOT(save_as()));
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newScheme()));
-    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(save_as()));
+    connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(quickSave()));
 
 }
 
@@ -250,6 +250,15 @@ void MainWindow::mousePress(MyLabel *block){
             if(block == active_connection->getOutBlock())       //nelze vytvorit spojeni na jednom bloku
                 return;
 
+            blockConn* tmp = listConn->getFirst();
+            if(tmp != NULL){
+                for(int i = 0; i < listConn->getListlenght(); i++){   // staci jedno stejne spojeni
+                    if(active_connection->getOutBlock()->getID() == tmp->first_ID && block->getID() == tmp->second_ID){
+                        active_connection = NULL;
+                        return;
+                    }
+                }
+            }
             active_connection->setInblock(block);
             connectionList* in = block->getInList();
             MyLabel* temp = active_connection->getOutBlock();
@@ -410,7 +419,8 @@ void MainWindow::load(){
     QTextStream read(&file);
     bool ok;
     int count = 0;
-    int ID, x, y;   //pro nove bloky
+    unsigned int ID;
+    int x, y;   //pro nove bloky
     blockType typ;
     QString combat = "COMBAT"; QString dice = "DICE"; QString item = "ITEM";
     QString arena = "ARENA"; QString rest = "REST";
@@ -504,8 +514,56 @@ void MainWindow::load(){
 
 void MainWindow::save_as(){
 
+    filename = QFileDialog::getSaveFileName(this, "Save File", "./untitled.az", "Scheme (*.az)");
+
     if(filename.isEmpty() == true){
-      filename = QFileDialog::getSaveFileName(this, "Save File", "./untitled.az", "Scheme (*.az)");
+        return;
+    }
+
+    QFile file(filename);
+    file.open( QIODevice::WriteOnly);
+    QTextStream stream(&file);
+    stream << blocks->getListLenght() << endl;
+    Listblock* block = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        stream << block->data->getID();
+        if(block->data->getType() == COMBAT){
+            stream << " COMBAT ";
+        }
+        else if(block->data->getType() == DICE){
+            stream << " DICE ";
+        }
+        else if (block->data->getType() == ITEM){
+            stream << " ITEM ";
+        }
+        else if (block->data->getType() == REST){
+            stream << " REST ";
+        }
+        else if (block->data->getType() == ARENA){
+            stream << " ARENA ";
+        }
+
+        int x,y;
+        block->data->getCoords(&x, &y);
+        stream << x << " " << y << endl;
+
+        block = block->next;
+    }
+
+    stream << listConn->getListlenght() << endl;
+    blockConn* item = listConn->getFirst();
+    for(int i = 0; i < listConn->getListlenght(); i++){
+        stream << item->first_ID << " " << item->second_ID << endl;
+        item = item->next;
+    }
+
+    file.close();
+}
+
+void MainWindow::quickSave(){
+
+    if(filename.isEmpty() == true){
+        filename = QFileDialog::getSaveFileName(this, "Save File", "./untitled.az", "Scheme (*.az)");
     }
 
     if(filename.isEmpty() == true){
@@ -552,36 +610,49 @@ void MainWindow::save_as(){
     file.close();
 }
 
+
 void MainWindow::doResized(){
     Listblock* tmp = blocks->getFirst();
-    connectionList* list;
     int x, y, g, h;
+    connectionList* list;
     for(int i = 0; i < blocks->getListLenght(); i++){
         tmp->data->getCoords(&x, &y);
         checkPlacement(&x, &y);
         tmp->data->setCoords(x, y);
         tmp->data->setGeometry(x, y, 100, 100);
-        list = tmp->data->getOutList();
-        ListItem* item = list->getFirst();
-        for(int j = 0; j < list->getListLenght(); j++){
-            item->data->setOutcoords(&x, &y);
-            item->data->getOutcoords(&x, &y);
-            item->data->getIncoords(&g, &h);
-            item->data->setLine(x, y, g, h);
-            item = item->next;
-        }
-
-        list = tmp->data->getInList();
-        item = list->getFirst();
-        for(int j = 0; j < list->getListLenght(); j++){
-            item->data->setIncoords(&x, &y);
-            item->data->getIncoords(&x, &y);
-            item->data->getOutcoords(&g, &h);
-            item->data->setLine(g, h, x, y);
-            item = item->next;
-        }
         tmp = tmp->next;
     }
+
+    blockConn* temp = listConn->getFirst();
+    for(int i = 0; i < listConn->getListlenght(); i++){
+        unsigned int id_out = temp->first_ID;
+        unsigned int id_in = temp->second_ID;
+        tmp = blocks->getFirst();
+        for(int j = 0; j < blocks->getListLenght(); j++){
+            if(id_out == tmp->data->getID()){
+                list = tmp->data->getOutList();
+                ListItem* docasne = list->getFirst();
+                for(int a = 0; a < list->getListLenght(); a++){
+                    if(docasne->data->getInBlock()->getID() == id_in){
+                        tmp->data->getCoords(&x, &y);
+                        docasne->data->getInBlock()->getCoords(&g, &h);
+                        docasne->data->setIncoords(&g, &h);
+                        docasne->data->setOutcoords(&x, &y);
+                        docasne->data->getIncoords(&g, &h);
+                        docasne->data->getOutcoords(&x, &y);
+                        docasne->data->setLine(x, y, g, h);
+                    }
+                    docasne = docasne->next;
+                }
+            }
+
+            tmp = tmp->next;
+        }
+
+        temp = temp->next;
+    }
+
+
 }
 
 

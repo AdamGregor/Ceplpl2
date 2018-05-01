@@ -92,6 +92,7 @@ private:
      */
     QString filename;
 
+
 private slots:
     /**
      * @brief prints hHelp
@@ -152,6 +153,11 @@ private slots:
      * @brief save a scheme under given name
      */
     void save_as();
+
+    /**
+     * @brief quick save
+     */
+    void quickSave();
 
     /**
      * @brief changes placement of blocks in order to be in window

@@ -31,8 +31,8 @@ struct ListItem{
  * @brief Structure for list of IDs of blocks, that are connectet
  */
 struct blockConn{
-    int first_ID;
-    int second_ID;
+    unsigned int first_ID;
+    unsigned int second_ID;
     blockConn* next;
 };
 
