@@ -21,7 +21,7 @@ class connectionList;
 class MyLabel;
 
 /**
- * @brief types of blocks
+ * @brief typy bloků
  */
 enum blockType {COMBAT, ITEM, DICE, REST, ARENA};
 

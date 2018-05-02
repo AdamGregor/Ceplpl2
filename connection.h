@@ -203,7 +203,7 @@ public:
 
 
 /**
- * @brief Třída blockConnect, ukládá ID dvojice ID bloků, které jsoú spojeny
+ * @brief Třída blockConnect, ukládá ID dvojice ID bloků, které jsou spojeny
  */
 class blockConnect{
     /**

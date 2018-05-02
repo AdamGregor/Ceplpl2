@@ -29,6 +29,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QTimer>
 
 #include <iostream>
 #include <fstream>
@@ -294,7 +295,7 @@ void MainWindow::checkPlacement(int* x, int* y){
     return;
 }
 
-void MainWindow::resizeEvent(){
+void MainWindow::resizeEvent(QEvent* event){
     emit resized();
 }
 
@@ -316,8 +317,9 @@ void* MainWindow::getGod(unsigned int ID){
     QString njord = "Njord";
     QString poseidon = "Poseidon";
     QString mimir = "Mimir";
+    QString id = QString::number(ID);
 
-    QString god = QInputDialog::getText(this, "Insert input", "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus", &ok);
+    QString god = QInputDialog::getText(this, "Block ID: " + id, "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus", &ok);
     bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(!ok){
@@ -377,7 +379,8 @@ void* MainWindow::getArena(unsigned int ID){
     QString norwegian = "Norwegian sea";
     QString alfheim = "Alfheim";
     QString valley = "Valley of the kings";
-    QString place = QInputDialog::getText(this, "Insert input", "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
+    QString id = QString::number(ID);
+    QString place = QInputDialog::getText(this, "Block ID: " + id, "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
                                          QLineEdit::Normal, "Olymp", &ok);
     bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
@@ -439,8 +442,10 @@ void* MainWindow::getItem(unsigned int ID){
     QString scroll = "Scroll of wisdom";
     QString piety = "Piety";
     QString impiety = "Impiety";
-    QString item = QInputDialog::getText(this, "Insert input", "Enter item:\n-> Leviathan Axe\n-> Curse\n-> Scroll of wisdom\n-> Piety\n-> Impiety\n",
-                                         QLineEdit::Normal, "Curse...", &ok);
+    QString id = QString::number(ID);
+
+    QString item = QInputDialog::getText(this, "Block ID: " + id, "Enter item:\n-> Leviathan Axe\n-> Curse\n-> Scroll of wisdom\n-> Piety\n-> Impiety\n",
+                                         QLineEdit::Normal, "Curse", &ok);
     bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(!ok){
@@ -489,8 +494,6 @@ void MainWindow::highlightBlock(unsigned int ID){
 }
 
 void MainWindow::unhighlightBlock(unsigned int ID){
-    //QThread::sleep(1);
-
     Listblock* block = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
         if(block->data->getID() == ID)
