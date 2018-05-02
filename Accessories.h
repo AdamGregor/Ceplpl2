@@ -1,6 +1,7 @@
 #ifndef ACCESSORIES_H
 #define ACCESSORIES_H
-
+#include <string>
+using namespace std;
 #define ITEM_COUNT 5
 
 //IMPLEMENTACE DATOVEHO TYPU ACCESSORIES
@@ -9,11 +10,11 @@
 class Accessories {
 protected:
 	double	Effect;
-	char*	Name;
+    string	Name;
 
 public:
 	double	getEffect() { return Effect; }
-	char*	getName() { return Name; }
+    string	getName() { return Name; }
 };
 
 //Predmey

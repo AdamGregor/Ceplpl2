@@ -4,6 +4,8 @@
 #include "Arenas.h"
 #include "Accessories.h"
 #include "Blocks.h"
+#include <string>
+using namespace std;
 
 class Block;
 struct PortStuff {
@@ -13,7 +15,7 @@ struct PortStuff {
 
 class Connect {
 public:
-	char *Data_type;
+    string Data_type;
 	bool transfered;
 	PortStuff *reaction;
 

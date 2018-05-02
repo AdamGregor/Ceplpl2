@@ -17,6 +17,8 @@
 #include "Accessories.h"
 #include "SupportClasses.h"
 #include <typeinfo>
+#include <string>
+using namespace std;
 
 /// Hlavicky jednotlivych bloku
 /*!
@@ -31,8 +33,8 @@ public:
 
 	Block() { this->subscriptions = new SubscribeList; }
 	virtual void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); this->OPort1_Connected = true; }
-	virtual char* getOut() = 0;
-	virtual PortStuff *tryConnect(char*) = 0;
+    virtual string getOut() = 0;
+    virtual PortStuff *tryConnect(string) = 0;
 	virtual void eval() = 0;
 	virtual bool askReady() = 0;
 	virtual void Reset() = 0;
@@ -50,8 +52,8 @@ public:
 
 	Rest(unsigned int);
 	void eval();
-	PortStuff *tryConnect(char*);
-	char* getOut() {return "Gods"; }
+    PortStuff *tryConnect(string);
+    string getOut() {return "Gods"; }
 	bool askReady();
 	void Reset();
 };
@@ -77,8 +79,8 @@ public:
 
 	Combat(unsigned int);
 	void eval();
-	PortStuff *tryConnect(char*);
-	char* getOut() { return "Gods"; }
+    PortStuff *tryConnect(string);
+    string getOut() { return "Gods"; }
 	bool askReady();
 	void Reset();
 	
@@ -102,8 +104,8 @@ public:
 
 	ItemApply(unsigned int);
 	void eval();
-	PortStuff *tryConnect(char*);
-	char* getOut() { return "Gods"; }
+    PortStuff *tryConnect(string);
+    string getOut() { return "Gods"; }
 	bool askReady();
 	void Reset();
 };
@@ -121,8 +123,8 @@ public:
 
 	DiceThrow(unsigned int);
 	void eval();
-	PortStuff *tryConnect(char*);
-	char* getOut() { return "Gods"; }
+    PortStuff *tryConnect(string);
+    string getOut() { return "Gods"; }
 	bool askReady();
 	void Reset();
 };
@@ -144,8 +146,8 @@ public:
 
 	ArenaSelect(unsigned int);
 	void eval();
-	PortStuff *tryConnect(char*);
-	char* getOut() { return "Arena"; }
+    PortStuff *tryConnect(string);
+    string getOut() { return "Arena"; }
 	bool askReady();
 	void Reset();
 };

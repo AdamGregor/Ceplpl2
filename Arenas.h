@@ -1,17 +1,18 @@
 #ifndef ARENAS_H
 #define ARENAS_H
-
+#include <string>
+using namespace std;
 //IMPLEMENTACE DATOVEHO TYPU ARENAS
 
 //Base class Arena, dedi z ni konkretni areny
 class Arena {
 protected:
 	double	Effect;
-	char*	Name;
+    string	Name;
 
 public:
 	double	getEffect() { return Effect; }
-	char*	getName() { return Name; }
+    string	getName() { return Name; }
 };
 
 //Areny

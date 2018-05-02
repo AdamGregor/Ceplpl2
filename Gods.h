@@ -1,6 +1,7 @@
 #ifndef GODS_H
 #define GODS_H
-
+#include <string>
+using namespace std;
 
 //IMPLEMENTACE DATOVEHO TYPU GODS
 
@@ -8,13 +9,13 @@
 class Gods {
 protected:
 	double	Strenght;
-    char*	Name;
+    string	Name;
 
 
 public:
 	double			getStrenght() { return Strenght; }
 	virtual double  getOriginalStrenght() = 0;
-	char*			getName() { return Name; }
+    string			getName() { return Name; }
 	Gods*			setStrenght(double newStrenght) { Strenght = newStrenght; return this; }
 	Gods* 			addStrenght(double change) { Strenght += change; return this; }
 };

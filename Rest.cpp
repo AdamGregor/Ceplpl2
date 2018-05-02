@@ -5,9 +5,10 @@
 #include "mainwindow.h"
 #include <iostream>
 #include <typeinfo>
-
+#include <string>
 #define HIGHEST_EFFECT 1.0
 #define LOWEST_EFFECT -0.5
+using namespace  std;
 
 //globalni promenna, jedinacek
 extern Execute Program;
@@ -144,7 +145,7 @@ bool ArenaSelect::askReady() {
 		return false;
 }
 
-PortStuff * Rest::tryConnect(char* typ) {
+PortStuff * Rest::tryConnect(string typ) {
 	std::cout << typ << IPort1_Connected; 
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
@@ -160,7 +161,7 @@ PortStuff * Rest::tryConnect(char* typ) {
 		return ret;
 }
 
-PortStuff *DiceThrow::tryConnect(char* typ) {
+PortStuff *DiceThrow::tryConnect(string typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
@@ -174,7 +175,7 @@ PortStuff *DiceThrow::tryConnect(char* typ) {
 		return ret;
 }
 
-PortStuff *Combat::tryConnect(char* typ) {
+PortStuff *Combat::tryConnect(string typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
@@ -199,7 +200,7 @@ PortStuff *Combat::tryConnect(char* typ) {
 		return ret;
 }
 
-PortStuff *ItemApply::tryConnect(char* typ) {
+PortStuff *ItemApply::tryConnect(string typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
@@ -213,7 +214,7 @@ PortStuff *ItemApply::tryConnect(char* typ) {
 	return ret;
 }
 
-PortStuff* ArenaSelect::tryConnect(char* typ) {
+PortStuff* ArenaSelect::tryConnect(string typ) {
 	PortStuff *ret = new PortStuff;
 	if (typ == "Gods" && IPort1_Connected == false) {
 		this->IPort1_Connected = true;
@@ -256,7 +257,7 @@ void Rest::eval() {
 
 //Select areny na zaklade bohu
 void ArenaSelect::eval() {
-	char *name;
+    string name;
 	//vypocteni, ci arena se pouzije
 	int random = rand() % 2;
 	
@@ -315,11 +316,11 @@ void Combat::eval() {
 	Arena *Bojiste = (Arena*) this->IPort2;
 
 	double effect = Bojiste->getEffect();
-	char *arena = Bojiste->getName();
-	char *God1 = Buh1->getName();
+    string arena = Bojiste->getName();
+    string God1 = Buh1->getName();
 	double God1_S = Buh1->getStrenght();
 
-	char *God2 = Buh2->getName();
+    string God2 = Buh2->getName();
 	double God2_S = Buh2->getStrenght();
 
 	//pokud je 1. buh recky a arena take, prida mu cast sily
