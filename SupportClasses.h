@@ -22,7 +22,7 @@ public:
     Block* in;
     Block* out;
 
-    Connect(Block *blok, Block *blok2);
+    Connect(Block *blok, Block *blok2, bool* ok);
     void DistributeResult(void *);
 };
 

@@ -507,7 +507,7 @@ void SubscribeList::InsertItem(Connect *data) {
 }
 
 
-Connect::Connect(Block* Blok1, Block *Blok2) {
+Connect::Connect(Block* Blok1, Block *Blok2, bool* ok) {
     this->transfered = false;
 
     this->Data_type = Blok1->getOut();
@@ -519,11 +519,11 @@ Connect::Connect(Block* Blok1, Block *Blok2) {
         std::cout << "je to fajn \n";
         this->in = Blok1;
         this->out = Blok2;
+        *ok = true;
     }
     else {
-        std::cout << "ses posral, ne? ";
+        *ok = false;
     }
-        //nejaka chyba
 
 }
 

@@ -9,6 +9,7 @@
 #include "mylabel.h"
 #include "connection.h"
 #include "Execute.h"
+#include "SupportClasses.h"
 
 #include <QPushButton>
 #include <QDesktopWidget>
@@ -501,9 +502,22 @@ void MainWindow::mousePress(MyLabel *block){
                     }
                 }
             }
+            MyLabel* temp = active_connection->getOutBlock();
+
+            bool ok;
+            Connect* novespojeni = new Connect(temp->getLogicblock(), block->getLogicblock(), &ok);
+            if(ok)
+                temp->setLogicconnect(novespojeni);
+            else{
+                delete novespojeni;
+                delete active_connection;
+                active_connection = nullptr;
+                return;
+            }
+
             active_connection->setInblock(block);
             connectionList* in = block->getInList();
-            MyLabel* temp = active_connection->getOutBlock();
+
             connectionList* out = temp->getOutList();
             int g,h;
             active_connection->getOutcoords(&g,&h);
@@ -517,7 +531,7 @@ void MainWindow::mousePress(MyLabel *block){
             in->insert(active_connection);
             out->insert(active_connection);
             listConn->insert(active_connection->getOutBlock()->getID(), active_connection->getInBlock()->getID());
-           // connect(active_connection, SIGNAL(showDat(connection*)), this, SLOT(showData(connection*)));
+
         }
     }
 
