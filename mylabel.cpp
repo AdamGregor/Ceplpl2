@@ -16,6 +16,7 @@ MyLabel::MyLabel(QWidget *parent) : QLabel(parent){
     in_List = new connectionList;
     out_List = new connectionList;
     IDlabel = nullptr;
+    logicConnect = nullptr;
 }
 
 void MyLabel::setID(unsigned int ID){
@@ -54,6 +55,10 @@ Block *MyLabel::getLogicblock(){
 
 void MyLabel::setLogicblock(Block* logicBl){
     this->logicBlock = logicBl;
+}
+
+void MyLabel::setLogicconnect(Connect *conn){
+    this->logicConnect = conn;
 }
 
 void MyLabel::setCoords(int x, int y){
