@@ -74,6 +74,31 @@ public:
      */
     void* getItem(unsigned int ID);
 
+    /**
+     * @brief zvyrazneni bloku s danym ID
+     * @param ID
+     */
+    void highlightBlock(unsigned int ID);
+
+    /**
+     * @brief zrusi zvyrazneni bloku
+     * @param ID
+     */
+    void unhighlightBlock(unsigned int ID);
+
+    /**
+     * @brief vypise vysledek schematu
+     * @param typ bloku (0 = buh, 1 = arena, 2 = vec)
+     * @param ID bloku
+     * @param data
+     */
+    void printResult(int typ, unsigned int ID, void* data);
+
+    /**
+     * @brief vypise hlasku o cyklech v schematu
+     */
+    void printCycle();
+
 private:
     /**
      * @brief X coordinate of spawn point
@@ -166,6 +191,11 @@ private slots:
      * @brief run
      */
     void run();
+
+    /**
+     * @brief provede krok vypctu
+     */
+    void stepIt();
 
     /**
      * @brief deletes all and makes a new scheme

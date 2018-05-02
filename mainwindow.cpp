@@ -12,6 +12,7 @@
 #include "SupportClasses.h"
 
 #include <QPushButton>
+#include <QThread>
 #include <QDesktopWidget>
 #include <QObject>
 #include <QWidget>
@@ -31,7 +32,7 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <string>
 
 Execute Program;
 MainWindow* MyWindow;
@@ -80,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->actionNew, SIGNAL(triggered()), this, SLOT(newScheme()));
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(quickSave()));
     connect(ui->actionReset, SIGNAL(triggered()), this, SLOT(resetIt()));
+    connect(ui->actionStep, SIGNAL(triggered()), this, SLOT(stepIt()));
 
 }
 
@@ -315,7 +317,7 @@ void* MainWindow::getGod(unsigned int ID){
     QString poseidon = "Poseidon";
     QString mimir = "Mimir";
 
-    QString god = QInputDialog::getText(this, "Insert input", "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus...", &ok);
+    QString god = QInputDialog::getText(this, "Insert input", "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus", &ok);
     bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(!ok){
@@ -376,7 +378,7 @@ void* MainWindow::getArena(unsigned int ID){
     QString alfheim = "Alfheim";
     QString valley = "Valley of the kings";
     QString place = QInputDialog::getText(this, "Insert input", "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
-                                         QLineEdit::Normal, "Olymp...", &ok);
+                                         QLineEdit::Normal, "Olymp", &ok);
     bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(place.isEmpty())
@@ -474,6 +476,79 @@ void* MainWindow::getItem(unsigned int ID){
     return nullptr;
 }
 
+void MainWindow::highlightBlock(unsigned int ID){
+    Listblock* block = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        if(block->data->getID() == ID)
+            break;
+        block = block->next;
+    }
+
+    block->data->setStyleSheet("QLabel { background-color : blue;}");
+    return;
+}
+
+void MainWindow::unhighlightBlock(unsigned int ID){
+    //QThread::sleep(1);
+
+    Listblock* block = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        if(block->data->getID() == ID)
+            break;
+        block = block->next;
+    }
+
+    block->data->setStyleSheet("QLabel { background-color : ;}");
+    return;
+}
+
+void MainWindow::printResult(int typ, unsigned int ID, void *data){
+    QMessageBox msg;
+
+    if(typ == 0){
+        Gods* buh = (Gods*)data;
+        std::string name = buh->getName();
+        double strenght = buh->getStrenght();
+        QString tmpname = QString::fromStdString(name);
+        QString tmpstrenght = QString::number(strenght);
+        QString id = QString::number(ID);
+
+        msg.setText("Result of block with ID: " + id +" is God:\nName: " + tmpname + "\nStrenght: " + tmpstrenght + "\n");
+        msg.exec();
+    }
+    else if(typ == 1){
+        Arena* aren = (Arena*)data;
+        std::string name = aren->getName();
+        double strenght = aren->getEffect();
+        QString tmpname = QString::fromStdString(name);
+        QString tmpstrenght = QString::number(strenght);
+        QString id = QString::number(ID);
+
+        msg.setText("Result of block with ID: " + id +" is Arena:\nName: " + tmpname + "\nEffect: " + tmpstrenght + "\n");
+        msg.exec();
+    }
+    else{
+        Accessories* buh = (Accessories*)data;
+        std::string name = buh->getName();
+        double strenght = buh->getEffect();
+        QString tmpname = QString::fromStdString(name);
+        QString tmpstrenght = QString::number(strenght);
+        QString id = QString::number(ID);
+
+        msg.setText("Result of block with ID: " + id +" is Item:\nName: " + tmpname + "\nEffect: " + tmpstrenght + "\n");
+        msg.exec();
+    }
+
+    return;
+
+}
+
+void MainWindow::printCycle(){
+    QMessageBox msg;
+    msg.setText("ERROR: Cycles detected! Remove some of your blocks.\n");
+    msg.exec();
+
+}
 
 
 void MainWindow::mousePress(MyLabel *block){
@@ -534,7 +609,6 @@ void MainWindow::mousePress(MyLabel *block){
             in->insert(active_connection);
             out->insert(active_connection);
             listConn->insert(active_connection->getOutBlock()->getID(), active_connection->getInBlock()->getID());
-
         }
     }
 
@@ -580,8 +654,11 @@ void MainWindow::deleteSlot(MyLabel *block){
 }
 
 void MainWindow::run(){
-    // volat adama na run
+    Program.Run();
+}
 
+void MainWindow::stepIt(){
+    Program.Step();
 }
 
 void MainWindow::newScheme(){

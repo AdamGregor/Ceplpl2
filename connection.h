@@ -147,7 +147,13 @@ public:
      * @brief Událost, kdy je myš nad spojem, nastaví tooltip spoje
      * @param událost
      */
-    void hoverEnterEvent();
+    void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
+
+    /**
+     * @brief Udalost, kdy mys opousti spoj
+     * @param udalost
+     */
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
 };
 

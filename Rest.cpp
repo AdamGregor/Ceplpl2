@@ -246,8 +246,8 @@ void Rest::eval() {
     Gods * tmp = (Gods *)IPort1;
 
     //ZVYRAZNENI
-    MyWindow.highlightBloc(this->ID_bloku);
-    MyWindow.unhighlightBloc(this->ID_bloku);
+    MyWindow->highlightBlock(this->ID_bloku);
+    MyWindow->unhighlightBlock(this->ID_bloku);
 
 
     //PROVEDENI VYPOCTU
@@ -283,8 +283,8 @@ void ArenaSelect::eval() {
     Gods * tmp2 = (Gods *)IPort2;
 
     //ZVYRAZNENI
-    MyWindow.highlightBloc(this->ID_bloku);
-    MyWindow.unhighlightBloc(this->ID_bloku);
+    MyWindow->highlightBlock(this->ID_bloku);
+    MyWindow->unhighlightBlock(this->ID_bloku);
 
     //nastaveni areny podle vylosovaneho boha
     if (random == 0)
@@ -335,8 +335,8 @@ void Combat::eval() {
     Arena *Bojiste = (Arena*) this->IPort2;
 
     //ZVYRAZNENI
-    MyWindow.highlightBloc(this->ID_bloku);
-    MyWindow.unhighlightBloc(this->ID_bloku);
+    MyWindow->highlightBlock(this->ID_bloku);
+    MyWindow->unhighlightBlock(this->ID_bloku);
 
     double effect = Bojiste->getEffect();
     string arena = Bojiste->getName();
@@ -442,8 +442,8 @@ void ItemApply::eval() {
     Accessories * vec = (Accessories*) this->IPort2;
 
     //ZVYRAZNENI
-    MyWindow.highlightBloc(this->ID_bloku);
-    MyWindow.unhighlightBloc(this->ID_bloku);
+    MyWindow->highlightBlock(this->ID_bloku);
+    MyWindow->unhighlightBlock(this->ID_bloku);
 
     double effect = vec->getEffect();
     effect *= (double)((rand() % 155) - 25) / 100.0;
@@ -478,8 +478,8 @@ void DiceThrow::eval() {
     strenght *= 0.9;
 
     //ZVYRAZNENI
-    MyWindow.highlightBloc(this->ID_bloku);
-    MyWindow.unhighlightBloc(this->ID_bloku);
+    MyWindow->highlightBlock(this->ID_bloku);
+    MyWindow->unhighlightBlock(this->ID_bloku);
 
     //vybere se nahodny predmet a ten se na nej aplikuje
     int random = rand();
@@ -620,8 +620,8 @@ void Execute::Run() {
         else {
             NotReadyInRow += 1;
             if (NotReadyInRow == this->Block_count) {
-                std::cout << "Nach nach";
                 Completed = true;
+                MyWindow->printCycle();
                 return;
             }
             data = data->next;
@@ -662,7 +662,7 @@ void Execute::Step() {
             NotReadyInRow += 1;
             std::cout<<" " << NotReadyInRow<<" "<< this->Block_count<<"\n";
             if (NotReadyInRow == this->Block_count) {
-                std::cout << "Nach nach\n";
+                MyWindow->printCycle();
                 Completed = true;
                 return;
             }

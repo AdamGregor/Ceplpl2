@@ -63,7 +63,7 @@ MyLabel *connection::getOutBlock(){
     return outBlock;
 }
 
-void connection::hoverEnterEvent(){
+void connection::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
     unsigned int id = this->getOutBlock()->getID();
     QString ID = QString::number(id);
     blockType type;
@@ -86,7 +86,18 @@ void connection::hoverEnterEvent(){
 
     this->setToolTip("Block ID: " + ID + "\n"
                      "Block Type: " + blocktype + "\n"
-                     "Position: " + posX + ", " + posY + "\n");
+                                                  "Position: " + posX + ", " + posY + "\n");
+    QPen pen;
+    pen.setWidth(4);
+    pen.setColor(Qt::red);
+    this->setPen(pen);
+}
+
+void connection::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
+    QPen pen;
+    pen.setWidth(4);
+    pen.setColor(Qt::black);
+    this->setPen(pen);
 }
 
 
