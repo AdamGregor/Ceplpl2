@@ -512,6 +512,9 @@ void MainWindow::mousePress(MyLabel *block){
                 delete novespojeni;
                 delete active_connection;
                 active_connection = nullptr;
+                QMessageBox msg;
+                msg.setText("This connection can not be made.\nEither full input ports of second block or incompatible I/O types.\n");
+                msg.exec();
                 return;
             }
 
