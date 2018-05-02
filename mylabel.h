@@ -9,6 +9,7 @@
 
 #include "connection.h"
 #include "Blocks.h"
+#include "SupportClasses.h"
 
 #include <QObject>
 #include <QWidget>
@@ -82,6 +83,8 @@ private:
      * @brief actuall block
      */
     Block* logicBlock;
+
+    Connect* logicConnect;
 
 
 public:
@@ -171,6 +174,12 @@ public:
      * @brief set Logic block
      */
     void setLogicblock(Block* logicBl);
+
+    /**
+     * @brief nastavi logicke spojeni
+     * @param conn
+     */
+    void setLogicconnect(Connect* conn);
 
 
 signals:
