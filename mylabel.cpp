@@ -15,6 +15,7 @@ MyLabel::MyLabel(QWidget *parent) : QLabel(parent){
     this->setMouseTracking(true);
     in_List = new connectionList;
     out_List = new connectionList;
+    IDlabel = nullptr;
 }
 
 void MyLabel::setID(unsigned int ID){
@@ -72,6 +73,14 @@ connectionList *MyLabel::getOutList(){
 
 connectionList *MyLabel::getInList(){
     return in_List;
+}
+
+void MyLabel::setIDlabel(MyLabel *label){
+    this->IDlabel = label;
+}
+
+MyLabel *MyLabel::getIDlabel(){
+    return IDlabel;
 }
 
 

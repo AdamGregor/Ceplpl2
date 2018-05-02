@@ -197,12 +197,6 @@ private slots:
      */
     void resetIt();
 
-    /**
-     * @brief shows data in block, if mouse cursor is above connection
-     * @param connection between blocks
-     */
-  //  void showData(connection* conn);
-
 signals:
     void resized();
 

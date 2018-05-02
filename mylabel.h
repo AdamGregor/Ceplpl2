@@ -49,6 +49,11 @@ private:
     unsigned int block_ID;
 
     /**
+     * @brief Label, ktery ukazuje ID bloku
+     */
+    MyLabel* IDlabel;
+
+    /**
      * @brief type of block
      */
     blockType type;
@@ -131,6 +136,18 @@ public:
      * @return connectionList*
      */
     connectionList* getInList();
+
+    /**
+     * @brief nastavi ID label
+     * @param label
+     */
+    void setIDlabel(MyLabel* label);
+
+    /**
+     * @brief vraci ID label
+     * @return
+     */
+    MyLabel* getIDlabel();
 
 public:
     /**

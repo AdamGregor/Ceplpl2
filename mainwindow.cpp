@@ -11,6 +11,7 @@
 #include "Execute.h"
 
 #include <QPushButton>
+#include <QDesktopWidget>
 #include <QObject>
 #include <QWidget>
 #include <QLabel>
@@ -43,7 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     MyWindow = this;
 
     scene = new QGraphicsScene;
-    this->setFixedSize(1700, 900);
+    QRect tmp = QApplication::desktop()->screenGeometry();
+    this->setFixedSize(tmp.width() *0.9, tmp.height()*0.9);
     ui->graphicsView->setAlignment(Qt::AlignTop|Qt::AlignLeft);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -57,7 +59,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pen = new QPen;
     pen->setWidth(4);
 
-    blocks_ID = 0;
+    blocks_ID = 1;
     active_connection = nullptr;
     filename = QString();
     this->blocks = new BlockList;
@@ -88,96 +90,141 @@ MainWindow::~MainWindow(){
 void MainWindow::addCombat(){
     MyLabel* block = new MyLabel(this);
     block->setID(blocks_ID);
-    blocks_ID++;
     block->setType(COMBAT);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    Spawn_x +=10;
-    Spawn_y +=10;
     QPixmap pixmap(":combat.gif");
     block->setPixmap(pixmap);
+
+    MyLabel* tmp = new MyLabel(this);
+    block->setIDlabel(tmp);
+    tmp->setGeometry(Spawn_x, Spawn_y +5, 35, 15);
+    QString id = QString::number(blocks_ID);
+    tmp->setText(id);
+    tmp->setAlignment(Qt::AlignCenter);
+    tmp->show();
+
     block->show();
     blocks->insert(block);
+
     block->setLogicblock(new Combat(block->getID()));
+
+    Spawn_x +=10;
+    Spawn_y +=10;
+    blocks_ID++;
 }
 
 void MainWindow::addDice_throw(){
     MyLabel* block = new MyLabel(this);
     block->setID(blocks_ID);
-    blocks_ID++;
     block->setType(DICE);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    Spawn_x +=10;
-    Spawn_y +=10;
+
     QPixmap pixmap(":dice.png");
     block->setPixmap(pixmap);
+
+    MyLabel* tmp = new MyLabel(this);
+    block->setIDlabel(tmp);
+    tmp->setGeometry(Spawn_x, Spawn_y +5, 35, 15);
+    QString id = QString::number(blocks_ID);
+    tmp->setText(id);
+    tmp->setAlignment(Qt::AlignCenter);
+    tmp->show();
+
     block->show();
     blocks->insert(block);
     block->setLogicblock(new DiceThrow(block->getID()));
+    Spawn_x +=10;
+    Spawn_y +=10;
+    blocks_ID++;
 }
 
 void MainWindow::addItem_apply(){
     MyLabel* block = new MyLabel(this);
     block->setID(blocks_ID);
-    blocks_ID++;
     block->setType(ITEM);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    Spawn_x +=10;
-    Spawn_y +=10;
+
     QPixmap pixmap(":itemSelect.gif");
     block->setPixmap(pixmap);
+    MyLabel* tmp = new MyLabel(this);
+    block->setIDlabel(tmp);
+    tmp->setGeometry(Spawn_x, Spawn_y +5, 35, 15);
+    QString id = QString::number(blocks_ID);
+    tmp->setText(id);
+    tmp->setAlignment(Qt::AlignCenter);
+    tmp->show();
     block->show();
     blocks->insert(block);
     block->setLogicblock(new ItemApply(block->getID()));
+    Spawn_x +=10;
+    Spawn_y +=10;
+    blocks_ID++;
 }
 
 void MainWindow::addArena_select(){
     MyLabel* block = new MyLabel(this);
     block->setID(blocks_ID);
-    blocks_ID++;
     block->setType(ARENA);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    Spawn_x +=10;
-    Spawn_y +=10;
+
     QPixmap pixmap(":arenaSelect.gif");
     block->setPixmap(pixmap);
+    MyLabel* tmp = new MyLabel(this);
+    block->setIDlabel(tmp);
+    tmp->setGeometry(Spawn_x, Spawn_y +5, 35, 15);
+    QString id = QString::number(blocks_ID);
+    tmp->setText(id);
+    tmp->setAlignment(Qt::AlignCenter);
+    tmp->show();
     block->show();
     blocks->insert(block);
     block->setLogicblock(new ArenaSelect(block->getID()));
+    Spawn_x +=10;
+    Spawn_y +=10;
+    blocks_ID++;
 }
 
 void MainWindow::addRest(){
     MyLabel* block = new MyLabel(this);
     block->setID(blocks_ID);
-    blocks_ID++;
     block->setType(REST);
     connect(block , SIGNAL(mouseRelease(MyLabel*)), this, SLOT(mouseRelease(MyLabel*)));
     connect(block, SIGNAL(mousePress(MyLabel*)), this, SLOT(mousePress(MyLabel*)));
     connect(block, SIGNAL(deleteSig(MyLabel*)), this, SLOT(deleteSlot(MyLabel*)));
     block->setGeometry(Spawn_x,Spawn_y,100,100);
     block->setCoords(Spawn_x, Spawn_y);
-    Spawn_x +=10;
-    Spawn_y +=10;
+
     QPixmap pixmap(":rest.gif");
     block->setPixmap(pixmap);
+    MyLabel* tmp = new MyLabel(this);
+    block->setIDlabel(tmp);
+    tmp->setGeometry(Spawn_x, Spawn_y +5, 35, 15);
+    QString id = QString::number(blocks_ID);
+    tmp->setText(id);
+    tmp->setAlignment(Qt::AlignCenter);
+    tmp->show();
     block->show();
     blocks->insert(block);
     block->setLogicblock(new Rest(block->getID()));
+    Spawn_x +=10;
+    Spawn_y +=10;
+    blocks_ID++;
 }
 
 
@@ -194,6 +241,8 @@ void MainWindow::mouseRelease(MyLabel* block){
     checkPlacement(&x, &y);
     block->setCoords(x, y);
     block->setGeometry(x,y,100,100);
+    MyLabel* tmp = block->getIDlabel();
+    tmp->setGeometry(x, y+5, 35, 15);
 
     connectionList* out = block->getOutList();
     connectionList* in = block->getInList();
@@ -489,6 +538,7 @@ void MainWindow::deleteSlot(MyLabel *block){
         connectionList* in_list = block->getInList();
         ListItem* item = out_list->getFirst();
         MyLabel* other_block;
+        delete block->getIDlabel();
 
         for(int i = 0; i < out_list->getListLenght(); i++){
             other_block = item->data->getInBlock();
@@ -526,6 +576,7 @@ void MainWindow::newScheme(){
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
     active_connection = nullptr;
+
     for(int i = 0; i < lenght; i++){
         connectionList* out_list = tmp->data->getOutList();
         connectionList* in_list = tmp->data->getInList();
@@ -546,7 +597,7 @@ void MainWindow::newScheme(){
             listConn->deleteConn(other_block->getID(), tmp->data->getID());
             item = item->next;
         }
-
+        delete tmp->data->getIDlabel();
         blocks->deleteBlock(tmp->data->getID());
         tmp = tmp->next;
     }
@@ -691,6 +742,14 @@ void MainWindow::load(){
             QPixmap pixmap(":rest.gif");
             newblock->setPixmap(pixmap);
         }
+
+        MyLabel* docasne = new MyLabel(this);
+        QString idcko = QString::number(ID);
+        newblock->setIDlabel(docasne);
+        docasne->setGeometry(x, y +5, 35, 15);
+        docasne->setText(idcko);
+        docasne->setAlignment(Qt::AlignCenter);
+        docasne->show();
 
         blocks->insert(newblock);
         newblock->show();
@@ -852,7 +911,7 @@ void MainWindow::quickSave(){
 }
 
 
-void MainWindow::doResized(){
+void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju v budoucnu
     Listblock* tmp = blocks->getFirst();
     int x, y, g, h;
     connectionList* list;
@@ -895,14 +954,7 @@ void MainWindow::doResized(){
 void MainWindow::resetIt(){
     Program.Reset();
 }
-/*
-void MainWindow::showData(connection *conn){
 
-    QString id = QString::number(conn->getOutBlock()->getID());
-
-    conn->setToolTip(id);
-
-}*/
 
 
 
