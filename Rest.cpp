@@ -260,7 +260,7 @@ void Rest::eval() {
    else{
     ListItemLogic *subscribes = this->subscriptions->getFirst();
     while (subscribes != nullptr) {
-        subscribes->data->DistributeResult((void*) this->OPort1);
+        subscribes->data->DistributeResult((void*) this->OPort1, this->OPort1->getStrenght(), this->OPort1->getName());
         subscribes = subscribes->next;
     }
    }
@@ -312,7 +312,7 @@ void ArenaSelect::eval() {
     else{
         ListItemLogic *subscribes = this->subscriptions->getFirst();
         while (subscribes != nullptr) {
-        subscribes->data->DistributeResult((void*) this->OPort1);
+        subscribes->data->DistributeResult((void*) this->OPort1, this->OPort1->getEffect(), this->OPort1->getName());
         subscribes = subscribes->next;
         }
     }
@@ -424,7 +424,7 @@ void Combat::eval() {
     else{
         ListItemLogic *subscribes = this->subscriptions->getFirst();
         while (subscribes != nullptr) {
-            subscribes->data->DistributeResult((void*) this->OPort1);
+            subscribes->data->DistributeResult((void*) this->OPort1, this->OPort1->getStrenght(), this->OPort1->getName());
             subscribes = subscribes->next;
         }
     }
@@ -460,7 +460,7 @@ void ItemApply::eval() {
     else{
         ListItemLogic *subscribes = this->subscriptions->getFirst();
         while (subscribes != nullptr) {
-            subscribes->data->DistributeResult((void*) this->OPort1);
+            subscribes->data->DistributeResult((void*) this->OPort1, this->OPort1->getStrenght(), this->OPort1->getName());
             subscribes = subscribes->next;
         }
     }
@@ -531,7 +531,7 @@ void DiceThrow::eval() {
     else{
         ListItemLogic *subscribes = this->subscriptions->getFirst();
         while (subscribes != nullptr) {
-            subscribes->data->DistributeResult((void*) this->OPort1);
+            subscribes->data->DistributeResult((void*) this->OPort1, this->OPort1->getStrenght(), this->OPort1->getName());
             subscribes = subscribes->next;
         }
     }
@@ -549,14 +549,14 @@ void SubscribeList::InsertItem(Connect *data) {
 
 Connect::Connect(Block* Blok1, Block *Blok2, bool* ok) {
     this->transfered = false;
+    this->value = -1;
+    this->name = "None";
 
     this->Data_type = Blok1->getOut();
-    std::cout << this->Data_type << "\n";
     this->reaction = Blok2->tryConnect(this->Data_type);
     if (reaction->init != nullptr) {
         Blok1->setSubscribe(this);
         Blok1->OPort1_Connected = true;
-        std::cout << "je to fajn \n";
         this->in = Blok1;
         this->out = Blok2;
         *ok = true;
@@ -568,9 +568,11 @@ Connect::Connect(Block* Blok1, Block *Blok2, bool* ok) {
 }
 
 
-void Connect::DistributeResult(void* value){
+void Connect::DistributeResult(void* value,double power, string name){
     transfered = true;
-    std::cout<<"\n zdeeeee "<<value << "\n";
+    this->value=power;
+    this->name = name;
+
     *(reaction->init) = true;
     if (this->in->getOut() == "Gods") {
         Gods **tmp = (Gods**)reaction->value;
@@ -689,65 +691,102 @@ void Execute::Reset() {
 
 
 void Rest::Reset() {
+    this->IPort1_Initiated = false;
+    if(IPort1_Connected == false)
+        delete (Gods*) IPort1;
+    IPort1 = nullptr;
+
     this->OPort1_Initiated = false;
     this->OPort1 = nullptr;
-    this->IPort1_Initiated = false;
 
     ListItemLogic * Connection = this->subscriptions->getFirst();
     while (Connection != nullptr) {
-        Connection->data->transfered = false;
+        Connection->data->Reset();
         Connection = Connection->next;
     }
 }
 
 void Combat::Reset() {
+
+    this->IPort1_Initiated = false;
+    if(IPort1_Connected == false)
+        delete (Gods*) IPort1;
+    IPort1 = nullptr;
+
+    this->IPort2_Initiated = false;
+    if(IPort2_Connected == false)
+        delete (Arena*) IPort2;
+    IPort2 = nullptr;
+
+    this->IPort3_Initiated = false;
+    if(IPort3_Connected == false)
+        delete (Gods*) IPort3;
+    IPort3 = nullptr;
+
     this->OPort1_Initiated = false;
     this->OPort1 = nullptr;
-    this->IPort2_Initiated = false;
-    this->IPort3_Initiated = false;
-    this->IPort1_Initiated = false;
 
     ListItemLogic * Connection = this->subscriptions->getFirst();
     while (Connection != nullptr) {
-        Connection->data->transfered = false;
+        Connection->data->Reset();
         Connection = Connection->next;
     }
 }
 
 void ItemApply::Reset() {
+    this->IPort1_Initiated = false;
+    if(IPort1_Connected == false)
+        delete (Gods*) IPort1;
+    IPort1 = nullptr;
+
+    this->IPort2_Initiated = false;
+    if(IPort2_Connected == false)
+        delete (Accessories*) IPort2;
+    IPort2 = nullptr;
+
     this->OPort1_Initiated = false;
     this->OPort1 = nullptr;
-    this->IPort2_Initiated = false;
-    this->IPort1_Initiated = false;
 
     ListItemLogic * Connection = this->subscriptions->getFirst();
     while (Connection != nullptr) {
-        Connection->data->transfered = false;
+        Connection->data->Reset();
         Connection = Connection->next;
     }
 }
 
 void DiceThrow::Reset() {
+    this->IPort1_Initiated = false;
+    if(IPort1_Connected == false)
+        delete (Gods*) IPort1;
+    IPort1 = nullptr;
+
     this->OPort1_Initiated = false;
     this->OPort1 = nullptr;
-    this->IPort1_Initiated = false;
 
     ListItemLogic * Connection = this->subscriptions->getFirst();
     while (Connection != nullptr) {
-        Connection->data->transfered = false;
+        Connection->data->Reset();
         Connection = Connection->next;
     }
 }
 
 void ArenaSelect::Reset() {
+    this->IPort1_Initiated = false;
+    if(IPort1_Connected == false)
+        delete (Gods*) IPort1;
+    IPort1 = nullptr;
+
+    this->IPort2_Initiated = false;
+    if(IPort2_Connected == false)
+        delete (Gods*) IPort2;
+    IPort2 = nullptr;
+
     this->OPort1_Initiated = false;
     this->OPort1 = nullptr;
-    this->IPort2_Initiated = false;
-    this->IPort1_Initiated = false;
 
     ListItemLogic * Connection = this->subscriptions->getFirst();
     while (Connection != nullptr) {
-        Connection->data->transfered = false;
+        Connection->data->Reset();
         Connection = Connection->next;
     }
 }

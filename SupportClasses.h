@@ -18,12 +18,15 @@ public:
     string Data_type;
     bool transfered;
     PortStuff *reaction;
+    double value;
+    string name;
 
     Block* in;
     Block* out;
 
     Connect(Block *blok, Block *blok2, bool* ok);
-    void DistributeResult(void *);
+    void DistributeResult(void *,double, string);
+    void Reset(){transfered = false; value = -1; name = "None";}
 };
 
 struct ListItemLogic {
