@@ -1,12 +1,12 @@
 /*!
-	*\author	Adam Gregor
-	*\mainpage	Blokový editor 2018	
-	*\section	Úvod
-	* Tento kód vznikl v rámci projektu do pøedmìtu ICP
-	*\section	Kompilace
-	*Program se kompiluje klasicky, pøíkazem 'make'
-	\subsection Make
-	* Napište make
+    *\author	Adam Gregor
+    *\mainpage	Blokov? editor 2018
+    *\section	?vod
+    * Tento kód vznikl v r?mci projektu do p¸edm?tu ICP
+    *\section	Kompilace
+    *Program se kompiluje klasicky, p¸?kazem 'make'
+    \subsection Make
+    * Napiðte make
 */
 
 
@@ -22,136 +22,136 @@ using namespace std;
 
 /// Hlavicky jednotlivych bloku
 /*!
-	*\brief Base class všech blokových tøíd. Obsahuje deklarace metod, jež jsou dìdìny všemi tøídami blokù.
-*/ 
+    *\brief Base class vðech blokov?ch t¸?d. Obsahuje deklarace metod, jeþ jsou d?d?ny vðemi t¸?dami blok?.
+*/
 class Block {
 public:
-	SubscribeList *subscriptions;
-	bool OPort1_Connected;
-	bool OPort1_Initiated;
-	unsigned int ID_bloku;
+    SubscribeList *subscriptions;
+    bool OPort1_Connected;
+    bool OPort1_Initiated;
+    unsigned int ID_bloku;
 
-	Block() { this->subscriptions = new SubscribeList; }
-	virtual void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); this->OPort1_Connected = true; }
+    Block() { this->subscriptions = new SubscribeList; }
+    virtual void setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); this->OPort1_Connected = true; }
     virtual string getOut() = 0;
     virtual PortStuff *tryConnect(string) = 0;
-	virtual void eval() = 0;
-	virtual bool askReady() = 0;
-	virtual void Reset() = 0;
+    virtual void eval() = 0;
+    virtual bool askReady() = 0;
+    virtual void Reset() = 0;
 };
 
 class Rest : public Block {
 public:
-	//I/O Porty
-	void *IPort1;	//BUH
-	bool IPort1_Connected;
-	bool IPort1_Initiated;
-	
+    //I/O Porty
+    void *IPort1;	//BUH
+    bool IPort1_Connected;
+    bool IPort1_Initiated;
+
     Gods *OPort1;
 
 
-	Rest(unsigned int);
-	void eval();
+    Rest(unsigned int);
+    void eval();
     PortStuff *tryConnect(string);
     string getOut() {return "Gods"; }
-	bool askReady();
-	void Reset();
+    bool askReady();
+    void Reset();
 };
 
 class Combat : public Block {
 public:
-	//I/O Porty
-	void *IPort1; //BUH
-	bool IPort1_Connected;
-	bool IPort1_Initiated;
-	
-	void *IPort2; //ARENA
-	bool IPort2_Connected;
-	bool IPort2_Initiated;
-	
-	void *IPort3; //BUH
-	bool IPort3_Connected;
-	bool IPort3_Initiated;
+    //I/O Porty
+    void *IPort1; //BUH
+    bool IPort1_Connected;
+    bool IPort1_Initiated;
 
-	Gods *OPort1;
+    void *IPort2; //ARENA
+    bool IPort2_Connected;
+    bool IPort2_Initiated;
 
-	//metody
+    void *IPort3; //BUH
+    bool IPort3_Connected;
+    bool IPort3_Initiated;
 
-	Combat(unsigned int);
-	void eval();
+    Gods *OPort1;
+
+    //metody
+
+    Combat(unsigned int);
+    void eval();
     PortStuff *tryConnect(string);
     string getOut() { return "Gods"; }
-	bool askReady();
-	void Reset();
-	
+    bool askReady();
+    void Reset();
+
 };
 
 
 class ItemApply : public Block {
 public:
-	//I/O Porty
-	void *IPort1;	//BUH
-	bool IPort1_Connected;
-	bool IPort1_Initiated;
-	
-	void *IPort2;	//PREDMET
-	bool IPort2_Connected;
-	bool IPort2_Initiated;
+    //I/O Porty
+    void *IPort1;	//BUH
+    bool IPort1_Connected;
+    bool IPort1_Initiated;
 
-	Gods *OPort1;
+    void *IPort2;	//PREDMET
+    bool IPort2_Connected;
+    bool IPort2_Initiated;
 
-	//metody
+    Gods *OPort1;
 
-	ItemApply(unsigned int);
-	void eval();
+    //metody
+
+    ItemApply(unsigned int);
+    void eval();
     PortStuff *tryConnect(string);
     string getOut() { return "Gods"; }
-	bool askReady();
-	void Reset();
+    bool askReady();
+    void Reset();
 };
 
 class DiceThrow : public Block {
 public:
-	//I/O Porty
-	void*IPort1; //BUH
-	bool IPort1_Connected;
-	bool IPort1_Initiated;
+    //I/O Porty
+    void*IPort1; //BUH
+    bool IPort1_Connected;
+    bool IPort1_Initiated;
 
-	Gods *OPort1;
+    Gods *OPort1;
 
-	//metody
+    //metody
 
-	DiceThrow(unsigned int);
-	void eval();
+    DiceThrow(unsigned int);
+    void eval();
     PortStuff *tryConnect(string);
     string getOut() { return "Gods"; }
-	bool askReady();
-	void Reset();
+    bool askReady();
+    void Reset();
 };
 
 class ArenaSelect : public Block {
 public:
-	//I/O Porty
-	void *IPort1;	//BUH
-	bool IPort1_Connected;
-	bool IPort1_Initiated;
+    //I/O Porty
+    void *IPort1;	//BUH
+    bool IPort1_Connected;
+    bool IPort1_Initiated;
 
-	void *IPort2;
-	bool IPort2_Connected;
-	bool IPort2_Initiated;
+    void *IPort2;
+    bool IPort2_Connected;
+    bool IPort2_Initiated;
 
-	Arena *OPort1; //BUH
+    Arena *OPort1; //BUH
 
-	//metody
+    //metody
 
-	ArenaSelect(unsigned int);
-	void eval();
+    ArenaSelect(unsigned int);
+    void eval();
     PortStuff *tryConnect(string);
     string getOut() { return "Arena"; }
-	bool askReady();
-	void Reset();
+    bool askReady();
+    void Reset();
 };
 
 
 
-#endif 
+#endif

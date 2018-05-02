@@ -63,7 +63,7 @@ MyLabel *connection::getOutBlock(){
     return outBlock;
 }
 
-void connection::hoverEnterEvent(QGraphicsSceneHoverEvent *event){
+void connection::hoverEnterEvent(){
     unsigned int id = this->getOutBlock()->getID();
     QString ID = QString::number(id);
     blockType type;

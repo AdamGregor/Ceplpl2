@@ -36,7 +36,6 @@ Execute Program;
 MainWindow* MyWindow;
 
 
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow){
 
     ui->setupUi(this);
@@ -292,7 +291,7 @@ void MainWindow::checkPlacement(int* x, int* y){
     return;
 }
 
-void MainWindow::resizeEvent(QResizeEvent *event){
+void MainWindow::resizeEvent(){
     emit resized();
 }
 
@@ -954,23 +953,4 @@ void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju 
 void MainWindow::resetIt(){
     Program.Reset();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -51,7 +51,7 @@ public:
      * @brief emits signal if window is resized
      * @param event
      */
-    void resizeEvent(QResizeEvent* event);
+    void resizeEvent();
 
     /**
      * @brief get God from user
@@ -156,7 +156,7 @@ private slots:
      * @param block
      */
     void mousePress(MyLabel* block);
-   // void mouseDoubleClick(MyLabel* block);
+
     /**
      * @brief delete block or connection
      * @param block

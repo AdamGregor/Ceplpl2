@@ -9,11 +9,11 @@ using namespace std;
 //Base class Accessories, dedi z ni konkretni predmety, kteri bohove mohou pouzivat
 class Accessories {
 protected:
-	double	Effect;
+    double	Effect;
     string	Name;
 
 public:
-	double	getEffect() { return Effect; }
+    double	getEffect() { return Effect; }
     string	getName() { return Name; }
 };
 
@@ -21,42 +21,42 @@ public:
 
 class LeviathanAxe : public Accessories {
 public:
-	LeviathanAxe() {
-		Effect = 7.0;
-		Name = "Leviathan Axe";
-	}
+    LeviathanAxe() {
+        Effect = 7.0;
+        Name = "Leviathan Axe";
+    }
 };
 
 class Curse : public Accessories {
 public:
-	Curse() {
-		Effect = -10.0;
-		Name = "Curse";
-	}
+    Curse() {
+        Effect = -10.0;
+        Name = "Curse";
+    }
 };
 
 class ScrollOfWisdom : public Accessories {
 public:
-	ScrollOfWisdom() {
-		Effect = 4.0;
-		Name = "Scroll Of Wisdom";
-	}
+    ScrollOfWisdom() {
+        Effect = 4.0;
+        Name = "Scroll Of Wisdom";
+    }
 };
 
 class Piety : public Accessories {
 public:
-	Piety() {
-		Effect = 3.0;
-		Name = "Piety";
-	}
+    Piety() {
+        Effect = 3.0;
+        Name = "Piety";
+    }
 };
 
 class Impiety : public Accessories {
 public:
-	Impiety() {
-		Effect = -3.0;
-		Name = "Impiety";
-	}
+    Impiety() {
+        Effect = -3.0;
+        Name = "Impiety";
+    }
 };
 
 

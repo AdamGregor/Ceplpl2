@@ -147,7 +147,7 @@ public:
      * @brief Událost, kdy je myš nad spojem, nastaví tooltip spoje
      * @param událost
      */
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverEnterEvent();
 
 };
 
