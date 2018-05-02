@@ -245,14 +245,25 @@ void Rest::eval() {
     }
     Gods * tmp = (Gods *)IPort1;
 
+    //ZVYRAZNENI
+    MyWindow.highlightBloc(this->ID_bloku);
+    MyWindow.unhighlightBloc(this->ID_bloku);
+
+
+    //PROVEDENI VYPOCTU
     this->OPort1 = tmp->setStrenght(tmp->getOriginalStrenght());
     OPort1_Initiated = true;
+
     //distribuce vysledku
+   if(this->OPort1_Connected == 0)
+       MyWindow->printResult(0,this->ID_bloku, (void *) this->OPort1);
+   else{
     ListItemLogic *subscribes = this->subscriptions->getFirst();
     while (subscribes != nullptr) {
         subscribes->data->DistributeResult((void*) this->OPort1);
         subscribes = subscribes->next;
     }
+   }
 }
 
 //Select areny na zaklade bohu
@@ -270,6 +281,11 @@ void ArenaSelect::eval() {
         IPort2 = MyWindow->getGod(ID_bloku);
     }
     Gods * tmp2 = (Gods *)IPort2;
+
+    //ZVYRAZNENI
+    MyWindow.highlightBloc(this->ID_bloku);
+    MyWindow.unhighlightBloc(this->ID_bloku);
+
     //nastaveni areny podle vylosovaneho boha
     if (random == 0)
         name = tmp1->getName();
@@ -291,12 +307,15 @@ void ArenaSelect::eval() {
 
     OPort1_Initiated = true;
     //distribuce vysledku
-    ListItemLogic *subscribes = this->subscriptions->getFirst();
-    while (subscribes != nullptr) {
+    if(this->OPort1_Connected == 0)
+        MyWindow->printResult(1,this->ID_bloku, (void *) this->OPort1);
+    else{
+        ListItemLogic *subscribes = this->subscriptions->getFirst();
+        while (subscribes != nullptr) {
         subscribes->data->DistributeResult((void*) this->OPort1);
         subscribes = subscribes->next;
+        }
     }
-
 }
 
 void Combat::eval() {
@@ -314,6 +333,10 @@ void Combat::eval() {
         IPort2 = MyWindow->getArena(ID_bloku);
     }
     Arena *Bojiste = (Arena*) this->IPort2;
+
+    //ZVYRAZNENI
+    MyWindow.highlightBloc(this->ID_bloku);
+    MyWindow.unhighlightBloc(this->ID_bloku);
 
     double effect = Bojiste->getEffect();
     string arena = Bojiste->getName();
@@ -396,10 +419,14 @@ void Combat::eval() {
     }
     OPort1_Initiated = true;
     //distribuce vysledku
-    ListItemLogic *subscribes = this->subscriptions->getFirst();
-    while (subscribes != nullptr) {
-        subscribes->data->DistributeResult((void*) this->OPort1);
-        subscribes = subscribes->next;
+    if(this->OPort1_Connected == 0)
+        MyWindow->printResult(0,this->ID_bloku, (void *) this->OPort1);
+    else{
+        ListItemLogic *subscribes = this->subscriptions->getFirst();
+        while (subscribes != nullptr) {
+            subscribes->data->DistributeResult((void*) this->OPort1);
+            subscribes = subscribes->next;
+        }
     }
 }
 
@@ -414,6 +441,9 @@ void ItemApply::eval() {
     }
     Accessories * vec = (Accessories*) this->IPort2;
 
+    //ZVYRAZNENI
+    MyWindow.highlightBloc(this->ID_bloku);
+    MyWindow.unhighlightBloc(this->ID_bloku);
 
     double effect = vec->getEffect();
     effect *= (double)((rand() % 155) - 25) / 100.0;
@@ -425,12 +455,15 @@ void ItemApply::eval() {
     this->OPort1 = buh;
     OPort1_Initiated = true;
     //distribuce vysledku
-    ListItemLogic *subscribes = this->subscriptions->getFirst();
-    while (subscribes != nullptr) {
-        subscribes->data->DistributeResult((void*) this->OPort1);
-        subscribes = subscribes->next;
+    if(this->OPort1_Connected == 0)
+        MyWindow->printResult(0,this->ID_bloku, (void *) this->OPort1);
+    else{
+        ListItemLogic *subscribes = this->subscriptions->getFirst();
+        while (subscribes != nullptr) {
+            subscribes->data->DistributeResult((void*) this->OPort1);
+            subscribes = subscribes->next;
+        }
     }
-
 }
 
 //Bohovi bude sebrano 10% zdravi a za to dostane nahodny predmet
@@ -444,6 +477,9 @@ void DiceThrow::eval() {
     double strenght = Buh->getStrenght();
     strenght *= 0.9;
 
+    //ZVYRAZNENI
+    MyWindow.highlightBloc(this->ID_bloku);
+    MyWindow.unhighlightBloc(this->ID_bloku);
 
     //vybere se nahodny predmet a ten se na nej aplikuje
     int random = rand();
@@ -490,10 +526,14 @@ void DiceThrow::eval() {
     OPort1_Initiated = true;
 
     //distribuce vysledku
-    ListItemLogic *subscribes = this->subscriptions->getFirst();
-    while (subscribes != nullptr) {
-        subscribes->data->DistributeResult((void*) this->OPort1);
-        subscribes = subscribes->next;
+    if(this->OPort1_Connected == 0)
+        MyWindow->printResult(0,this->ID_bloku, (void *) this->OPort1);
+    else{
+        ListItemLogic *subscribes = this->subscriptions->getFirst();
+        while (subscribes != nullptr) {
+            subscribes->data->DistributeResult((void*) this->OPort1);
+            subscribes = subscribes->next;
+        }
     }
 }
 
