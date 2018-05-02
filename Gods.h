@@ -13,6 +13,7 @@ protected:
 
 
 public:
+    virtual         ~Gods(){delete &Strenght; delete &Name;}
     double			getStrenght() { return Strenght; }
     virtual double  getOriginalStrenght() = 0;
     string			getName() { return Name; }
@@ -23,15 +24,16 @@ public:
 //Bohove Olympu
 class Zeus : public Gods {
 public:
+    ~Zeus(){;}
     Zeus() {
         Name = "Zeus";
         Strenght = 100.0;
     }
-
     double getOriginalStrenght() { return 100.0; }
 };
 class Poseidon : public Gods {
 public:
+    ~Poseidon(){;}
     Poseidon() {
         Name = "Poseidon";
         Strenght = 94.0;
@@ -41,6 +43,7 @@ public:
 };
 class Athena : public Gods {
 public:
+    ~Athena(){;}
     Athena() {
         Name = "Athena";
         Strenght = 89.0;
@@ -53,6 +56,7 @@ public:
 //Bohove Asgardu
 class Odin : public Gods {
 public:
+    ~Odin(){;}
     Odin() {
         Name = "Odin";
         Strenght = 103.0;
@@ -62,6 +66,7 @@ public:
 };
 class Njord : public Gods {
 public:
+    ~Njord(){;}
     Njord() {
         Name = "Njord";
         Strenght = 92.0;
@@ -71,6 +76,7 @@ public:
 };
 class Mimir : public Gods {
 public:
+    ~Mimir(){;}
     Mimir() {
         Name = "Mimir";
         Strenght = 88.0;

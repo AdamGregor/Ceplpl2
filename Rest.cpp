@@ -30,6 +30,7 @@ Rest::Rest(unsigned int ID) {
     IPort1 = nullptr;
     IPort1_Connected = false;
     IPort1_Initiated = false;
+    IPort1_Connection= nullptr;
     OPort1 = nullptr;
     OPort1_Connected = false;
     OPort1_Initiated = false;
@@ -43,6 +44,7 @@ DiceThrow::DiceThrow(unsigned int ID) {
     IPort1 = nullptr;
     IPort1_Connected = false;
     IPort1_Initiated = false;
+    IPort1_Connection= nullptr;
     OPort1 = nullptr;
     OPort1_Connected = false;
     OPort1_Initiated = false;
@@ -56,14 +58,17 @@ Combat::Combat(unsigned int ID) {
     IPort1 = nullptr;
     IPort1_Connected = false;
     IPort1_Initiated = false;
+    IPort1_Connection= nullptr;
 
     IPort2 = nullptr;
     IPort2_Connected = false;
     IPort2_Initiated = false;
+    IPort2_Connection= nullptr;
 
     IPort3 = nullptr;
     IPort3_Connected = false;
     IPort3_Initiated = false;
+    IPort3_Connection= nullptr;
 
     OPort1 = nullptr;
     OPort1_Connected = false;
@@ -78,12 +83,12 @@ ItemApply::ItemApply(unsigned int ID) {
     IPort1 = nullptr;
     IPort1_Connected = false;
     IPort1_Initiated = false;
+    IPort1_Connection= nullptr;
+
     IPort2 = nullptr;
     IPort2_Connected = false;
     IPort2_Initiated = false;
-    OPort1 = nullptr;
-    OPort1_Connected = false;
-    OPort1_Initiated = false;
+    IPort2_Connection= nullptr;
 
     Program.AddBlock(this);
 }
@@ -94,9 +99,13 @@ ArenaSelect::ArenaSelect(unsigned int ID) {
     IPort1 = nullptr;
     IPort1_Connected = false;
     IPort1_Initiated = false;
+    IPort1_Connection= nullptr;
+
     IPort2 = nullptr;
     IPort2_Connected = false;
     IPort2_Initiated = false;
+    IPort2_Connection= nullptr;
+
     OPort1 = nullptr;
     OPort1_Connected = false;
     OPort1_Initiated = false;
@@ -145,13 +154,14 @@ bool ArenaSelect::askReady() {
         return false;
 }
 
-PortStuff * Rest::tryConnect(string typ) {
+PortStuff * Rest::tryConnect(string typ, Connect* spojeni) {
     std::cout << typ << IPort1_Connected;
     PortStuff *ret = new PortStuff;
     if (typ == "Gods" && IPort1_Connected == false) {
         this->IPort1_Connected = true;
+        this->IPort1_Connection= spojeni;
+
         ret->value = &(this->IPort1);
-        //std::cout << "taaadddyyy " << ret->value <<" " << &(void*)(this->IPort1) <<"\n";
         ret->init = &(this->IPort1_Initiated);
         return ret;
     }
@@ -161,10 +171,12 @@ PortStuff * Rest::tryConnect(string typ) {
         return ret;
 }
 
-PortStuff *DiceThrow::tryConnect(string typ) {
+PortStuff *DiceThrow::tryConnect(string typ, Connect* spojeni) {
     PortStuff *ret = new PortStuff;
     if (typ == "Gods" && IPort1_Connected == false) {
         this->IPort1_Connected = true;
+        this->IPort1_Connection= spojeni;
+
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
         return ret;
@@ -175,21 +187,28 @@ PortStuff *DiceThrow::tryConnect(string typ) {
         return ret;
 }
 
-PortStuff *Combat::tryConnect(string typ) {
+PortStuff *Combat::tryConnect(string typ, Connect* spojeni) {
     PortStuff *ret = new PortStuff;
     if (typ == "Gods" && IPort1_Connected == false) {
         this->IPort1_Connected = true;
+        this->IPort1_Connection= spojeni;
+
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
         return ret;
     }
     else if (typ == "Gods" && IPort3_Connected == false) {
         this->IPort3_Connected = true;
+        this->IPort3_Connection= spojeni;
+
         ret->value = &(this->IPort3);
         ret->init = &(this->IPort3_Initiated);
         return ret;
     }
     else if (typ == "Arena" && IPort2_Connected == false) {
+        this->IPort2_Connected = true;
+        this->IPort2_Connection= spojeni;
+
         ret->value = &(this->IPort2);
         ret->init = &(this->IPort2_Initiated);
         return ret;
@@ -200,10 +219,12 @@ PortStuff *Combat::tryConnect(string typ) {
         return ret;
 }
 
-PortStuff *ItemApply::tryConnect(string typ) {
+PortStuff *ItemApply::tryConnect(string typ, Connect* spojeni) {
     PortStuff *ret = new PortStuff;
     if (typ == "Gods" && IPort1_Connected == false) {
         this->IPort1_Connected = true;
+        this->IPort1_Connection= spojeni;
+
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
         return ret;
@@ -214,16 +235,20 @@ PortStuff *ItemApply::tryConnect(string typ) {
     return ret;
 }
 
-PortStuff* ArenaSelect::tryConnect(string typ) {
+PortStuff* ArenaSelect::tryConnect(string typ, Connect* spojeni) {
     PortStuff *ret = new PortStuff;
     if (typ == "Gods" && IPort1_Connected == false) {
         this->IPort1_Connected = true;
+        this->IPort1_Connection= spojeni;
+
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
         return ret;
     }
     else if (typ == "Gods" && IPort2_Connected == false) {
         this->IPort2_Connected = true;
+        this->IPort2_Connection= spojeni;
+
         ret->value = &(this->IPort2);
         ret->init = &(this->IPort2_Initiated);
         return ret;
@@ -553,10 +578,9 @@ Connect::Connect(Block* Blok1, Block *Blok2, bool* ok) {
     this->name = "None";
 
     this->Data_type = Blok1->getOut();
-    this->reaction = Blok2->tryConnect(this->Data_type);
+    this->reaction = Blok2->tryConnect(this->Data_type,this);
     if (reaction->init != nullptr) {
         Blok1->setSubscribe(this);
-        Blok1->OPort1_Connected = true;
         this->in = Blok1;
         this->out = Blok2;
         *ok = true;

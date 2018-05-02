@@ -11,6 +11,7 @@ protected:
     string	Name;
 
 public:
+    virtual ~Arena(){delete &Effect; delete &Name;}
     double	getEffect() { return Effect; }
     string	getName() { return Name; }
 };
@@ -20,6 +21,7 @@ public:
 //Areny reckych bohu
 class Olymp : public Arena {
 public:
+    ~Olymp(){;}
     Olymp() {
         Effect = 8.0;
         Name = "Olymp";
@@ -28,6 +30,7 @@ public:
 
 class AegeanSea : public Arena {
 public:
+    ~AegeanSea(){;}
     AegeanSea() {
         Effect = 5.0;
         Name = "Aegean Sea";
@@ -36,6 +39,7 @@ public:
 
 class LibraryOfAlexandria : public Arena {
 public:
+    ~LibraryOfAlexandria(){;}
     LibraryOfAlexandria() {
         Effect = 3.0;
         Name = "Library Of Alexandria";
@@ -45,6 +49,7 @@ public:
 //Areny norskych bohu
 class Asgartd : public Arena {
 public:
+    ~Asgartd(){;}
     Asgartd() {
         Effect = 9.0;
         Name = "Asgartd";
@@ -53,6 +58,7 @@ public:
 
 class NorwegianSea : public Arena {
 public:
+    ~NorwegianSea(){;}
     NorwegianSea() {
         Effect = 5.0;
         Name = "Norwegian Sea";
@@ -61,6 +67,7 @@ public:
 
 class Alfheim : public Arena {
 public:
+    ~Alfheim(){;}
     Alfheim() {
         Effect = 4.0;
         Name = "Alfheim";
@@ -70,6 +77,7 @@ public:
 //Neutralni bojiste
 class ValleyOfTheKings : public Arena {
 public:
+    ~ValleyOfTheKings(){;}
     ValleyOfTheKings() {
         Effect = 0.0;
         Name = "Valley Of Kings";
