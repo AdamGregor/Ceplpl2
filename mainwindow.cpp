@@ -691,7 +691,7 @@ void MainWindow::deleteSlot(MyLabel *block){
 }
 
 void MainWindow::run(){
-   // Program.Reset();
+    Program.Reset();
     Program.Run();
 }
 
