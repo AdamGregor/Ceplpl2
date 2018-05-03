@@ -171,7 +171,7 @@ public:
     MyLabel* getIDlabel();
 
     /**
-     * @brief vraci ukazatel na logicke spojeni
+     * @brief vrací ukazatel na logické spojení
      * @return
      */
     Connect* getLogicconnect(){return logicConnect;}
