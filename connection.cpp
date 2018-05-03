@@ -64,6 +64,14 @@ MyLabel *connection::getOutBlock(){
     return outBlock;
 }
 
+
+/**
+ * @brief Událost, kdy je myš nad spojem, nastaví tooltip spoje.
+ * Pro spojení nad kterým se nachází myš, se zjistí ID a typ bloků, které jsou spojeny.
+ * Pokud v bloku, ze kterého spoj vychází, byl proveden výpočet, zjistí se aktuální data,
+ * která se nastaví jako ToolTip, v opačném případě se nastaví hláška s "No data transfered"
+ * @param event
+ */
 void connection::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
     unsigned int id = this->getOutBlock()->getID();
     QString ID = QString::number(id);
@@ -220,6 +228,7 @@ ListItem* connectionList::getFirst(){
     return first;
 }
 
+// BLOCKLIST
 blockConnect::blockConnect(){
     this->first = nullptr;
     this->lenght = 0;
