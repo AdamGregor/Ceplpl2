@@ -687,8 +687,8 @@ void MainWindow::stepIt(){
 
 void MainWindow::newScheme(){
     this->Spawn_x = 12;
-    this->Spawn_y = 1;
-    blocks_ID = 0;
+    this->Spawn_y = 67;
+    blocks_ID = 1;
     filename = QString();
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
@@ -713,6 +713,7 @@ void MainWindow::newScheme(){
             listConn->deleteConn(other_block->getID(), tmp->data->getID());
         }
 
+        delete tmp->data->getLogicblock();
         blocks->deleteBlock(tmp->data->getID());
         tmp = tmp->next;
     }
@@ -768,7 +769,7 @@ void MainWindow::load(){
             item = item->next;
             listConn->deleteConn(other_block->getID(), tmp->data->getID());
         }
-
+        delete tmp->data->getLogicblock();
         blocks->deleteBlock(tmp->data->getID());
         tmp = tmp->next;
     }
