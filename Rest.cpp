@@ -187,23 +187,23 @@ void Connect::Disconnect(int which){
     if(which == 0){ //chci mazat IN block
         if(in_name=="COMBAT"){
             Combat* tmp = (Combat*) in;
-            tmp->Disconnect(this);
+            tmp->Combat::Disconnect(this);
         }
         else if(in_name=="REST"){
             Rest* tmp = (Rest*) in;
-            tmp->Disconnect(this);
+            tmp->Rest::Disconnect(this);
         }
         else if(in_name=="ARENASELECT"){
             ArenaSelect* tmp = (ArenaSelect*) in;
-            tmp->Disconnect(this);
+            tmp->ArenaSelect::Disconnect(this);
         }
         else if(in_name=="DICETHROW"){
             DiceThrow* tmp = (DiceThrow*) in;
-            tmp->Disconnect(this);
+            tmp->DiceThrow::Disconnect(this);
         }
         else if(in_name=="ITEMAPPLY"){
             ItemApply* tmp = (ItemApply*) in;
-            tmp->Disconnect(this);
+            tmp->ItemApply::Disconnect(this);
         }
     }
 
@@ -211,23 +211,23 @@ void Connect::Disconnect(int which){
     if(which == 1){ //chci mazat OUT block
         if(out_name=="COMBAT"){
             Combat* tmp = (Combat*) out;
-            tmp->Disconnect(this);
+            tmp->Combat::Disconnect(this);
         }
         else if(out_name=="REST"){
             Rest* tmp = (Rest*) out;
-            tmp->Disconnect(this);
+            tmp->Rest::Disconnect(this);
         }
         else if(out_name=="ARENASELECT"){
             ArenaSelect* tmp = (ArenaSelect*) out;
-            tmp->Disconnect(this);
+            tmp->ArenaSelect::Disconnect(this);
         }
         else if(out_name=="DICETHROW"){
             DiceThrow* tmp = (DiceThrow*) out;
-            tmp->Disconnect(this);
+            tmp->DiceThrow::Disconnect(this);
         }
         else if(out_name=="ITEMAPPLY"){
             ItemApply* tmp = (ItemApply*) out;
-            tmp->Disconnect(this);
+            tmp->ItemApply::Disconnect(this);
         }
     }
 

@@ -266,3 +266,4 @@ void blockConnect::deleteConn(unsigned int first_ID, unsigned int second_ID){
 int blockConnect::getListlenght(){
     return lenght;
 }
+

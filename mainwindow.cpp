@@ -667,6 +667,8 @@ void MainWindow::deleteSlot(MyLabel *block){
             listConn->deleteConn(other_block->getID(), block->getID());
         }
 
+        delete block->getLogicblock();
+
         blocks->deleteBlock(block->getID());
     }
 
@@ -1075,3 +1077,4 @@ void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju 
 void MainWindow::resetIt(){
     Program.Reset();
 }
+

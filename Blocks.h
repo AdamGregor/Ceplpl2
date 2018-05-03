@@ -2,11 +2,11 @@
     *\author	Adam Gregor
     *\mainpage	Blokov? editor 2018
     *\section	?vod
-    * Tento kód vznikl v r?mci projektu do p¸edm?tu ICP
+    * Tento k?d vznikl v r?mci projektu do p?edm?tu ICP
     *\section	Kompilace
-    *Program se kompiluje klasicky, p¸?kazem 'make'
+    *Program se kompiluje klasicky, p??kazem 'make'
     \subsection Make
-    * Napiðte make
+    * Napi?te make
 */
 
 
@@ -22,7 +22,7 @@ using namespace std;
 
 /// Hlavicky jednotlivych bloku
 /*!
-    *\brief Base class vðech blokov?ch t¸?d. Obsahuje deklarace metod, jeþ jsou d?d?ny vðemi t¸?dami blok?.
+    *\brief Base class v?ech blokov?ch t??d. Obsahuje deklarace metod, je? jsou d?d?ny v?emi t??dami blok?.
 */
 class Block {
 public:

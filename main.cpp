@@ -1,7 +1,8 @@
 /**
  *@file main.cpp
- *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
- *@brief main of app
+ *@author Zdenek Jelinek (xjelin47)
+ *@author Adam Gregor (xgrego18)
+ *@brief main
  */
 
 #include "mainwindow.h"
