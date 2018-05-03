@@ -1,7 +1,8 @@
 /**
  *@file mylabel.h
- *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
- *@brief  blocks for gui
+ *@author Zdeněk Jelínek (xjelin47)
+ *@author Adam Gregor (xgrego18)
+ *@brief  Hlavičkový soubor pro grafické bloky
  */
 
 #ifndef MYLABEL_H
@@ -27,16 +28,24 @@ enum blockType {COMBAT, ITEM, DICE, REST, ARENA};
 
 
 /**
- * @brief Structure for list of blocks
+ * @brief struktura pro seznam bloků
  */
 struct Listblock{
+
+    /**
+     * @brief blok
+     */
     MyLabel* data;
+
+    /**
+     * @brief ukazatel na další prvek seznamu
+     */
     Listblock* next;
 };
 
 
 /**
- * @brief The MyLabel class, inherits from QLabel
+ * @brief Třída MyLabel, dědí od QLabel, zaštiťuje především grafickou část bloků
  */
 class MyLabel : public QLabel{
 
@@ -45,158 +54,178 @@ class MyLabel : public QLabel{
 private:
 
     /**
-     * @brief ID
+     * @brief ID bloku
      */
     unsigned int block_ID;
 
     /**
-     * @brief Label, ktery ukazuje ID bloku
+     * @brief Ukazatel na label, do kterého se nahraje ID bloku a to se zobrazí v levém horním rohu bloku
      */
     MyLabel* IDlabel;
 
     /**
-     * @brief type of block
+     * @brief typ bloku
      */
     blockType type;
 
     /**
-     * @brief x coordinate of block
+     * @brief Xová souřadnice bloku
      */
     int x;
 
     /**
-     * @brief y coordinate of block
+     * @brief Yová souřadnice bloku
      */
     int y;
 
     /**
-     * @brief list of connections from out port
+     * @brief seznam spojů, které obsahuje out port tohoto bloku
      */
     connectionList* out_List;
 
     /**
-     * @brief list of connections from in port
+     * @brief sezanm spojů, které obsahuje in port tohoto bloku
      */
     connectionList* in_List;
 
     /**
-     * @brief actuall block
+     * @brief logický blok, obsahující skutečná data
      */
     Block* logicBlock;
 
+    /**
+     * @brief logické spojení, tvořící skutečné spojení
+     */
     Connect* logicConnect;
 
 
 public:
     /**
-     * @brief constructor
+     * @brief konstruktor
      * @param parent
      */
     MyLabel(QWidget *parent = 0);
 
+    ~MyLabel();
+
     /**
-     * @brief sets ID for block
+     * @brief nastaví ID bloku
      * @param ID
      */
     void setID(unsigned int ID);
 
     /**
-     * @brief return ID of block
-     * @return unsigned int
+     * @brief vrací ID bloku
+     * @return hodnota ID bloku
      */
     unsigned int getID();
 
     /**
-     * @brief sets type of a block
-     * @param typ
+     * @brief nastaví typ bloku
+     * @param typ typ bloku
      */
     void setType(blockType typ);
+
     /**
-     * @brief returns a type of a block
-     * @return blockType
+     * @brief vrací typ bloku
+     * @return typ bloku
      */
     blockType getType();
+
     /**
-     * @brief sets coordinates of block
-     * @param x
-     * @param y
+     * @brief nastaví koordináty bloku
+     * @param x Xová souřadnice
+     * @param y Yová souřadnice
      */
     void setCoords(int x, int y);
+
     /**
-     * @brief returns coordinates of a block in x and y
+     * @brief nahraje koordináty bloku do parametrů
      * @param x
      * @param y
      */
     void getCoords(int* x, int *y);
 
     /**
-     * @brief returns pointer to out list
-     * @return connectionList*
+     * @brief vrací ukazatel na out list
+     * @return ukazatel na connectionList
      */
     connectionList* getOutList();
+
     /**
-     * @brief returns pointer to in list
-     * @return connectionList*
+     * @brief vrací ukazatel na in list
+     * @return ukazatel na connectionList
      */
     connectionList* getInList();
 
     /**
-     * @brief nastavi ID label
+     * @brief nastaví ID label
      * @param label
      */
     void setIDlabel(MyLabel* label);
 
     /**
-     * @brief vraci ID label
-     * @return
+     * @brief vrací ukazatel na ID label
+     * @return ukazatel na MyLabel
      */
     MyLabel* getIDlabel();
 
-public:
     /**
-     * @brief mouseReleaseEvent
+     * @brief vraci ukazatel na logicke spojeni
+     * @return
+     */
+    Connect* getLogicconnect(){return logicConnect;}
+
+public:
+
+    /**
+     * @brief událost, kdy se pustí tlačítko myši
      * @param event
      */
     void mouseReleaseEvent(QMouseEvent* event);
+
     /**
-     * @brief mousePressEvent
+     * @brief událost, kdy se zmáčkne tlačítko myši
      * @param event
      */
     void mousePressEvent(QMouseEvent* event);
 
     /**
-     * @brief get logic block
-     * @return pointer to logic block
+     * @brief vrací ukazatel na logic block
+     * @return ukazatel na Block
      */
     Block* getLogicblock();
 
     /**
-     * @brief set Logic block
+     * @brief nastaví logic blok
+     * @param logicBl ukazatel na Block
      */
     void setLogicblock(Block* logicBl);
 
     /**
-     * @brief nastavi logicke spojeni
-     * @param conn
+     * @brief nastaví logicconnect
+     * @param conn ukazatel na Connect
      */
     void setLogicconnect(Connect* conn);
 
 
 signals:
+
     /**
-     * @brief mouseRelease
-     * @param block
+     * @brief signál pro událost, kdy se na bloku pustí tlačítko myši
+     * @param label blok na kterém se pustilo tlačítko myši
      */
     void mouseRelease(MyLabel* label);
+
     /**
-     * @brief mousePress
-     * @param block
+     * @brief signál pro událost, kdy se na bloku zmáčkne tlačítko myši
+     * @param label blok na kterém se zmáčklo tlačítko myši
      */
     void mousePress(MyLabel* label);
 
     /**
-     * @brief delete a block
-     * @param block
+     * @brief signál pro smazání bloku
+     * @param label blok, který se má smazat
      */
     void deleteSig(MyLabel* label);
 
@@ -204,46 +233,48 @@ signals:
 
 
 /**
- * @brief BlockList class
+ * @brief Třída Blocklist, funguje jako začátek seznamu
  */
 class BlockList{
+
     /**
-     * @brief First item of list of blocks
+     * @brief první prvek seznamu
      */
     Listblock* first;
+
     /**
-     * @brief lenght of list
+     * @brief délka seznamu
      */
     int lenght;
 
 public:
+
     /**
-     * @brief constructor
+     * @brief konstruktor
      */
     BlockList();
 
     /**
-     * @brief insert block in blocks list
-     * @param item
+     * @brief vloží blok do seznamu bloků
+     * @param block blok, který se má vložit
      */
     void insert(MyLabel* block);
 
     /**
-     * @brief deletes a block
+     * @brief smaže blok s daným ID
      * @param block_ID
-     * @param out  finding block_ID in out list
      */
     void deleteBlock(unsigned int block_ID);
 
     /**
-     * @brief getListLenght
-     * @return lenght
+     * @brief vrací délku seznamu
+     * @return délka seznamu
      */
     int getListLenght();
 
     /**
-     * @brief getFirst
-     * @return pointer to first item of connections list
+     * @brief vrací první prvek seznamu bloků
+     * @return ukazatel na prvek seznamu
      */
     Listblock* getFirst();
 };

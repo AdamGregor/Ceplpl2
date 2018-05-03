@@ -1,7 +1,8 @@
 /**
  *@file mainwindow.h
- *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
- *@brief mainwindow of app
+ *@author Zdeněk Jelínek (xjelin47)
+ *@author Adam Gregor (xgrego18)
+ *@brief hlavičkový soubor pro hlavní okno aplikace
  */
 
 #ifndef MAINWINDOW_H
@@ -27,7 +28,7 @@ class MainWindow;
 }
 
 /**
- * @brief Třída MainWindow, dědí od QMainWindow
+ * @brief Třída MainWindow, dědí od QMainWindow, představuje hlavní okno aplikace
  */
 class MainWindow : public QMainWindow
 {
@@ -36,40 +37,42 @@ class MainWindow : public QMainWindow
 public:
     /**
      * @brief Konstruktor
-     * @param rodič
+     * @param parent
      */
     explicit MainWindow(QWidget *parent = 0);
+
     ~MainWindow();
+
     /**
      * @brief Ověří umístění bloku v okně
-     * @param Xová souřadnice bloku
-     * @param Yová souřadnice bloku
+     * @param x Xová souřadnice bloku
+     * @param y Yová souřadnice bloku
      */
     void checkPlacement(int* x, int* y);
 
     /**
      * @brief Emituje signál v případě, že velikost okna byla změněna
-     * @param událost změny okna
+     * @param event událost změny okna
      */
     void resizeEvent(QEvent* event);
 
     /**
      * @brief Zažádá uživatele o zadání vstupu, konkrétně boha
-     * @param ID bloku do kterého se zadá vstup
+     * @param ID ID bloku do kterého se zadá vstup
      * @return ukazatel na vytvořeného boha
      */
     void* getGod(unsigned int ID);
 
     /**
      * @brief Zažádá uživatele o zadání vstupu, konkrétně arény
-     * @param ID bloku do kterého se zadá vstup
+     * @param ID  ID bloku do kterého se zadá vstup
      * @return ukazatel na vytvořenou arenu
      */
     void* getArena(unsigned int ID);
 
     /**
      * @brief Zažádá uživatele o zadání vstupu, konkrétně věc
-     * @param ID bloku do kterého se zadá vstup
+     * @param ID ID bloku do kterého se zadá vstup
      * @return ukazatel na vytvořenou věc
      */
     void* getItem(unsigned int ID);
@@ -88,9 +91,9 @@ public:
 
     /**
      * @brief Vypíše výsledek přepočtu bloku
-     * @param typ bloku (0 = buh, 1 = arena, 2 = vec)
-     * @param ID bloku
-     * @param ukazatel na výsledek
+     * @param typ typ bloku (0 = buh, 1 = arena, 2 = vec)
+     * @param ID ID bloku
+     * @param data ukazatel na výsledek
      */
     void printResult(int typ, unsigned int ID, void* data);
 
@@ -98,6 +101,11 @@ public:
      * @brief Vypíše hlášku o cyklech v bloku
      */
     void printCycle();
+
+    /**
+     * @brief vypíše hlášku o resetování výpočtu
+     */
+    void printReset();
 
 private:
     /**
@@ -185,19 +193,19 @@ private slots:
 
     /**
      * @brief přemístí blok tam, kde se nachází kursor myši pří puštění pravého tlačítka myši
-     * @param blok, který se má přemístit
+     * @param block blok, který se má přemístit
      */
     void mouseRelease(MyLabel* block);
 
     /**
      * @brief vytváří spojení mezi bloky na které se klikne
-     * @param blok pro spojení
+     * @param block blok pro spojení
      */
     void mousePress(MyLabel* block);
 
     /**
      * @brief smaže blok
-     * @param blok pro vymazání
+     * @param block blok pro vymazání
      */
     void deleteSlot(MyLabel* block);
 

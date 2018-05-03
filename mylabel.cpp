@@ -1,7 +1,8 @@
 /**
  *@file mylabel.cpp
- *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
- *@brief  blocks for gui
+ *@author Zdenek Jelinek (xjelin47)
+ *@author Adam Gregor (xgrego18)
+ *@brief  zdrojový soubor pro grafické bloky
  */
 
 #include "mylabel.h"
@@ -17,6 +18,26 @@ MyLabel::MyLabel(QWidget *parent) : QLabel(parent){
     out_List = new connectionList;
     IDlabel = nullptr;
     logicConnect = nullptr;
+}
+
+MyLabel::~MyLabel(){
+    delete IDlabel;
+    MyLabel* other_block;
+    ListItem* tmp = out_List->getFirst();
+    for(int i = 0; i < out_List->getListLenght(); i++){
+        other_block = tmp->data->getInBlock();
+        other_block->getInList()->deleteConnection(this->block_ID, true);
+        tmp = tmp->next;
+    }
+
+    tmp = in_List->getFirst();
+    for(int i = 0; i < in_List->getListLenght(); i++){
+        other_block = tmp->data->getOutBlock();
+        other_block->getOutList()->deleteConnection(this->block_ID, false);
+        tmp = tmp->next;
+    }
+
+    return;
 }
 
 void MyLabel::setID(unsigned int ID){

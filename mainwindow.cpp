@@ -1,7 +1,8 @@
 /**
  *@file mainwindow.cpp
- *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
- *@brief mainwindow of app
+ *@author Zdenek Jelinek (xjelin47)
+ *@author Adam Gregor (xgrego18)
+ *@brief zdrojový soubor pro hlavní okno aplikace
  */
 
 #include "mainwindow.h"
@@ -88,6 +89,21 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
 MainWindow::~MainWindow(){
     delete ui;
+
+    Listblock* tmp = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        delete tmp->data;
+        tmp = tmp->next;
+    }
+
+    blockConn* temp = listConn->getFirst();
+    blockConn* doc = temp;
+    for(int i = 0; i < listConn->getListlenght(); i++){
+        delete temp;
+        temp = doc->next;
+        doc = temp;
+    }
+
 }
 
 void MainWindow::addCombat(){
@@ -516,7 +532,7 @@ void MainWindow::printResult(int typ, unsigned int ID, void *data){
         QString tmpstrenght = QString::number(strenght);
         QString id = QString::number(ID);
 
-        msg.setText("Result of block with ID: " + id +" is God:\nName: " + tmpname + "\nStrenght: " + tmpstrenght + "\n");
+        msg.setText("Result of block with ID: " + id +" is God\nName: " + tmpname + "\nStrenght: " + tmpstrenght + "\n");
         msg.exec();
     }
     else if(typ == 1){
@@ -527,7 +543,7 @@ void MainWindow::printResult(int typ, unsigned int ID, void *data){
         QString tmpstrenght = QString::number(strenght);
         QString id = QString::number(ID);
 
-        msg.setText("Result of block with ID: " + id +" is Arena:\nName: " + tmpname + "\nEffect: " + tmpstrenght + "\n");
+        msg.setText("Result of block with ID: " + id +" is Arena\nName: " + tmpname + "\nEffect: " + tmpstrenght + "\n");
         msg.exec();
     }
     else{
@@ -538,7 +554,7 @@ void MainWindow::printResult(int typ, unsigned int ID, void *data){
         QString tmpstrenght = QString::number(strenght);
         QString id = QString::number(ID);
 
-        msg.setText("Result of block with ID: " + id +" is Item:\nName: " + tmpname + "\nEffect: " + tmpstrenght + "\n");
+        msg.setText("Result of block with ID: " + id +" is Item\nName: " + tmpname + "\nEffect: " + tmpstrenght + "\n");
         msg.exec();
     }
 
@@ -551,6 +567,12 @@ void MainWindow::printCycle(){
     msg.setText("ERROR: Cycles detected! Remove some of your blocks.\n");
     msg.exec();
 
+}
+
+void MainWindow::printReset(){
+    QMessageBox msg;
+    msg.setText("No further evaluation possible. \nPlease press Reset.\n");
+    msg.exec();
 }
 
 
@@ -631,11 +653,9 @@ void MainWindow::deleteSlot(MyLabel *block){
         connectionList* in_list = block->getInList();
         ListItem* item = out_list->getFirst();
         MyLabel* other_block;
-        delete block->getIDlabel();
 
         for(int i = 0; i < out_list->getListLenght(); i++){
             other_block = item->data->getInBlock();
-            other_block->getInList()->deleteConnection(block->getID(), true);
             item = item->next;
             listConn->deleteConn(block->getID(), other_block->getID());
         }
@@ -643,7 +663,6 @@ void MainWindow::deleteSlot(MyLabel *block){
         item = in_list->getFirst();
         for(int i = 0; i < in_list->getListLenght(); i++){
             other_block = item->data->getOutBlock();
-            other_block->getOutList()->deleteConnection(block->getID(), false);
             item = item->next;
             listConn->deleteConn(other_block->getID(), block->getID());
         }
@@ -666,7 +685,7 @@ void MainWindow::stepIt(){
 
 void MainWindow::newScheme(){
     this->Spawn_x = 12;
-    this->Spawn_y = 67;
+    this->Spawn_y = 1;
     blocks_ID = 0;
     filename = QString();
     Listblock* tmp = blocks->getFirst();
@@ -681,19 +700,17 @@ void MainWindow::newScheme(){
 
         for(int i = 0; i < out_list->getListLenght(); i++){
             other_block = item->data->getInBlock();
-            other_block->getInList()->deleteConnection(tmp->data->getID(), true);
-            listConn->deleteConn(tmp->data->getID(), other_block->getID());
             item = item->next;
+            listConn->deleteConn(tmp->data->getID(), other_block->getID());
         }
 
         item = in_list->getFirst();
         for(int i = 0; i < in_list->getListLenght(); i++){
             other_block = item->data->getOutBlock();
-            other_block->getOutList()->deleteConnection(tmp->data->getID(), false);
-            listConn->deleteConn(other_block->getID(), tmp->data->getID());
             item = item->next;
+            listConn->deleteConn(other_block->getID(), tmp->data->getID());
         }
-        delete tmp->data->getIDlabel();
+
         blocks->deleteBlock(tmp->data->getID());
         tmp = tmp->next;
     }
@@ -709,7 +726,6 @@ void MainWindow::printHelp(){
     help.setText(QString("Move a block:\n   - Press, move and release left mouse button\n\n") +
                  QString("Make a connection:\n   - Click on a blocks you want to connect with right mouse button\n\n") +
                  QString("Run editor:\n   - Press Run\n\n") +
-                 QString("Enter a God:\n   - Zeus, Odin, Athena, Njord, Mimir, Poseidon\n\n") +
                  QString("Delete block:\n   - Toggle Delete button and press on block you want to delete\n      with left mouse button\n\n"));
     help.exec();
 }
@@ -725,11 +741,13 @@ void MainWindow::load(){
     }
 
     this->Spawn_x = 12;
-    this->Spawn_y = 67;
+    this->Spawn_y = 1;
     blocks_ID = 0;
+    filename = QString();
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
     active_connection = nullptr;
+
     for(int i = 0; i < lenght; i++){
         connectionList* out_list = tmp->data->getOutList();
         connectionList* in_list = tmp->data->getInList();
@@ -738,17 +756,15 @@ void MainWindow::load(){
 
         for(int i = 0; i < out_list->getListLenght(); i++){
             other_block = item->data->getInBlock();
-            other_block->getInList()->deleteConnection(tmp->data->getID(), true);
-            listConn->deleteConn(tmp->data->getID(), other_block->getID());
             item = item->next;
+            listConn->deleteConn(tmp->data->getID(), other_block->getID());
         }
 
         item = in_list->getFirst();
         for(int i = 0; i < in_list->getListLenght(); i++){
             other_block = item->data->getOutBlock();
-            other_block->getOutList()->deleteConnection(tmp->data->getID(), false);
-            listConn->deleteConn(other_block->getID(), tmp->data->getID());
             item = item->next;
+            listConn->deleteConn(other_block->getID(), tmp->data->getID());
         }
 
         blocks->deleteBlock(tmp->data->getID());
@@ -821,22 +837,27 @@ void MainWindow::load(){
         if(typ == COMBAT){
             QPixmap pixmap(":combat.gif");
             newblock->setPixmap(pixmap);
+            newblock->setLogicblock(new Combat(newblock->getID()));
         }
         else if(typ == ARENA){
             QPixmap pixmap(":arenaSelect.gif");
             newblock->setPixmap(pixmap);
+            newblock->setLogicblock(new ArenaSelect(newblock->getID()));
         }
         else if(typ == DICE){
             QPixmap pixmap(":dice.png");
             newblock->setPixmap(pixmap);
+            newblock->setLogicblock(new DiceThrow(newblock->getID()));
         }
         else if(typ == ITEM){
             QPixmap pixmap(":itemSelect.gif");
             newblock->setPixmap(pixmap);
+            newblock->setLogicblock(new ItemApply(newblock->getID()));
         }
         else if(typ == REST){
             QPixmap pixmap(":rest.gif");
             newblock->setPixmap(pixmap);
+            newblock->setLogicblock(new Rest(newblock->getID()));
         }
 
         MyLabel* docasne = new MyLabel(this);
@@ -859,7 +880,7 @@ void MainWindow::load(){
 
     count = line.toInt(&ok, 10);        // nacteni spoju
     QStringList items;
-    MyLabel* in_block, * out_block;
+    MyLabel* in_block = nullptr , * out_block = nullptr;
     unsigned int in = -1 , out = -1;
     for(int i = 0; i < count; i++){
         line = read.readLine();
@@ -898,10 +919,14 @@ void MainWindow::load(){
         conn->getIncoords(&m, &n);
         conn->setLine(k, l, m, n);
         scene->addItem(conn);
+        bool ok;
+        Connect* novespojeni = new Connect(conn->getOutBlock()->getLogicblock(), conn->getInBlock()->getLogicblock(), &ok);
+        if(ok)
+            conn->getOutBlock()->setLogicconnect(novespojeni);
         listConn->insert(conn->getOutBlock()->getID(), conn->getInBlock()->getID());
         out_block->getOutList()->insert(conn);
         in_block->getInList()->insert(conn);
-       // connect(conn, SIGNAL(showDat(connection*)), this, SLOT(showData(connection*)));
+
     }
 
 
@@ -910,7 +935,7 @@ void MainWindow::load(){
 
 void MainWindow::save_as(){
 
-    filename = QFileDialog::getSaveFileName(this, "Save File", "./untitled.az", "Scheme (*.az)");
+    filename = QFileDialog::getSaveFileName(this, "Save Scheme", "./untitled.az", "Scheme (*.az)");
 
     if(filename.isEmpty() == true){
         return;
@@ -959,7 +984,7 @@ void MainWindow::save_as(){
 void MainWindow::quickSave(){
 
     if(filename.isEmpty() == true){
-        filename = QFileDialog::getSaveFileName(this, "Save File", "./untitled.az", "Scheme (*.az)");
+        filename = QFileDialog::getSaveFileName(this, "Save Scheme", "./untitled.az", "Scheme (*.az)");
     }
 
     if(filename.isEmpty() == true){

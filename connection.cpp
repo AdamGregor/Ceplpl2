@@ -1,19 +1,20 @@
 /**
  *@file connection.cpp
- *@author Zdenek Jelinek (xjelin47), Adam Gregor (xgrego18)
- *@brief  connection between blocks for gui
+ *@author Zdenek Jelinek (xjelin47)
+ *@author Adam Gregor (xgrego18)
+ *@brief  zdrojový soubor pro grafické spoje
  */
 
 #include "connection.h"
+#include "mainwindow.h"
 #include <QObject>
 #include <QGraphicsLineItem>
 #include <QWidget>
 #include <QGraphicsItem>
-#include "mainwindow.h"
 #include <QDebug>
 
 #include <iostream>
-
+#include <string>
 
 connection::connection(){
     num_of_clicks = 0;
@@ -68,6 +69,10 @@ void connection::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
     QString ID = QString::number(id);
     blockType type;
     type = this->getOutBlock()->getType();
+    blockType druhytype;
+    druhytype = this->getInBlock()->getType();
+    QString druheid = QString::number(this->getInBlock()->getID());
+    QString druhytyp = " ?";
     QString blocktype = " ?";
     if(type == DICE)
         blocktype = "DICE";
@@ -79,14 +84,52 @@ void connection::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
         blocktype = "ITEM";
     else if(type == REST)
         blocktype = "REST";
-    int x, y;
-    this->getOutBlock()->getCoords(&x, &y);
-    QString posX = QString::number(x);
-    QString posY = QString::number(y);
 
-    this->setToolTip("Block ID: " + ID + "\n"
-                     "Block Type: " + blocktype + "\n"
-                                                  "Position: " + posX + ", " + posY + "\n");
+    if(druhytype == DICE)
+        druhytyp = "DICE";
+    else if(druhytype == COMBAT)
+        druhytyp = "COMBAT";
+    else if(druhytype == ARENA)
+        druhytyp = "ARENA";
+    else if(druhytype == ITEM)
+        druhytyp = "ITEM";
+    else if (druhytype == REST)
+        druhytyp = "REST";
+
+
+    bool transf = this->getOutBlock()->getLogicconnect()->GetTransfered();
+
+    if(!transf){
+        this->setToolTip("Out Block ID: " + ID + "\n"
+                         "Out Block Type: " + blocktype + "\n\n"
+                         "In Block ID: " + druheid + "\n"
+                         "In block Type: " + druhytyp + "\n\n"
+                         "No data transfered.\n");
+    }
+    else{
+        std::string name = this->getOutBlock()->getLogicconnect()->GetName();
+        QString tmpname = QString::fromStdString(name);
+        double strenght = this->getOutBlock()->getLogicconnect()->GetValue();
+        QString eff = QString::number(strenght);
+        if(type == ARENA){
+            this->setToolTip("Out Block ID: " + ID + "\n"
+                             "Out Block Type: " + blocktype + "\n\n"
+                             "In Block ID: " + druheid + "\n"
+                             "In block Type: " + druhytyp + "\n\n"
+                             "Name of Arena: " + tmpname + "\n"
+                             "Effect: " + strenght + "\n");
+        }
+        else{
+            this->setToolTip("Out Block ID: " + ID + "\n"
+                             "Out Block Type: " + blocktype + "\n\n"
+                             "In Block ID: " + druheid + "\n"
+                             "In block Type: " + druhytyp + "\n\n"
+                             "Name of God: " + tmpname + "\n"
+                             "Strenght: " + eff + "\n");
+        }
+    }
+
+
     QPen pen;
     pen.setWidth(4);
     pen.setColor(Qt::red);
@@ -204,12 +247,12 @@ void blockConnect::deleteConn(unsigned int first_ID, unsigned int second_ID){
             if(tmp == first){
                 first = tmp->next;
                 lenght--;
-                delete tmp;
+                //delete tmp;
                 return;
             }
             else{
                 old_next->next = tmp->next;
-                delete tmp;
+               // delete tmp;
                 lenght--;
             }
         }
