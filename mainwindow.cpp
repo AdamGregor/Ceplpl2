@@ -138,6 +138,7 @@ void MainWindow::addCombat(){
 
     Spawn_x +=10;
     Spawn_y +=10;
+
     blocks_ID++;
     Program.Reset();
 }
@@ -658,6 +659,7 @@ void MainWindow::mousePress(MyLabel *block){
 
 void MainWindow::deleteSlot(MyLabel *block){
     if(ui->actionDelete->isChecked()){
+         Program.Reset();
         active_connection = nullptr;
         connectionList* out_list = block->getOutList();
         connectionList* in_list = block->getInList();
@@ -680,7 +682,7 @@ void MainWindow::deleteSlot(MyLabel *block){
         delete block->getLogicblock();
 
         blocks->deleteBlock(block->getID());
-        Program.Reset();
+
     }
 
     else{
@@ -689,7 +691,7 @@ void MainWindow::deleteSlot(MyLabel *block){
 }
 
 void MainWindow::run(){
-    Program.Reset();
+   // Program.Reset();
     Program.Run();
 }
 
@@ -757,7 +759,7 @@ void MainWindow::load(){
     }
 
     this->Spawn_x = 12;
-    this->Spawn_y = 1;
+    this->Spawn_y = 67;
     blocks_ID = 0;
     filename = QString();
     Listblock* tmp = blocks->getFirst();
