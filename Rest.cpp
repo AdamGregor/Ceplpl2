@@ -123,10 +123,12 @@ Block::~Block(){
         subscribes->data->Disconnect(0);
         subscribes = subscribes->next;
     }
+    //odebere se ze seznamu bloku
+    Program.Remove(this);
 }
 
 Rest::~Rest(){
-    // Rusi vsechny spoje, jez vedou z INportu
+    // Rusi vsechny spoje, jez vedou do INportu
     if(this->IPort1_Connected){
         IPort1_Connection->Disconnect(1);
         delete IPort1_Connection;
@@ -185,12 +187,38 @@ ItemApply::~ItemApply(){
 
 void Connect::Disconnect(int which){
     if(which == 0){ //chci mazat IN block
+        if(out_name=="COMBAT"){
+            Combat* tmp = (Combat*) out;
+            tmp->Combat::Disconnect(this);
+        }
+        else if(out_name=="REST"){
+            Rest* tmp = (Rest*) out;
+            tmp->Rest::Disconnect(this);
+            std::cout<<"Pripojenost bloku je: "<<tmp->IPort1_Connected;
+        }
+        else if(out_name=="ARENASELECT"){
+            ArenaSelect* tmp = (ArenaSelect*) out;
+            tmp->ArenaSelect::Disconnect(this);
+        }
+        else if(out_name=="DICETHROW"){
+            DiceThrow* tmp = (DiceThrow*) out;
+            tmp->DiceThrow::Disconnect(this);
+        }
+        else if(out_name=="ITEMAPPLY"){
+            ItemApply* tmp = (ItemApply*) out;
+            tmp->ItemApply::Disconnect(this);
+        }
+    }
+
+
+    if(which == 1){ //chci mazat OUT block
         if(in_name=="COMBAT"){
             Combat* tmp = (Combat*) in;
             tmp->Combat::Disconnect(this);
         }
         else if(in_name=="REST"){
             Rest* tmp = (Rest*) in;
+            std::cout<<"LOLOLOLOLOLOLO";
             tmp->Rest::Disconnect(this);
         }
         else if(in_name=="ARENASELECT"){
@@ -207,38 +235,18 @@ void Connect::Disconnect(int which){
         }
     }
 
-
-    if(which == 1){ //chci mazat OUT block
-        if(out_name=="COMBAT"){
-            Combat* tmp = (Combat*) out;
-            tmp->Combat::Disconnect(this);
-        }
-        else if(out_name=="REST"){
-            Rest* tmp = (Rest*) out;
-            tmp->Rest::Disconnect(this);
-        }
-        else if(out_name=="ARENASELECT"){
-            ArenaSelect* tmp = (ArenaSelect*) out;
-            tmp->ArenaSelect::Disconnect(this);
-        }
-        else if(out_name=="DICETHROW"){
-            DiceThrow* tmp = (DiceThrow*) out;
-            tmp->DiceThrow::Disconnect(this);
-        }
-        else if(out_name=="ITEMAPPLY"){
-            ItemApply* tmp = (ItemApply*) out;
-            tmp->ItemApply::Disconnect(this);
-        }
-    }
-
 }
 
 
-void Rest::Disconnect(Connect * spoj){
+void Rest::Disconnect(Connect* spoj){
     //jedna se o vstupni port
-    if (spoj==IPort1_Connection){
+     std::cout<<"\nHOHOOOOOOOOOOO SEM TAAADYYYYY spoj: "<< spoj << " a " << IPort1_Connection <<" \n";
+    if (spoj==IPort1_Connection || IPort1_Connection == 0){
+
+        std::cout<<"\nHOHOOOOOOOOOOO SEM TAAADYYYYY spojpowjdadiwabduihaw \n";
         IPort1_Connection = nullptr;
         IPort1_Connected=false;
+        return;
     }
 
     //jenda se o vystupni port
@@ -324,7 +332,7 @@ void ArenaSelect::Disconnect(Connect * spoj){
 }
 
 bool Rest::askReady() {
-    std::cout << "Plupluplu \n";
+    std::cout << "\n\nVYSTUPY \n"<<IPort1_Initiated<<"\n"<<IPort1_Connected<<"\n"<<OPort1_Initiated;
     if ((IPort1_Initiated == true || IPort1_Connected == false) && OPort1_Initiated == false)
         return true;
     else
@@ -868,7 +876,7 @@ void Execute::AddBlock(Block* blok) {
 void Execute::Run() {
     bool Ready;
     BlocklistElem * data = this->Blocks->getFirst();
-
+    std::cout<<"\n\n\n"<<Program.Block_count;
     while (1) {
         if(Completed){
             MyWindow->printReset();
@@ -1056,4 +1064,29 @@ void ArenaSelect::Reset() {
         Connection->data->Reset();
         Connection = Connection->next;
     }
+}
+
+
+void Execute::Remove(Block* block_to_remove){
+    BlocklistElem* block = Blocks->getFirst();
+    if(block->Data == block_to_remove){
+        Blocks->first=block->next;
+        Block_count--;
+        return;
+    }
+    else {
+        while(1){
+            BlocklistElem* prev = block;
+            block = block->next;
+            if(block->Data == block_to_remove){
+                prev->next=block->next;
+                Block_count--;
+                return;
+            }
+        }
+
+    }
+
+
+
 }

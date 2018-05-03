@@ -3,32 +3,35 @@
 #include "Blocks.h"
 
 struct BlocklistElem {
-	Block *Data;
-	BlocklistElem *next;
+    Block*          Data;
+    BlocklistElem*  next;
 };
 
 class  Blocklist {
-	BlocklistElem * first;
 public:
+    BlocklistElem*  first;
+
+
     Blocklist() { first = nullptr; }
-	void addItem(Block*);
+    void            addItem(Block*);
 	BlocklistElem*	getFirst() { return first; }
 };
 
 class Execute{
-	Blocklist *Blocks;
-	int Done;
-	int NotReadyInRow;
-	bool Completed;
+    Blocklist*      Blocks;
+    int             Done;
+    int             NotReadyInRow;
+    bool            Completed;
 
 public:
 	int Block_count;
 
 	Execute();
-	void AddBlock(Block *);
-	void Run();
-	void Step();
-	void Reset();
+    void            AddBlock(Block *);
+    void            Run();
+    void            Step();
+    void            Reset();
+    void            Remove(Block*);
 };
 
 
