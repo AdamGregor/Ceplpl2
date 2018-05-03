@@ -14,7 +14,7 @@ public:
 
     Blocklist() { first = nullptr; }
     void            addItem(Block*);
-	BlocklistElem*	getFirst() { return first; }
+    BlocklistElem*	getFirst() { return first; }
 };
 
 class Execute{
@@ -24,17 +24,14 @@ class Execute{
     bool            Completed;
 
 public:
-	int Block_count;
+    int Block_count;
 
-	Execute();
+    Execute();
     void            AddBlock(Block *);
     void            Run();
     void            Step();
     void            Reset();
     void            Remove(Block*);
 };
-
-
-
 
 #endif // ! EXECUTE_H

@@ -162,7 +162,7 @@ private:
 private slots:
 
     /**
-     * @brief vypíše help
+     * @brief vypíše nápovědu k používání aplikace
      */
     void printHelp();
 
@@ -248,6 +248,11 @@ private slots:
      * @brief resetuje výpočet
      */
     void resetIt();
+
+    /**
+     * @brief vypíše informace o aplikaci
+     */
+    void printAbout();
 
 signals:
     /**

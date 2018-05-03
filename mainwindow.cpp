@@ -84,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->actionSave, SIGNAL(triggered()), this, SLOT(quickSave()));
     connect(ui->actionReset, SIGNAL(triggered()), this, SLOT(resetIt()));
     connect(ui->actionStep, SIGNAL(triggered()), this, SLOT(stepIt()));
+    connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(printAbout()));
 
 }
 
@@ -92,6 +93,7 @@ MainWindow::~MainWindow(){
 
     Listblock* tmp = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
+        delete tmp->data->getLogicblock();
         delete tmp->data;
         tmp = tmp->next;
     }
@@ -103,6 +105,9 @@ MainWindow::~MainWindow(){
         temp = doc->next;
         doc = temp;
     }
+
+    delete listConn;
+    delete blocks;
 
 }
 
@@ -134,6 +139,7 @@ void MainWindow::addCombat(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+    Program.Reset();
 }
 
 void MainWindow::addDice_throw(){
@@ -163,6 +169,7 @@ void MainWindow::addDice_throw(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+    Program.Reset();
 }
 
 void MainWindow::addItem_apply(){
@@ -190,6 +197,7 @@ void MainWindow::addItem_apply(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+    Program.Reset();
 }
 
 void MainWindow::addArena_select(){
@@ -217,6 +225,7 @@ void MainWindow::addArena_select(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+    Program.Reset();
 }
 
 void MainWindow::addRest(){
@@ -244,6 +253,7 @@ void MainWindow::addRest(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+    Program.Reset();
 }
 
 
@@ -670,6 +680,7 @@ void MainWindow::deleteSlot(MyLabel *block){
         delete block->getLogicblock();
 
         blocks->deleteBlock(block->getID());
+        Program.Reset();
     }
 
     else{
@@ -678,6 +689,7 @@ void MainWindow::deleteSlot(MyLabel *block){
 }
 
 void MainWindow::run(){
+    Program.Reset();
     Program.Run();
 }
 
@@ -719,6 +731,7 @@ void MainWindow::newScheme(){
     }
 
     delete blocks;
+    delete listConn;
     listConn = new blockConnect;
     blocks = new BlockList;
 }
@@ -775,6 +788,7 @@ void MainWindow::load(){
     }
 
     delete blocks;
+    delete listConn;
     listConn = new blockConnect;
     blocks = new BlockList;
 
@@ -934,6 +948,7 @@ void MainWindow::load(){
 
 
     file.close();
+    Program.Reset();
 }
 
 void MainWindow::save_as(){
@@ -1077,5 +1092,12 @@ void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju 
 
 void MainWindow::resetIt(){
     Program.Reset();
+}
+
+void MainWindow::printAbout(){
+    QMessageBox msg;
+    msg.setText("Hello and welcome to our amazing app!!");
+    msg.exec();
+
 }
 
