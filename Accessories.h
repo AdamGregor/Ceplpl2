@@ -13,7 +13,7 @@ protected:
     string	Name;
 
 public:
-    virtual ~Accessories(){delete &Effect; delete &Name;}
+    virtual ~Accessories(){;}
     double	getEffect() { return Effect; }
     string	getName() { return Name; }
 };

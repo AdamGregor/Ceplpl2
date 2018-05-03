@@ -1075,4 +1075,3 @@ void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju 
 void MainWindow::resetIt(){
     Program.Reset();
 }
-

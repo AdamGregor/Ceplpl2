@@ -13,7 +13,7 @@ protected:
 
 
 public:
-    virtual         ~Gods(){delete &Strenght; delete &Name;}
+    virtual         ~Gods(){;}
     double			getStrenght() { return Strenght; }
     virtual double  getOriginalStrenght() = 0;
     string			getName() { return Name; }

@@ -11,7 +11,7 @@ protected:
     string	Name;
 
 public:
-    virtual ~Arena(){delete &Effect; delete &Name;}
+    virtual ~Arena(){;}
     double	getEffect() { return Effect; }
     string	getName() { return Name; }
 };

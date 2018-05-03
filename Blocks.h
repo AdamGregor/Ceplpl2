@@ -32,12 +32,14 @@ public:
     unsigned int    ID_bloku;
 
                     Block() { this->subscriptions = new SubscribeList; }
+    virtual         ~Block();
     virtual void    setSubscribe(Connect *data) { this->subscriptions->InsertItem(data); this->OPort1_Connected = true; }
     virtual string  getOut() = 0;
     virtual PortStuff* tryConnect(string, Connect*) = 0;
     virtual void    eval() = 0;
     virtual bool    askReady() = 0;
     virtual void    Reset() = 0;
+    virtual void    Disconnect(Connect*)=0;
 };
 
 class Rest : public Block {
@@ -53,11 +55,13 @@ public:
 
     //METODY
                 Rest(unsigned int);
+                ~Rest();
     void        eval();
     PortStuff*  tryConnect(string, Connect*);
     string      getOut() {return "Gods"; }
     bool        askReady();
     void        Reset();
+    void        Disconnect(Connect*);
 };
 
 class Combat : public Block {
@@ -83,11 +87,13 @@ public:
 
     //metody
                 Combat(unsigned int);
+                ~Combat();
     void        eval();
     PortStuff*  tryConnect(string, Connect*);
     string      getOut() { return "Gods"; }
     bool        askReady();
     void        Reset();
+    void        Disconnect(Connect*);
 
 };
 
@@ -110,11 +116,13 @@ public:
 
     //metody
                 ItemApply(unsigned int);
+                ~ItemApply();
     void        eval();
     PortStuff*  tryConnect(string, Connect*);
     string      getOut() { return "Gods"; }
     bool        askReady();
     void        Reset();
+    void        Disconnect(Connect*);
 };
 
 class DiceThrow : public Block {
@@ -130,11 +138,13 @@ public:
     //metody
 
                 DiceThrow(unsigned int);
+                ~DiceThrow();
     void        eval();
     PortStuff*  tryConnect(string, Connect*);
     string      getOut() { return "Gods"; }
     bool        askReady();
     void        Reset();
+    void        Disconnect(Connect*);
 };
 
 class ArenaSelect : public Block {
@@ -155,11 +165,13 @@ public:
     //metody
 
                 ArenaSelect(unsigned int);
+                ~ArenaSelect();
     void        eval();
     PortStuff*  tryConnect(string, Connect*);
     string      getOut() { return "Arena"; }
     bool        askReady();
     void        Reset();
+    void        Disconnect(Connect*);
 };
 
 

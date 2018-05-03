@@ -114,6 +114,170 @@ ArenaSelect::ArenaSelect(unsigned int ID) {
 }
 
 
+//Destruktory
+
+Block::~Block(){
+    // Rusi vsechny spoje, jez vedou z OUTportu
+    ListItemLogic *subscribes = this->subscriptions->getFirst();
+    while (subscribes != nullptr) {
+        subscribes->data->Disconnect(0);
+        subscribes = subscribes->next;
+    }
+}
+
+Rest::~Rest(){
+    // Rusi vsechny spoje, jez vedou z INportu
+    if(this->IPort1_Connected){
+        IPort1_Connection->Disconnect(1);
+        delete IPort1_Connection;
+    }
+}
+
+Combat::~Combat(){
+    // Rusi vsechny spoje, jez vedou z INportu
+    if(this->IPort1_Connected){
+        IPort1_Connection->Disconnect(1);
+        delete IPort1_Connection;
+    }
+    if(this->IPort2_Connected){
+        IPort2_Connection->Disconnect(1);
+        delete IPort2_Connection;
+    }
+    if(this->IPort3_Connected){
+        IPort3_Connection->Disconnect(1);
+        delete IPort3_Connection;
+    }
+}
+
+DiceThrow::~DiceThrow(){
+    // Rusi vsechny spoje, jez vedou z INportu
+    if(this->IPort1_Connected){
+        IPort1_Connection->Disconnect(1);
+        delete IPort1_Connection;
+    }
+}
+
+ArenaSelect::~ArenaSelect(){
+    // Rusi vsechny spoje, jez vedou z INportu
+    if(this->IPort1_Connected){
+        IPort1_Connection->Disconnect(1);
+        delete IPort1_Connection;
+    }
+    if(this->IPort2_Connected){
+        IPort2_Connection->Disconnect(1);
+        delete IPort2_Connection;
+    }
+}
+
+ItemApply::~ItemApply(){
+    // Rusi vsechny spoje, jez vedou z INportu
+    if(this->IPort1_Connected){
+        IPort1_Connection->Disconnect(1);
+        delete IPort1_Connection;
+    }
+    if(this->IPort2_Connected){
+        IPort2_Connection->Disconnect(1);
+        delete IPort2_Connection;
+    }
+}
+
+
+
+void Connect::Disconnect(int which){
+    if(which == 0) //chci mazat IN block
+        in->Disconnect(this);
+    if(which == 1) //chci mazat OUT block
+        out->Disconnect(this);
+}
+
+void Rest::Disconnect(Connect * spoj){
+    //jedna se o vstupni port
+    if (spoj==IPort1_Connection){
+        IPort1_Connection = nullptr;
+        IPort1_Connected=false;
+    }
+
+    //jenda se o vystupni port
+    subscriptions->RemoveItem(spoj);
+    if(subscriptions->getLenght()==0)
+        OPort1_Connected=false;
+}
+
+void Combat::Disconnect(Connect * spoj){
+    //jedna se o vstupni port
+    if (spoj==IPort1_Connection){
+        IPort1_Connection = nullptr;
+        IPort1_Connected=false;
+        return;
+    }
+    if (spoj==IPort2_Connection){
+        IPort2_Connection = nullptr;
+        IPort2_Connected=false;
+        return;
+    }
+    if (spoj==IPort3_Connection){
+        IPort3_Connection = nullptr;
+        IPort3_Connected=false;
+        return;
+    }
+
+    //jenda se o vystupni port
+    subscriptions->RemoveItem(spoj);
+    if(subscriptions->getLenght()==0)
+        OPort1_Connected=false;
+}
+
+void DiceThrow::Disconnect(Connect * spoj){
+    //jedna se o vstupni port
+    if (spoj==IPort1_Connection){
+        IPort1_Connection = nullptr;
+        IPort1_Connected=false;
+        return;
+    }
+
+    //jenda se o vystupni port
+    subscriptions->RemoveItem(spoj);
+    if(subscriptions->getLenght()==0)
+        OPort1_Connected=false;
+}
+
+void ItemApply::Disconnect(Connect * spoj){
+    //jedna se o vstupni port
+    if (spoj==IPort1_Connection){
+        IPort1_Connection = nullptr;
+        IPort1_Connected=false;
+        return;
+    }
+    if (spoj==IPort2_Connection){
+        IPort2_Connection = nullptr;
+        IPort2_Connected=false;
+        return;
+    }
+
+    //jenda se o vystupni port
+    subscriptions->RemoveItem(spoj);
+    if(subscriptions->getLenght()==0)
+        OPort1_Connected=false;
+}
+
+void ArenaSelect::Disconnect(Connect * spoj){
+    //jedna se o vstupni port
+    if (spoj==IPort1_Connection){
+        IPort1_Connection = nullptr;
+        IPort1_Connected=false;
+        return;
+    }
+    if (spoj==IPort2_Connection){
+        IPort2_Connection = nullptr;
+        IPort2_Connected=false;
+        return;
+    }
+
+    //jenda se o vystupni port
+    subscriptions->RemoveItem(spoj);
+    if(subscriptions->getLenght()==0)
+        OPort1_Connected=false;
+}
 
 bool Rest::askReady() {
     std::cout << "Plupluplu \n";
@@ -571,6 +735,27 @@ void SubscribeList::InsertItem(Connect *data) {
     this->listLenght++;
 }
 
+void SubscribeList::RemoveItem(Connect *data){
+    ListItemLogic* blok = getFirst();
+    ListItemLogic* prev;
+    if(blok->data == data){
+        first = blok->next;
+        listLenght-=1;
+        return;
+    }
+    else{
+        while(1){
+            prev = blok;
+            blok=blok->next;
+            if(blok->data == data){
+                prev->next=blok->next;
+                listLenght-=1;
+                return;
+            }
+        }
+    }
+
+}
 
 Connect::Connect(Block* Blok1, Block *Blok2, bool* ok) {
     this->transfered = false;
@@ -631,11 +816,16 @@ void Execute::Run() {
     BlocklistElem * data = this->Blocks->getFirst();
 
     while (1) {
-        if (Done == this->Block_count || Completed) {
-            std::cout << "Juch juch";
+        if(Completed){
+            MyWindow->printReset();
             Completed = true;
             return;
         }
+        if (Done == this->Block_count) {
+            Completed = true;
+            return;
+        }
+
         Ready = data->Data->askReady();
         std::cout << "moje redy: " << Ready;
         if (Ready) {
@@ -663,7 +853,7 @@ void Execute::Step() {
 
     while (1) {
         if (Done == this->Block_count || Completed) {
-            std::cout << "Juch juch";
+            MyWindow->printReset();
             Completed = true;
             return;
         }
@@ -674,13 +864,11 @@ void Execute::Step() {
             Done += 1;
             NotReadyInRow = 0;
             if (Done == this->Block_count || Completed) {
-                //byl dodelan posledni blok
-                std::cout << "Juch juch\n";
+                //MyWindow->printReset();
                 Completed = true;
                 return;
             }
             //jsou jeste bloky k udelani
-            std::cout << "Jeste zbyva \n";
             return;
 
         }
@@ -700,11 +888,12 @@ void Execute::Step() {
 }
 
 void Execute::Reset() {
+    std::cout<<"zde este ano";
     Done = 0;
     NotReadyInRow = 0;
     Completed = 0;
     BlocklistElem *Blok = this->Blocks->getFirst();
-
+    std::cout<<"zde este ano";
     while (Blok != nullptr) {
         Blok->Data->Reset();
         Blok = Blok->next;
@@ -716,7 +905,7 @@ void Execute::Reset() {
 
 void Rest::Reset() {
     this->IPort1_Initiated = false;
-    if(IPort1_Connected == false)
+    if(IPort1_Connected == false && IPort1 != nullptr)
         delete (Gods*) IPort1;
     IPort1 = nullptr;
 
@@ -733,17 +922,17 @@ void Rest::Reset() {
 void Combat::Reset() {
 
     this->IPort1_Initiated = false;
-    if(IPort1_Connected == false)
+    if(IPort1_Connected == false && IPort1 != nullptr)
         delete (Gods*) IPort1;
     IPort1 = nullptr;
 
     this->IPort2_Initiated = false;
-    if(IPort2_Connected == false)
+    if(IPort2_Connected == false && IPort2 != nullptr)
         delete (Arena*) IPort2;
     IPort2 = nullptr;
 
     this->IPort3_Initiated = false;
-    if(IPort3_Connected == false)
+    if(IPort3_Connected == false && IPort3 != nullptr)
         delete (Gods*) IPort3;
     IPort3 = nullptr;
 
@@ -759,12 +948,12 @@ void Combat::Reset() {
 
 void ItemApply::Reset() {
     this->IPort1_Initiated = false;
-    if(IPort1_Connected == false)
+    if(IPort1_Connected == false && IPort1 != nullptr)
         delete (Gods*) IPort1;
     IPort1 = nullptr;
 
     this->IPort2_Initiated = false;
-    if(IPort2_Connected == false)
+    if(IPort2_Connected == false && IPort2 != nullptr)
         delete (Accessories*) IPort2;
     IPort2 = nullptr;
 
@@ -780,7 +969,7 @@ void ItemApply::Reset() {
 
 void DiceThrow::Reset() {
     this->IPort1_Initiated = false;
-    if(IPort1_Connected == false)
+    if(IPort1_Connected == false && IPort1 != nullptr)
         delete (Gods*) IPort1;
     IPort1 = nullptr;
 
@@ -796,12 +985,12 @@ void DiceThrow::Reset() {
 
 void ArenaSelect::Reset() {
     this->IPort1_Initiated = false;
-    if(IPort1_Connected == false)
+    if(IPort1_Connected == false && IPort1 != nullptr)
         delete (Gods*) IPort1;
     IPort1 = nullptr;
 
     this->IPort2_Initiated = false;
-    if(IPort2_Connected == false)
+    if(IPort2_Connected == false && IPort2 != nullptr)
         delete (Gods*) IPort2;
     IPort2 = nullptr;
 

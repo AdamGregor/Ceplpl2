@@ -9,42 +9,45 @@ using namespace std;
 
 class Block;
 struct PortStuff {
-    void *value;
-    bool *init;
+    void*           value;
+    bool*           init;
 };
 
 class Connect {
 public:
-    string Data_type;
-    bool transfered;
-    PortStuff *reaction;
-    double value;
-    string name;
+    string          Data_type;
+    bool            transfered;
+    PortStuff*      reaction;
+    double          value;
+    string          name;
 
-    Block* in;
-    Block* out;
+    Block*          in;
+    Block*          out;
 
-    Connect(Block *blok, Block *blok2, bool* ok);
-    void DistributeResult(void *,double, string);
-    void Reset(){transfered = false; value = -1; name = "None";}
+                    Connect(Block *blok, Block *blok2, bool* ok);
+    bool            GetTransfered(){return transfered;}
+    double          GetValue(){return value;}
+    string          GetName(){return name;}
+    void            Disconnect(int);
+    void            DistributeResult(void *,double, string);
+    void            Reset(){transfered = false; value = -1; name = "None";}
 };
 
 struct ListItemLogic {
-    Connect *data;
-    ListItemLogic *next;
+    Connect*        data;
+    ListItemLogic*  next;
 };
 
 class SubscribeList {
 public:
-    ListItemLogic *first;
-    int	listLenght;
+    ListItemLogic*  first;
+    int             listLenght;
 
-    SubscribeList() { this->first = nullptr ;  this->listLenght = 0; }
-    int getLenght() { return this->listLenght; }
-    ListItemLogic * getFirst() { return this->first; }
-    void InsertItem(Connect *);
-
-
+                    SubscribeList() { this->first = nullptr ;  this->listLenght = 0; }
+    int             getLenght() { return this->listLenght; }
+    ListItemLogic*  getFirst() { return this->first; }
+    void            InsertItem(Connect *);
+    void            RemoveItem(Connect *);
 };
 
 #endif
