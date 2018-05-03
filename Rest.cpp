@@ -184,11 +184,55 @@ ItemApply::~ItemApply(){
 
 
 void Connect::Disconnect(int which){
-    if(which == 0) //chci mazat IN block
-        in->Disconnect(this);
-    if(which == 1) //chci mazat OUT block
-        out->Disconnect(this);
+    if(which == 0){ //chci mazat IN block
+        if(in_name=="COMBAT"){
+            Combat* tmp = (Combat*) in;
+            tmp->Disconnect(this);
+        }
+        else if(in_name=="REST"){
+            Rest* tmp = (Rest*) in;
+            tmp->Disconnect(this);
+        }
+        else if(in_name=="ARENASELECT"){
+            ArenaSelect* tmp = (ArenaSelect*) in;
+            tmp->Disconnect(this);
+        }
+        else if(in_name=="DICETHROW"){
+            DiceThrow* tmp = (DiceThrow*) in;
+            tmp->Disconnect(this);
+        }
+        else if(in_name=="ITEMAPPLY"){
+            ItemApply* tmp = (ItemApply*) in;
+            tmp->Disconnect(this);
+        }
+    }
+
+
+    if(which == 1){ //chci mazat OUT block
+        if(out_name=="COMBAT"){
+            Combat* tmp = (Combat*) out;
+            tmp->Disconnect(this);
+        }
+        else if(out_name=="REST"){
+            Rest* tmp = (Rest*) out;
+            tmp->Disconnect(this);
+        }
+        else if(out_name=="ARENASELECT"){
+            ArenaSelect* tmp = (ArenaSelect*) out;
+            tmp->Disconnect(this);
+        }
+        else if(out_name=="DICETHROW"){
+            DiceThrow* tmp = (DiceThrow*) out;
+            tmp->Disconnect(this);
+        }
+        else if(out_name=="ITEMAPPLY"){
+            ItemApply* tmp = (ItemApply*) out;
+            tmp->Disconnect(this);
+        }
+    }
+
 }
+
 
 void Rest::Disconnect(Connect * spoj){
     //jedna se o vstupni port
@@ -327,6 +371,7 @@ PortStuff * Rest::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else
@@ -343,6 +388,7 @@ PortStuff *DiceThrow::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else
@@ -359,6 +405,7 @@ PortStuff *Combat::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else if (typ == "Gods" && IPort3_Connected == false) {
@@ -367,6 +414,7 @@ PortStuff *Combat::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort3);
         ret->init = &(this->IPort3_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else if (typ == "Arena" && IPort2_Connected == false) {
@@ -375,6 +423,7 @@ PortStuff *Combat::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort2);
         ret->init = &(this->IPort2_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else
@@ -391,6 +440,7 @@ PortStuff *ItemApply::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else
@@ -407,6 +457,7 @@ PortStuff* ArenaSelect::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort1);
         ret->init = &(this->IPort1_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else if (typ == "Gods" && IPort2_Connected == false) {
@@ -415,6 +466,7 @@ PortStuff* ArenaSelect::tryConnect(string typ, Connect* spojeni) {
 
         ret->value = &(this->IPort2);
         ret->init = &(this->IPort2_Initiated);
+        ret->blockType = this->getType();
         return ret;
     }
     else
@@ -763,11 +815,13 @@ Connect::Connect(Block* Blok1, Block *Blok2, bool* ok) {
     this->name = "None";
 
     this->Data_type = Blok1->getOut();
+    this->in_name = Blok1->getType();
     this->reaction = Blok2->tryConnect(this->Data_type,this);
     if (reaction->init != nullptr) {
         Blok1->setSubscribe(this);
         this->in = Blok1;
         this->out = Blok2;
+        this->out_name = reaction->blockType;
         *ok = true;
     }
     else {

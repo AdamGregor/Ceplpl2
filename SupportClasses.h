@@ -11,6 +11,7 @@ class Block;
 struct PortStuff {
     void*           value;
     bool*           init;
+    string          blockType;
 };
 
 class Connect {
@@ -22,7 +23,9 @@ public:
     string          name;
 
     Block*          in;
+    string          in_name;
     Block*          out;
+    string          out_name;
 
                     Connect(Block *blok, Block *blok2, bool* ok);
     bool            GetTransfered(){return transfered;}

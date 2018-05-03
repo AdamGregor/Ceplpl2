@@ -40,6 +40,7 @@ public:
     virtual bool    askReady() = 0;
     virtual void    Reset() = 0;
     virtual void    Disconnect(Connect*)=0;
+    virtual string    getType()=0;
 };
 
 class Rest : public Block {
@@ -62,6 +63,7 @@ public:
     bool        askReady();
     void        Reset();
     void        Disconnect(Connect*);
+    string        getType(){return "REST";}
 };
 
 class Combat : public Block {
@@ -94,6 +96,7 @@ public:
     bool        askReady();
     void        Reset();
     void        Disconnect(Connect*);
+    string        getType(){return "COMBAT";}
 
 };
 
@@ -123,6 +126,7 @@ public:
     bool        askReady();
     void        Reset();
     void        Disconnect(Connect*);
+    string        getType(){return "ITEMAPPLY";}
 };
 
 class DiceThrow : public Block {
@@ -145,6 +149,7 @@ public:
     bool        askReady();
     void        Reset();
     void        Disconnect(Connect*);
+    string        getType(){return "DICETHROW";}
 };
 
 class ArenaSelect : public Block {
@@ -172,6 +177,7 @@ public:
     bool        askReady();
     void        Reset();
     void        Disconnect(Connect*);
+    string        getType(){return "ARENASELECT";}
 };
 
 
