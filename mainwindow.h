@@ -158,6 +158,11 @@ private:
      */
     QString filename;
 
+    /**
+     * @brief počet vytvořených bloků, pokud je větší jak 50, Spawn_x a Spawn_y se resetuje na původní hodnoty, stejně tak tato hodnota
+     */
+    int spawnCount;
+
 
 private slots:
 

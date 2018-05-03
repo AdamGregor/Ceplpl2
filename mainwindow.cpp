@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     pen->setWidth(4);
 
     blocks_ID = 1;
+    spawnCount = 0;
     active_connection = nullptr;
     filename = QString();
     this->blocks = new BlockList;
@@ -141,6 +142,12 @@ void MainWindow::addCombat(){
 
     blocks_ID++;
     Program.Reset();
+    spawnCount++;
+    if(spawnCount > 50){
+        Spawn_x = 12;
+        Spawn_y = 67;
+        spawnCount = 0;
+    }
 }
 
 void MainWindow::addDice_throw(){
@@ -171,6 +178,12 @@ void MainWindow::addDice_throw(){
     Spawn_y +=10;
     blocks_ID++;
     Program.Reset();
+    spawnCount++;
+    if(spawnCount > 50){
+        Spawn_x = 12;
+        Spawn_y = 67;
+        spawnCount = 0;
+    }
 }
 
 void MainWindow::addItem_apply(){
@@ -199,6 +212,12 @@ void MainWindow::addItem_apply(){
     Spawn_y +=10;
     blocks_ID++;
     Program.Reset();
+    spawnCount++;
+    if(spawnCount > 50){
+        Spawn_x = 12;
+        Spawn_y = 67;
+        spawnCount = 0;
+    }
 }
 
 void MainWindow::addArena_select(){
@@ -227,6 +246,12 @@ void MainWindow::addArena_select(){
     Spawn_y +=10;
     blocks_ID++;
     Program.Reset();
+    spawnCount++;
+    if(spawnCount > 50){
+        Spawn_x = 12;
+        Spawn_y = 67;
+        spawnCount = 0;
+    }
 }
 
 void MainWindow::addRest(){
@@ -255,6 +280,12 @@ void MainWindow::addRest(){
     Spawn_y +=10;
     blocks_ID++;
     Program.Reset();
+    spawnCount++;
+    if(spawnCount > 50){
+        Spawn_x = 12;
+        Spawn_y = 67;
+        spawnCount = 0;
+    }
 }
 
 
