@@ -225,7 +225,7 @@ private slots:
     void stepIt();
 
     /**
-     * @brief vše smaže a vytvoří nové schéma
+     * @brief vše smaže a připraví aplikaci pro nové schéma
      */
     void newScheme();
 

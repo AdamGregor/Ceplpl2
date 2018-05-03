@@ -177,8 +177,8 @@ public:
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
 
     /**
-     * @brief Udalost, kdy mys opousti spoj
-     * @param event udalost
+     * @brief Událost, kdy myš opustí spoj
+     * @param event událost
      */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 
