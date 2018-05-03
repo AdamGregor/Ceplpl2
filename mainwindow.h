@@ -28,7 +28,7 @@ class MainWindow;
 }
 
 /**
- * @brief Třída MainWindow, dědí od QMainWindow, představuje hlavní okno aplikace
+ * @brief Třída MainWindow, dědí od QMainWindow, představuje hlavní okno aplikace.
  */
 class MainWindow : public QMainWindow
 {
@@ -36,7 +36,7 @@ class MainWindow : public QMainWindow
 
 public:
     /**
-     * @brief Konstruktor
+     * @brief Konstruktor.
      * @param parent
      */
     explicit MainWindow(QWidget *parent = 0);
@@ -44,53 +44,53 @@ public:
     ~MainWindow();
 
     /**
-     * @brief Ověří umístění bloku v okně
+     * @brief Ověří umístění bloku v okně.
      * @param x Xová souřadnice bloku
      * @param y Yová souřadnice bloku
      */
     void checkPlacement(int* x, int* y);
 
     /**
-     * @brief Emituje signál v případě, že velikost okna byla změněna
+     * @brief Emituje signál v případě, že velikost okna byla změněna.
      * @param event událost změny okna
      */
     void resizeEvent(QEvent* event);
 
     /**
-     * @brief Zažádá uživatele o zadání vstupu, konkrétně boha
+     * @brief Zažádá uživatele o zadání vstupu, konkrétně boha.
      * @param ID ID bloku do kterého se zadá vstup
      * @return ukazatel na vytvořeného boha
      */
     void* getGod(unsigned int ID);
 
     /**
-     * @brief Zažádá uživatele o zadání vstupu, konkrétně arény
+     * @brief Zažádá uživatele o zadání vstupu, konkrétně arény.
      * @param ID  ID bloku do kterého se zadá vstup
      * @return ukazatel na vytvořenou arenu
      */
     void* getArena(unsigned int ID);
 
     /**
-     * @brief Zažádá uživatele o zadání vstupu, konkrétně věc
+     * @brief Zažádá uživatele o zadání vstupu, konkrétně věc.
      * @param ID ID bloku do kterého se zadá vstup
      * @return ukazatel na vytvořenou věc
      */
     void* getItem(unsigned int ID);
 
     /**
-     * @brief zvýraznění bloku s daným ID
+     * @brief zvýraznění bloku s daným ID.
      * @param ID
      */
     void highlightBlock(unsigned int ID);
 
     /**
-     * @brief zruší zvýraznění bloku
+     * @brief zruší zvýraznění bloku.
      * @param ID
      */
     void unhighlightBlock(unsigned int ID);
 
     /**
-     * @brief Vypíše výsledek přepočtu bloku
+     * @brief Vypíše výsledek přepočtu bloku.
      * @param typ typ bloku (0 = buh, 1 = arena, 2 = vec)
      * @param ID ID bloku
      * @param data ukazatel na výsledek
@@ -98,68 +98,68 @@ public:
     void printResult(int typ, unsigned int ID, void* data);
 
     /**
-     * @brief Vypíše hlášku o cyklech v bloku
+     * @brief Vypíše hlášku o cyklech v bloku.
      */
     void printCycle();
 
     /**
-     * @brief vypíše hlášku o resetování výpočtu
+     * @brief vypíše hlášku o resetování výpočtu.
      */
     void printReset();
 
 private:
     /**
-     * @brief Xová souřadnice bodu při vytvoření bloku
+     * @brief Xová souřadnice bodu při vytvoření bloku.
      */
     int Spawn_x;
 
     /**
-     * @brief Yová souřadnice bodu při vytvoření bloku
+     * @brief Yová souřadnice bodu při vytvoření bloku.
      */
     int Spawn_y;
 
     /**
-     * @brief ukazatel na grafickou scénu
+     * @brief ukazatel na grafickou scénu.
      */
     QGraphicsScene* scene;
 
     /**
-     * @brief ukazatel na pero, kterým se malují spoje
+     * @brief ukazatel na pero, kterým se malují spoje.
      */
     QPen* pen;
 
     /**
-     * @brief ukazatel na právě tvořený spoj
+     * @brief ukazatel na právě tvořený spoj.
      */
     connection* active_connection;
 
     /**
-     * @brief seznam existujících bloků
+     * @brief seznam existujících bloků.
      */
     BlockList* blocks;
 
     /**
-     * @brief sezanm existujících spojení
+     * @brief sezanm existujících spojení.
      */
     blockConnect* listConn;
 
     /**
-     * @brief userinterface
+     * @brief userinterface.
      */
     Ui::MainWindow *ui;
 
     /**
-     * @brief hodnota pro generování ID bloků
+     * @brief hodnota pro generování ID bloků.
      */
     unsigned int blocks_ID;
 
     /**
-     * @brief název souboru pro ukládání/načítaní
+     * @brief název souboru pro ukládání/načítaní.
      */
     QString filename;
 
     /**
-     * @brief počet vytvořených bloků, pokud je větší jak 50, Spawn_x a Spawn_y se resetuje na původní hodnoty, stejně tak tato hodnota
+     * @brief počet vytvořených bloků, pokud je větší jak 50, Spawn_x a Spawn_y se resetuje na původní hodnoty, stejně tak tato hodnota.
      */
     int spawnCount;
 
@@ -167,101 +167,101 @@ private:
 private slots:
 
     /**
-     * @brief vypíše nápovědu k používání aplikace
+     * @brief vypíše nápovědu k používání aplikace.
      */
     void printHelp();
 
     /**
-     * @brief vytvoří Combat blok
+     * @brief vytvoří Combat blok.
      */
     void addCombat();
 
     /**
-     * @brief vytvoří Dice blok
+     * @brief vytvoří Dice blok.
      */
     void addDice_throw();
 
     /**
-     * @brief vytvoří Item blok
+     * @brief vytvoří Item blok.
      */
     void addItem_apply();
 
     /**
-     * @brief vytvoří Arena blok
+     * @brief vytvoří Arena blok.
      */
     void addArena_select();
 
     /**
-     * @brief vytvoří Rest blok
+     * @brief vytvoří Rest blok.
      */
     void addRest();
 
     /**
-     * @brief přemístí blok tam, kde se nachází kursor myši pří puštění pravého tlačítka myši
+     * @brief přemístí blok tam, kde se nachází kursor myši pří puštění pravého tlačítka myši.
      * @param block blok, který se má přemístit
      */
     void mouseRelease(MyLabel* block);
 
     /**
-     * @brief vytváří spojení mezi bloky na které se klikne
+     * @brief vytváří spojení mezi bloky na které se klikne.
      * @param block blok pro spojení
      */
     void mousePress(MyLabel* block);
 
     /**
-     * @brief smaže blok
+     * @brief smaže blok.
      * @param block blok pro vymazání
      */
     void deleteSlot(MyLabel* block);
 
     /**
-     * @brief spustí výpočet
+     * @brief spustí výpočet.
      */
     void run();
 
     /**
-     * @brief provede krok výpočtu
+     * @brief provede krok výpočtu.
      */
     void stepIt();
 
     /**
-     * @brief vše smaže a připraví aplikaci pro nové schéma
+     * @brief vše smaže a připraví aplikaci pro nové schéma.
      */
     void newScheme();
 
     /**
-     * @brief načte schéma ze souboru
+     * @brief načte schéma ze souboru.
      */
     void load();
 
     /**
-     * @brief uloží schéma do souboru
+     * @brief uloží schéma do souboru.
      */
     void save_as();
 
     /**
-     * @brief provede rychlé uložení
+     * @brief provede rychlé uložení.
      */
     void quickSave();
 
     /**
-     * @brief změní umístění bloků při změně velikosti okna
+     * @brief změní umístění bloků při změně velikosti okna.
      */
     void doResized();
 
     /**
-     * @brief resetuje výpočet
+     * @brief resetuje výpočet.
      */
     void resetIt();
 
     /**
-     * @brief vypíše informace o aplikaci
+     * @brief vypíše informace o aplikaci.
      */
     void printAbout();
 
 signals:
     /**
-     * @brief signál při změně velikosti okna
+     * @brief signál při změně velikosti okna.
      */
     void resized();
 

@@ -20,45 +20,45 @@ class connection;
 class MyLabel;
 
 /**
- * @brief Struktura pro seznam spojů
+ * @brief Struktura pro seznam spojů.
  */
 
 struct ListItem{
 
     /**
-     * @brief spojení bloků
+     * @brief spojení bloků.
      */
     connection* data;
 
     /**
-     * @brief ukazatel na další prvek seznamu
+     * @brief ukazatel na další prvek seznamu.
      */
     ListItem* next;
 };
 
 /**
- * @brief Struktura pro seznam ID bloků, které jsou spojeny
+ * @brief Struktura pro seznam ID bloků, které jsou spojeny.
  */
 struct blockConn{
 
     /**
-     * @brief ID prvního bloku
+     * @brief ID prvního bloku.
      */
     unsigned int first_ID;
 
     /**
-     * @brief ID druhého bloku
+     * @brief ID druhého bloku.
      */
     unsigned int second_ID;
 
     /**
-     * @brief ukazatel na další prvek
+     * @brief ukazatel na další prvek.
      */
     blockConn* next;
 };
 
 /**
- * @brief Třída connection, dědí od QGraphicsLineItem, zaštiťuje především grafickou část spojů
+ * @brief Třída connection, dědí od QGraphicsLineItem, zaštiťuje především grafickou část spojů.
  */
 
 class connection : public QObject, public QGraphicsLineItem{
@@ -66,118 +66,118 @@ class connection : public QObject, public QGraphicsLineItem{
     Q_OBJECT
 
     /**
-     * @brief Ukazatel na blok, jehož out port je spojen
+     * @brief Ukazatel na blok, jehož out port je spojen.
      */
     MyLabel* outBlock;
 
     /**
-     * @brief Xová souřadnice out portu
+     * @brief Xová souřadnice out portu.
      */
     int out_x;
 
     /**
-     * @brief Yová souřadnice out portu
+     * @brief Yová souřadnice out portu.
      */
     int out_y;
 
     /**
-     * @brief Ukazatel na blok, jehož in port je spojen
+     * @brief Ukazatel na blok, jehož in port je spojen.
      */
     MyLabel* inBlock;
 
     /**
-     * @brief Xová souřadnice in portu
+     * @brief Xová souřadnice in portu.
      */
     int in_x;
 
     /**
-     * @brief Yová souřadnice in portu
+     * @brief Yová souřadnice in portu.
      */
     int in_y;
 
     /**
-     * @brief Počet kliků pravého tlačítka na myši, pokud se rovná 2, nakreslí se spojení
+     * @brief Počet kliků pravého tlačítka na myši, pokud se rovná 2, nakreslí se spojení.
      */
     int num_of_clicks;
 
 public:
 
     /**
-     * @brief Kontruktor
+     * @brief Kontruktor.
      */
     connection();
 
     /**
-     * @brief Nastaví outBlock
+     * @brief Nastaví outBlock.
      * @param block  ukazatel na blok
      */
     void setOutblock(MyLabel* block);
 
     /**
-     * @brief Nastaví inBlock
+     * @brief Nastaví inBlock.
      * @param block ukazatel na blok
      */
     void setInblock(MyLabel* block);
 
     /**
-     * @brief Nastaví koordináty out portu
+     * @brief Nastaví koordináty out portu.
      * @param x Xová souřadnice
      * @param y Yová souřadnice
      */
     void setOutcoords(int* x, int* y);
 
     /**
-     * @brief Nahraje souřadnice out portu do parametrů x, y
+     * @brief Nahraje souřadnice out portu do parametrů x, y.
      * @param x
      * @param y
      */
     void getOutcoords(int* x, int* y);
 
     /**
-     * @brief Nastaví koordináty in portu
+     * @brief Nastaví koordináty in portu.
      * @param x
      * @param y
      */
     void setIncoords(int* x, int* y);
 
     /**
-     * @brief Nahraje souřadnice in portu do parametrů x, y
+     * @brief Nahraje souřadnice in portu do parametrů x, y.
      * @param x
      * @param y
      */
     void getIncoords(int* x, int* y);
 
     /**
-     * @brief Inkrementuje hodnotu num_of_clicks
+     * @brief Inkrementuje hodnotu num_of_clicks.
      */
     void incNumOfClicks();
 
     /**
-     * @brief Vrátí hodnotu num_of_clicks
+     * @brief Vrátí hodnotu num_of_clicks.
      * @return integer
      */
     int getNumOfClicks();
 
     /**
-     * @brief Vrátí ukazatel outBlocku
+     * @brief Vrátí ukazatel outBlocku.
      * @return ukazatel na MyLabel
      */
     MyLabel* getOutBlock();
 
     /**
-     * @brief Vrátí ukazatel inBlocku
+     * @brief Vrátí ukazatel inBlocku.
      * @return ukazatel na MyLabel
      */
     MyLabel* getInBlock(){return inBlock;}
 
     /**
-     * @brief Událost, kdy je myš nad spojem, nastaví tooltip spoje
+     * @brief Událost, kdy je myš nad spojem, nastaví tooltip spoje.
      * @param event událost
      */
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
 
     /**
-     * @brief Událost, kdy myš opustí spoj
+     * @brief Událost, kdy myš opustí spoj.
      * @param event událost
      */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
@@ -185,48 +185,48 @@ public:
 };
 
 /**
- * @brief Třída connectionList, ukládá ukazatele na connection v struktuře ListItem
+ * @brief Třída connectionList, ukládá ukazatele na connection v struktuře ListItem.
  */
 class connectionList{
 
     /**
-     * @brief První prvek seznamu
+     * @brief První prvek seznamu.
      */
     ListItem* first;
 
     /**
-     * @brief délka seznamu
+     * @brief délka seznamu.
      */
     int lenght;
 
 public:
 
     /**
-     * @brief konstruktor
+     * @brief konstruktor.
      */
     connectionList();
 
     /**
-     * @brief Vloží ukazatel na connection do seznamu
+     * @brief Vloží ukazatel na connection do seznamu.
      * @param item ukazatel na connection
      */
     void insert(connection* item);
 
     /**
-     * @brief odstraní connection ze seznamu,
+     * @brief odstraní connection ze seznamu.
      * @param block_ID ID bloku, který obsahuje connection
      * @param out  hledá blok v out listu pokud je true
      */
     void deleteConnection(unsigned int block_ID, bool out);
 
     /**
-     * @brief zjistí délku seznamu
+     * @brief zjistí délku seznamu.
      * @return vrací hodnotu délky seznamu
      */
     int getListLenght();
 
     /**
-     * @brief vrací první prvek seznamu
+     * @brief vrací první prvek seznamu.
      * @return ukazatel na první prvek seznamu
      */
     ListItem* getFirst();
@@ -234,49 +234,49 @@ public:
 
 
 /**
- * @brief Třída blockConnect, ukládá ID dvojice ID bloků, které jsou spojeny
+ * @brief Třída blockConnect, ukládá ID dvojice ID bloků, které jsou spojeny.
  */
 class blockConnect{
 
     /**
-     * @brief ukazatel na první prvek seznamu
+     * @brief ukazatel na první prvek seznamu.
      */
     blockConn* first;
 
     /**
-     * @brief délka seznamu
+     * @brief délka seznamu.
      */
     int lenght;
 
 public:
 
     /**
-     * @brief konstruktor
+     * @brief konstruktor.
      */
     blockConnect();
 
     /**
-     * @brief vloží do seznamu dvojici ID bloků, které jsou spojeny
+     * @brief vloží do seznamu dvojici ID bloků, které jsou spojeny.
      * @param first_ID  ID prvního bloku
      * @param second_ID ID druhého bloku
      */
     void insert(int first_ID, int second_ID);
 
     /**
-     * @brief vrací ukazatel na první prvek seznamu
+     * @brief vrací ukazatel na první prvek seznamu.
      * @return ukazatel na první prvek sezanmu
      */
     blockConn* getFirst();
 
     /**
-     * @brief odstraní prvek seznamu, který má stejná ID jako dané parametry
+     * @brief odstraní prvek seznamu, který má stejná ID jako dané parametry.
      * @param first_ID  ID prvního bloku
      * @param second_ID ID druhého bloku
      */
     void deleteConn(unsigned int first_ID, unsigned int second_ID);
 
     /**
-     * @brief vrací délku seznamu
+     * @brief vrací délku seznamu.
      * @return délka seznamu
      */
     int getListlenght();
