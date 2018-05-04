@@ -543,7 +543,6 @@ void* MainWindow::getItem(unsigned int ID){
 }
 
 void MainWindow::highlightBlock(unsigned int ID){
-    qDebug()<<"HIGH" << ID <<"\n";
     Listblock* block = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
         if(block->data->getID() == ID){
@@ -555,7 +554,7 @@ void MainWindow::highlightBlock(unsigned int ID){
 }
 
 void MainWindow::unhighlightBlock(unsigned int ID){
-    qDebug()<<"UNHIGH" <<ID<< "\n";
+
     Listblock* block = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
         if(block->data->getID() == ID){
