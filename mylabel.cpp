@@ -112,8 +112,6 @@ MyLabel *MyLabel::getIDlabel(){
 
 // BlocksList
 
-
-
 BlockList::BlockList(){
     lenght = 0;
     first = nullptr;

@@ -123,7 +123,7 @@ void connection::hoverEnterEvent(QGraphicsSceneHoverEvent* event){
                              "In Block ID: " + druheid + "\n"
                              "In block Type: " + druhytyp + "\n\n"
                              "Name of Arena: " + tmpname + "\n"
-                             "Effect: " + strenght + "\n");
+                             "Effect: " + eff + "\n");
         }
         else{
             this->setToolTip("Out Block ID: " + ID + "\n"
