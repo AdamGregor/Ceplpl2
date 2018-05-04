@@ -796,41 +796,7 @@ void MainWindow::load(){
         return;
     }
 
-    this->Spawn_x = 12;
-    this->Spawn_y = 67;
-    blocks_ID = 0;
-    filename = QString();
-    Listblock* tmp = blocks->getFirst();
-    int lenght = blocks->getListLenght();
-    active_connection = nullptr;
-
-    for(int i = 0; i < lenght; i++){
-        connectionList* out_list = tmp->data->getOutList();
-        connectionList* in_list = tmp->data->getInList();
-        ListItem* item = out_list->getFirst();
-        MyLabel* other_block;
-
-        for(int i = 0; i < out_list->getListLenght(); i++){
-            other_block = item->data->getInBlock();
-            item = item->next;
-            listConn->deleteConn(tmp->data->getID(), other_block->getID());
-        }
-
-        item = in_list->getFirst();
-        for(int i = 0; i < in_list->getListLenght(); i++){
-            other_block = item->data->getOutBlock();
-            item = item->next;
-            listConn->deleteConn(other_block->getID(), tmp->data->getID());
-        }
-        delete tmp->data->getLogicblock();
-        blocks->deleteBlock(tmp->data->getID());
-        tmp = tmp->next;
-    }
-
-    delete blocks;
-    delete listConn;
-    listConn = new blockConnect;
-    blocks = new BlockList;
+    this->newScheme();
 
     QTextStream read(&file);
     bool ok;
