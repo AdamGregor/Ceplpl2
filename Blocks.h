@@ -1,12 +1,100 @@
 ﻿/*!
-    *\author	Adam Gregor
-    *\mainpage	blokový editor 2018
+    *\author	Adam Gregor(xgrego18)
+    *\author	Zdeněk Jelínek/(xjelin47)
+    *\mainpage	Blokový editor 2018
     *\section	Úvod
-    * Tento kód vznikl v rámci projektu do předmětu ICP
+    * Tento kód vznikl v rámci projektu do předmětu ICP v roce 2018. Jeho úlolem 
+    * bylo navrhnout a implementovat aplikaci pro návrh a editaci blokových schémat.
     *\section	Kompilace
-    *Program se kompiluje klasicky, příkazem 'make'
-    \subsection Make
-    * Napište make
+    *Základní kompilace probíha standartně, příkazem "make".
+    *Program však podporuje i rozšířené možnosti kompilace:
+    \subsection run
+    * <b>make run</b>. Zkompiluje program a posléze jej spustí.
+	\subsection pack
+    * <b>make pack</b>. Vytvoří archiv pro odevzdání.
+	\subsection make
+    * <b>make doxygen</b>. Vygeneruje dokumentaci.
+	\subsection clean
+    * <b>make clean</b>. Odstraní části programu vygenerovatelné příkazem "make".
+
+	*\section	Program
+	* Náš program implementuje blokové schéma jako simulátor turnajů bohů. Samotní bohové 
+	* jsou jeden z námi implementovaných datových typů. Bloky představují akce, které bohové
+	* během turnaje mohou provádět.
+
+	*\subsection Bloky
+	*Seznam vytvořených bloků je následujicí:<br><br>
+	a) Combat <br>
+		&emsp;  -- INPUT: 2 Gods a 1 Arena <br>
+	    &emsp;	-- OUTPUT: 1 Gods <br> <br>
+	    &emsp;	-- Tento blok reprezentuje samotnou bitvu bohů. Bojují proti sobě vždy dva, pouze jeden je vítěz. Využívají u toho veškeré své schopnosti a znalosti, a proto pokud bojuje bůh v aréně z jeho světa, dostává bonus (např. Mimir v Asgartd), stejně tak, když bojují ve svém přidruženém prostředí (např. Athena/Mimir v Library of Alexandria).
+
+	<br>
+
+	b) Rest<br>
+	 &emsp;  -- INPUT: 1 Gods<br>
+	 &emsp;  -- OUTPUT: 1 Gods<br>
+	 &emsp;  -- Po vyčerpávajicím souboji nic neudělá bohovi větší radost než nerušený klidný odpočinek. Tento blok boha vyléčí do jeho původní  síly
+
+	<br>	 
+
+	c) ItemApply<br>
+	&emsp;  --INPUT: 1 Gods a 1 Accessories<br>
+	&emsp;  --OUTPUT: 1 Gods<br>
+	&emsp;  -- Jedna z mála věcí která je horší než bojovat proti Diovi na Olympu je bojovat proti Diovi posilněném vírou smrtelnílů na Olympu. Tento blok upravuje sílu boha v zásvislosti na vybraném Accessories.
+
+	<br>
+
+	d) DiceThrow <br>
+	&emsp;  --INPUT: 1 Gods <br>
+	&emsp;  --OUTPUT: 1 Gods <br>
+	&emsp;  -- Zoufalí bohové dělají zoufalé věci. Tato akce vezme bohovi 10% aktualního života aplikuje na něj náhodně vybranou Accessories s dvojnásobnou silou.
+
+	<br>
+
+	e) ArenaSelect <br>
+	&emsp;  --INPUT: 2 Gods <br>
+	&emsp;  --OUTPU: 1 Arena <br>
+	&emsp;  -- Tato akce náhodně preferovanou arénu jednoho z bohů.
+
+	<br>
+
+
+	*\subsection Bohové 
+	Seznam bohů a jejich síly: <br>
+	<b>Severští bohové</b> <br>
+	Odin	&emsp;&emsp;	103<br>
+	Mimir	&emsp;&emsp;	88<br>
+	Njord	&emsp;&emsp;	92<br>
+	<b>Řečtí bohové</b><br>
+	Zeus	&emsp;&emsp;	100<br>
+	Poseidon &emsp;&emsp;	94<br>
+	Athena &emsp;&emsp;	89<br>
+
+
+*\subsection Arény 
+Seznam arén, jejich silou a kým jsou oblíbeny: <br>
+<b>Řecké arény</b><br>
+Olymp		&emsp;	8 &emsp; Zeus<br>
+AegeanSea	&emsp;	5 &emsp; Poseidon<br>
+LibraryOfAlexandria &emsp;	3 &emsp; Athena<br>
+<b>Severské arény</b> <br>
+Asgartd		&emsp;  9 &emsp;Odin<br>
+NorwegianSea   &emsp; 5 &emsp; Njord<br>
+Alfheim		&emsp; 4  &emsp; Mimir<br>
+<b>Neutrální arény</b> <br>
+ValleyOfTheKings	 &emsp; 0 &emsp; nikdo<br>
+
+
+	*\subsection Zbraně 
+	Seznam zbraní a jejich síly: <br>
+	LeviathanAxe  &emsp; 7 <br>
+	Curse		  &emsp; -10 <br>
+	ScrollOfWisdom &emsp; 4 <br>
+	Piety		  &emsp;  3 <br>
+	Impiety		  &emsp; -3 <br>
+
+
 */
 
 /**
