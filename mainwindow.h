@@ -37,6 +37,8 @@ class MainWindow : public QMainWindow
 public:
     /**
      * @brief Konstruktor.
+     * Nastaví se velikost okna podle velikosti monitoru a jeho další potřebné nastavení. Dále se nastaví grafická scéna. Propojí se signály okna s odpovídajícími sloty.
+     * Alokuje se paměť pro seznam s bloky spojeními.
      * @param parent
      */
     explicit MainWindow(QWidget *parent = 0);
@@ -45,6 +47,7 @@ public:
 
     /**
      * @brief Ověří umístění bloku v okně.
+     * Kontrola souřadnic bloku. Pokud jsou mimo okno, přepočítá se na nejbližší možné místo v okně.
      * @param x Xová souřadnice bloku
      * @param y Yová souřadnice bloku
      */
@@ -173,43 +176,59 @@ private slots:
 
     /**
      * @brief vytvoří Combat blok.
+     * Nastaví se ID a typ (COMBAT) bloku. Propojí se signály s odpovídajícími sloty. Nastaví se umístění bloku v okně.
+     * Vytvoří se label, který grafiky zobrazuje ID bloku. Vytvoří se logický blok COMBAT.
      */
     void addCombat();
 
     /**
      * @brief vytvoří Dice blok.
+     * Nastaví se ID a typ (DICE) bloku. Propojí se signály s odpovídajícími sloty. Nastaví se umístění bloku v okně.
+     * Vytvoří se label, který grafiky zobrazuje ID bloku. Vytvoří se logický blok DICE.
      */
     void addDice_throw();
 
     /**
      * @brief vytvoří Item blok.
+     * Nastaví se ID a typ (ITEM) bloku. Propojí se signály s odpovídajícími sloty. Nastaví se umístění bloku v okně.
+     * Vytvoří se label, který grafiky zobrazuje ID bloku. Vytvoří se logický blok ITEM.
      */
     void addItem_apply();
 
     /**
      * @brief vytvoří Arena blok.
+     * Nastaví se ID a typ (ARENA) bloku. Propojí se signály s odpovídajícími sloty. Nastaví se umístění bloku v okně.
+     * Vytvoří se label, který grafiky zobrazuje ID bloku. Vytvoří se logický blok ARENA.
      */
     void addArena_select();
 
     /**
      * @brief vytvoří Rest blok.
+     * Nastaví se ID a typ (REST) bloku. Propojí se signály s odpovídajícími sloty. Nastaví se umístění bloku v okně.
+     * Vytvoří se label, který grafiky zobrazuje ID bloku. Vytvoří se logický blok REST.
      */
     void addRest();
 
     /**
      * @brief přemístí blok tam, kde se nachází kursor myši pří puštění pravého tlačítka myši.
+     * Při změně pozice bloku se zkontroluje, jestli má povolené souřadnice. Pokud ne, umístí se
+     * na nejbližší možné místo. Dále se přepočítá pozice všech spojů, které jsou napojeny na tento blok.
      * @param block blok, který se má přemístit
      */
     void mouseRelease(MyLabel* block);
 
     /**
      * @brief vytváří spojení mezi bloky na které se klikne.
+     * Při tvoření spojení se kontroluje, zda má blok kompatibilní porty a zda je nemá zaplněné.
+     * Pokud je možné spojení vytvořit, bloky se graficky spojí a alokuje se paměť pro logické spojení.
      * @param block blok pro spojení
      */
     void mousePress(MyLabel* block);
 
     /**
      * @brief smaže blok.
+     * Pokud je tlačítko Delete zamáčknuté, může se blok odstranit. Při tom se odtraní i logický blok a grafické i logické
+     * spoje.
      * @param block blok pro vymazání
      */
     void deleteSlot(MyLabel* block);
@@ -231,6 +250,8 @@ private slots:
 
     /**
      * @brief načte schéma ze souboru.
+     * Požádá uživatele o zadání souboru ze kterého se má schéma načíst.
+     * Po zadání se rozpracované schéma odstraní a načtou se bloky se spoji.
      */
     void load();
 

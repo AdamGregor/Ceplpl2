@@ -172,12 +172,16 @@ public:
 
     /**
      * @brief Událost, kdy je myš nad spojem, nastaví tooltip spoje.
+     * Pokud v bloku, ze kterého spoj vychází, byl proveden výpočet, zjistí se aktuální data,
+     * která se nastaví jako ToolTip, v opačném případě se nastaví hláška "No data transfered".
+     * Spoj se také zvyrazní červenou barvou.
      * @param event událost
      */
     void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
 
     /**
      * @brief Událost, kdy myš opustí spoj.
+     * Barva spoje se změní zpět na černou barvu
      * @param event událost
      */
     void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
@@ -208,12 +212,14 @@ public:
 
     /**
      * @brief Vloží ukazatel na connection do seznamu.
+     * Spoj se vloží do seznamu, a délka seznamu se zvětší o jedno
      * @param item ukazatel na connection
      */
     void insert(connection* item);
 
     /**
      * @brief odstraní connection ze seznamu.
+     * Smaže se daný spoj v seznamu a délka seznamu se zmenší o jedno
      * @param block_ID ID bloku, který obsahuje connection
      * @param out  hledá blok v out listu pokud je true
      */
@@ -257,6 +263,7 @@ public:
 
     /**
      * @brief vloží do seznamu dvojici ID bloků, které jsou spojeny.
+     * Do seznamu se vloží ID out bloku a in bloku
      * @param first_ID  ID prvního bloku
      * @param second_ID ID druhého bloku
      */
@@ -270,6 +277,7 @@ public:
 
     /**
      * @brief odstraní prvek seznamu, který má stejná ID jako dané parametry.
+     * Smaže se daný spoj v seznamu a délka seznamu se zmenší o jedno
      * @param first_ID  ID prvního bloku
      * @param second_ID ID druhého bloku
      */
