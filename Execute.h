@@ -63,17 +63,17 @@ class Execute{
      * @brief Atribut poskytujicí údaj zda byly všechny bloky vyhodnoceny
      */
     bool            Completed;
-    /**
-     * @brief Uchovává číslo naposledy zvýrazněného bloku
-     */
-    unsigned int previous;
+
 
 public:
     /**
      * @brief Celkový počet aktivních bloků
      */
     int Block_count;
-
+    /**
+     * @brief Uchovává číslo naposledy zvýrazněného bloku
+     */
+    unsigned int previous;
     /**
      * @brief Konstruktor, inicializuje seznam bloků, nastaví výchozí hodnoty atributů
      */

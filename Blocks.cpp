@@ -466,6 +466,7 @@ void ArenaSelect::eval() {
 
     //ZVYRAZNENI
     MyWindow->highlightBlock(this->ID_bloku);
+    if(Program.previous != this->ID_bloku)
     MyWindow->unhighlightBlock(this->ID_bloku);
 
     //nastaveni areny podle vylosovaneho boha
@@ -518,6 +519,7 @@ void Combat::eval() {
 
     //ZVYRAZNENI
     MyWindow->highlightBlock(this->ID_bloku);
+    if(Program.previous != this->ID_bloku)
     MyWindow->unhighlightBlock(this->ID_bloku);
 
     double effect = Bojiste->getEffect();
@@ -625,6 +627,7 @@ void ItemApply::eval() {
 
     //ZVYRAZNENI
     MyWindow->highlightBlock(this->ID_bloku);
+    if(Program.previous != this->ID_bloku)
     MyWindow->unhighlightBlock(this->ID_bloku);
 
     double effect = vec->getEffect();
@@ -658,10 +661,6 @@ void DiceThrow::eval() {
 
     double strenght = Buh->getStrenght();
     strenght *= 0.9;
-
-    //ZVYRAZNENI
-    MyWindow->highlightBlock(this->ID_bloku);
-    MyWindow->unhighlightBlock(this->ID_bloku);
 
     //vybere se nahodny predmet a ten se na nej aplikuje
     int random = rand();
@@ -698,7 +697,7 @@ void DiceThrow::eval() {
         delete tmp;
     }
 
-    strenght += boost;
+    strenght += (boost*2);
     if (strenght < 0.0)
         strenght = 0.0;
 
