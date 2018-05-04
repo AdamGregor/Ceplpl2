@@ -432,11 +432,6 @@ void Rest::eval() {
     }
     Gods * tmp = (Gods *)IPort1;
 
-    //ZVYRAZNENI
-    MyWindow->highlightBlock(this->ID_bloku);
-    MyWindow->unhighlightBlock(this->ID_bloku);
-
-
     //PROVEDENI VYPOCTU
     this->OPort1 = tmp->setStrenght(tmp->getOriginalStrenght());
     OPort1_Initiated = true;

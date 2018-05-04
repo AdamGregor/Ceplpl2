@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     this->setWindowTitle("BlockEditor");
     MyWindow = this;
 
+    this->setWindowIcon(QIcon(":Logo.ico"));
     scene = new QGraphicsScene;
     QRect tmp = QApplication::desktop()->screenGeometry();
     this->setFixedSize(tmp.width() *0.9, tmp.height()*0.9);
@@ -383,7 +384,6 @@ void* MainWindow::getGod(unsigned int ID){
     QString id = QString::number(ID);
 
     QString god = QInputDialog::getText(this, "Block ID: " + id, "Enter a god:\n-> Zeus\n-> Odin\n-> Athena\n-> Njord\n-> Poseidon\n-> Mimir\n", QLineEdit::Normal, "Zeus", &ok);
-    bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(!ok){
         return nullptr;
@@ -445,7 +445,6 @@ void* MainWindow::getArena(unsigned int ID){
     QString id = QString::number(ID);
     QString place = QInputDialog::getText(this, "Block ID: " + id, "Enter arena:\n-> Olymp\n-> Aegean sea\n-> Library of Alexandria\n-> Asgartd\n-> Norwegian sea\n-> Alfheim\n-> Valley of the kings\n",
                                          QLineEdit::Normal, "Olymp", &ok);
-    bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(place.isEmpty())
         return nullptr;
@@ -509,7 +508,6 @@ void* MainWindow::getItem(unsigned int ID){
 
     QString item = QInputDialog::getText(this, "Block ID: " + id, "Enter item:\n-> Leviathan Axe\n-> Curse\n-> Scroll of wisdom\n-> Piety\n-> Impiety\n",
                                          QLineEdit::Normal, "Curse", &ok);
-    bloc->data->setStyleSheet("QLabel { background-color : ;}");
 
     if(!ok){
         return nullptr;
@@ -545,27 +543,29 @@ void* MainWindow::getItem(unsigned int ID){
 }
 
 void MainWindow::highlightBlock(unsigned int ID){
+    qDebug()<<"HIGH" << ID <<"\n";
     Listblock* block = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
-        if(block->data->getID() == ID)
-            break;
+        if(block->data->getID() == ID){
+            block->data->setStyleSheet("QLabel { background-color : blue;}");
+            return;
+        }
         block = block->next;
     }
-
-    block->data->setStyleSheet("QLabel { background-color : blue;}");
-    return;
 }
 
 void MainWindow::unhighlightBlock(unsigned int ID){
+    qDebug()<<"UNHIGH" <<ID<< "\n";
     Listblock* block = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
-        if(block->data->getID() == ID)
-            break;
+        if(block->data->getID() == ID){
+            block->data->setStyleSheet("QLabel { background-color : ;}");
+            return;
+        }
         block = block->next;
     }
 
-    block->data->setStyleSheet("QLabel { background-color : ;}");
-    return;
+
 }
 
 void MainWindow::printResult(int typ, unsigned int ID, void *data){
@@ -740,6 +740,7 @@ void MainWindow::newScheme(){
     this->Spawn_x = 12;
     this->Spawn_y = 67;
     blocks_ID = 1;
+    spawnCount = 0;
     filename = QString();
     Listblock* tmp = blocks->getFirst();
     int lenght = blocks->getListLenght();
@@ -1097,6 +1098,12 @@ void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju 
 }
 
 void MainWindow::resetIt(){
+    Listblock* tmp = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        tmp->data->setStyleSheet("QLabel { background-color : ;}");
+    }
+
+
     Program.Reset();
 }
 

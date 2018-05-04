@@ -63,6 +63,10 @@ class Execute{
      * @brief Atribut poskytujicí údaj zda byly všechny bloky vyhodnoceny
      */
     bool            Completed;
+    /**
+     * @brief Uchovává číslo naposledy zvýrazněného bloku
+     */
+    unsigned int previous;
 
 public:
     /**

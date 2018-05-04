@@ -13,6 +13,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <string>
+
 #define HIGHEST_EFFECT 1.0
 #define LOWEST_EFFECT -0.5
 using namespace  std;
@@ -26,10 +27,9 @@ Execute::Execute() {
     Block_count = 0;
     Done = 0;
     NotReadyInRow = 0;
+    previous = 0;
     Completed = false;
 }
-
-
 
 void Connect::Disconnect(int which){
     if(which == 0){ //chci mazat IN block
@@ -204,7 +204,7 @@ void Execute::Run() {
 
 void Execute::Step() {
     bool Ready;
-    BlocklistElem * data = this->Blocks->getFirst();
+            BlocklistElem * data = this->Blocks->getFirst();
 
     while (1) {
         if (Done == this->Block_count || Completed) {
@@ -214,6 +214,10 @@ void Execute::Step() {
         }
         Ready = data->Data->askReady();
         if (Ready) {
+            MyWindow->highlightBlock(data->Data->ID_bloku);
+            MyWindow->unhighlightBlock(previous);
+            previous = data->Data->ID_bloku;
+
             data->Data->eval();
             Done += 1;
             NotReadyInRow = 0;
