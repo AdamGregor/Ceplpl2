@@ -194,7 +194,6 @@ void Connect::Disconnect(int which){
         else if(out_name=="REST"){
             Rest* tmp = (Rest*) out;
             tmp->Rest::Disconnect(this);
-            std::cout<<"Pripojenost bloku je: "<<tmp->IPort1_Connected;
         }
         else if(out_name=="ARENASELECT"){
             ArenaSelect* tmp = (ArenaSelect*) out;
@@ -218,7 +217,6 @@ void Connect::Disconnect(int which){
         }
         else if(in_name=="REST"){
             Rest* tmp = (Rest*) in;
-            std::cout<<"LOLOLOLOLOLOLO";
             tmp->Rest::Disconnect(this);
         }
         else if(in_name=="ARENASELECT"){
@@ -240,10 +238,7 @@ void Connect::Disconnect(int which){
 
 void Rest::Disconnect(Connect* spoj){
     //jedna se o vstupni port
-     std::cout<<"\nHOHOOOOOOOOOOO SEM TAAADYYYYY spoj: "<< spoj << " a " << IPort1_Connection <<" \n";
     if (spoj==IPort1_Connection || IPort1_Connection == 0){
-
-        std::cout<<"\nHOHOOOOOOOOOOO SEM TAAADYYYYY spojpowjdadiwabduihaw \n";
         IPort1_Connection = nullptr;
         IPort1_Connected=false;
         return;
@@ -332,7 +327,6 @@ void ArenaSelect::Disconnect(Connect * spoj){
 }
 
 bool Rest::askReady() {
-    std::cout << "\n\nVYSTUPY \n"<<IPort1_Initiated<<"\n"<<IPort1_Connected<<"\n"<<OPort1_Initiated;
     if ((IPort1_Initiated == true || IPort1_Connected == false) && OPort1_Initiated == false)
         return true;
     else
@@ -371,7 +365,6 @@ bool ArenaSelect::askReady() {
 }
 
 PortStuff * Rest::tryConnect(string typ, Connect* spojeni) {
-    std::cout << typ << IPort1_Connected;
     PortStuff *ret = new PortStuff;
     if (typ == "Gods" && IPort1_Connected == false) {
         this->IPort1_Connected = true;
@@ -876,7 +869,6 @@ void Execute::AddBlock(Block* blok) {
 void Execute::Run() {
     bool Ready;
     BlocklistElem * data = this->Blocks->getFirst();
-    std::cout<<"\n\n\n"<<Program.Block_count;
     while (1) {
         if(Completed){
             MyWindow->printReset();
@@ -889,7 +881,6 @@ void Execute::Run() {
         }
 
         Ready = data->Data->askReady();
-        std::cout << "moje redy: " << Ready;
         if (Ready) {
             data->Data->eval();
             Done +=1 ;
@@ -920,7 +911,6 @@ void Execute::Step() {
             return;
         }
         Ready = data->Data->askReady();
-        std::cout << "moje redy: " << Ready;
         if (Ready) {
             data->Data->eval();
             Done += 1;
@@ -936,7 +926,6 @@ void Execute::Step() {
         }
         else {
             NotReadyInRow += 1;
-            std::cout<<" " << NotReadyInRow<<" "<< this->Block_count<<"\n";
             if (NotReadyInRow == this->Block_count) {
                 MyWindow->printCycle();
                 Completed = true;
@@ -950,12 +939,10 @@ void Execute::Step() {
 }
 
 void Execute::Reset() {
-    std::cout<<"zde este ano";
     Done = 0;
     NotReadyInRow = 0;
     Completed = 0;
     BlocklistElem *Blok = this->Blocks->getFirst();
-    std::cout<<"zde este ano";
     while (Blok != nullptr) {
         Blok->Data->Reset();
         Blok = Blok->next;
