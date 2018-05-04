@@ -1,25 +1,59 @@
+/**
+ *@file Accessories.h
+ *@author Adam Gregor (xgrego18)
+ *@author Zdeněk Jelínek (xjelin47)
+ *@brief  Hlavičkový soubor imlementujicí datový typ Předmět
+ */
+
+
 #ifndef ACCESSORIES_H
 #define ACCESSORIES_H
 #include <string>
 using namespace std;
+/**
+ * celkový počet předmětů
+ */
 #define ITEM_COUNT 5
 
-//IMPLEMENTACE DATOVEHO TYPU ACCESSORIES
 
-//Base class Accessories, dedi z ni konkretni predmety, kteri bohove mohou pouzivat
+
+
+/**
+ * @brief Base class Accessories, dedi z ni konkretni predmety, kteri bohove mohou pouzivat
+ */
 class Accessories {
 protected:
+    /**
+     * @brief Atributa určujicí efektivitu zbraně
+     */
     double	Effect;
+    /**
+     * @brief Jméno předmětu
+     */
     string	Name;
 
 public:
+    /**
+     * @brief Viruální destruktor
+     */
     virtual ~Accessories(){;}
+    /**
+     * @brief Metoda vrací efekt předmětu
+     * @return double Effect
+     */
     double	getEffect() { return Effect; }
+    /**
+     * @brief Metoda navracejicí jméno předmětu
+     * @return string Name
+     */
     string	getName() { return Name; }
 };
 
 //Predmey
 
+/**
+ * @brief Třída reprezentujicí předmět "Leviathan Axe"
+ */
 class LeviathanAxe : public Accessories {
 public:
     ~LeviathanAxe(){;}
@@ -29,6 +63,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí předmět "Curse"
+ */
 class Curse : public Accessories {
 public:
     ~Curse(){;}
@@ -38,6 +75,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí předmět "Scroll of Wisdom"
+ */
 class ScrollOfWisdom : public Accessories {
 public:
     ~ScrollOfWisdom(){;}
@@ -47,6 +87,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí předmět "Piety"
+ */
 class Piety : public Accessories {
 public:
     ~Piety(){;}
@@ -56,6 +99,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí předmět "Impiety"
+ */
 class Impiety : public Accessories {
 public:
     ~Impiety(){;}

@@ -1,24 +1,52 @@
+/**
+ *@file Arenas.h
+ *@author Adam Gregor (xgrego18)
+ *@author Zdeněk Jelínek (xjelin47)
+ *@brief  Hlavičkový soubor imlementujicí datový typ Aréna
+ */
+
 #ifndef ARENAS_H
 #define ARENAS_H
 #include <string>
 using namespace std;
-//IMPLEMENTACE DATOVEHO TYPU ARENAS
 
-//Base class Arena, dedi z ni konkretni areny
+/**
+ * @brief Base class Arena, dedi z ni konkretni areny
+ */
 class Arena {
 protected:
+    /**
+     * @brief Atributa určujicí obecnout efektivitu. Konkrétní efekt se liší v závislosti na bohu
+     */
     double	Effect;
+    /**
+     * @brief Jméno arény
+     */
     string	Name;
 
 public:
+    /**
+     * @brief Virtuální destruktor třídy Arena
+     */
     virtual ~Arena(){;}
+    /**
+     * @brief Metoda vracející obecnou efektivitu arény
+     * @return double Effect
+     */
     double	getEffect() { return Effect; }
+    /**
+     * @brief Metoda vracející jméno arény
+     * @return
+     */
     string	getName() { return Name; }
 };
 
-//Areny
 
-//Areny reckych bohu
+///Areny reckych bohu
+
+/**
+ * @brief Třída reprezentujicí arénu "Olymp"
+ */
 class Olymp : public Arena {
 public:
     ~Olymp(){;}
@@ -28,6 +56,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí arénu "Eegean Sea"
+ */
 class AegeanSea : public Arena {
 public:
     ~AegeanSea(){;}
@@ -37,6 +68,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí arénu "Library of Alexandria"
+ */
 class LibraryOfAlexandria : public Arena {
 public:
     ~LibraryOfAlexandria(){;}
@@ -46,7 +80,10 @@ public:
     }
 };
 
-//Areny norskych bohu
+///Areny norskych bohu
+/**
+ * @brief Třída reprezentujicí arénu "Asgartd"
+ */
 class Asgartd : public Arena {
 public:
     ~Asgartd(){;}
@@ -56,6 +93,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí arénu "Norwegian Sea"
+ */
 class NorwegianSea : public Arena {
 public:
     ~NorwegianSea(){;}
@@ -65,6 +105,9 @@ public:
     }
 };
 
+/**
+ * @brief Třída reprezentujicí arénu "Alfheim"
+ */
 class Alfheim : public Arena {
 public:
     ~Alfheim(){;}
@@ -74,7 +117,11 @@ public:
     }
 };
 
-//Neutralni bojiste
+///Neutralni bojiste
+
+/**
+ * @brief Třída reprezentujicí arénu "Valley of Kings"
+ */
 class ValleyOfTheKings : public Arena {
 public:
     ~ValleyOfTheKings(){;}
