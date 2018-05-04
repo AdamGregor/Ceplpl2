@@ -29,7 +29,8 @@ SOURCES += \
         mainwindow.cpp \
     mylabel.cpp \
     connection.cpp \
-    Rest.cpp
+    Execute_Connect.cpp\
+    Blocks.cpp
 
 HEADERS += \
         mainwindow.h \
