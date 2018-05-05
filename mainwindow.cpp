@@ -143,6 +143,7 @@ void MainWindow::addCombat(){
     Spawn_y +=10;
 
     blocks_ID++;
+
     Program.Reset();
     spawnCount++;
     if(spawnCount > 50){
@@ -180,6 +181,7 @@ void MainWindow::addDice_throw(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+
     Program.Reset();
     spawnCount++;
     if(spawnCount > 50){
@@ -215,6 +217,7 @@ void MainWindow::addItem_apply(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+
     Program.Reset();
     spawnCount++;
     if(spawnCount > 50){
@@ -250,6 +253,7 @@ void MainWindow::addArena_select(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+
     Program.Reset();
     spawnCount++;
     if(spawnCount > 50){
@@ -285,6 +289,7 @@ void MainWindow::addRest(){
     Spawn_x +=10;
     Spawn_y +=10;
     blocks_ID++;
+
     Program.Reset();
     spawnCount++;
     if(spawnCount > 50){
@@ -695,7 +700,8 @@ void MainWindow::mousePress(MyLabel *block){
 
 void MainWindow::deleteSlot(MyLabel *block){
     if(ui->actionDelete->isChecked()){
-         Program.Reset();
+
+        Program.Reset();
         active_connection = nullptr;
         connectionList* out_list = block->getOutList();
         connectionList* in_list = block->getInList();
@@ -727,8 +733,19 @@ void MainWindow::deleteSlot(MyLabel *block){
 }
 
 void MainWindow::run(){
+    Listblock* block = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        block->data->setStyleSheet("QLabel { background-color : ;}");
+        block = block->next;
+    }
+
     Program.Reset();
     Program.Run();
+    Listblock* help = blocks->getFirst();
+    for(int i = 0; i < blocks->getListLenght(); i++){
+        help->data->setStyleSheet("QLabel { background-color : ;}");
+        help = help->next;
+    }
 }
 
 void MainWindow::stepIt(){
@@ -954,6 +971,7 @@ void MainWindow::load(){
 
 
     file.close();
+
     Program.Reset();
 }
 
@@ -1099,7 +1117,8 @@ void MainWindow::doResized(){               // zatim deadcode, treba to vyuziju 
 void MainWindow::resetIt(){
     Listblock* tmp = blocks->getFirst();
     for(int i = 0; i < blocks->getListLenght(); i++){
-        tmp->data->setStyleSheet("QLabel { background-color : ;}");
+        tmp->data->setStyleSheet("QLabel { background-color: ;}");
+        tmp = tmp->next;
     }
 
 
@@ -1108,71 +1127,27 @@ void MainWindow::resetIt(){
 
 void MainWindow::printAbout(){
     QMessageBox msg;
-    msg.setText("Welcome to the BlockEditor,\n"
-                "one of the most realistic god fight simulators of all time!\n"
-                "============================================================\n"
-                "1. GODS and their strenght\n"
-                "--Northern gods\n"
-                "-Odin		,103\n"
-                "-Mimir		,88\n"
-                "-Njord		,92\n\n"
-                "--Greek gods\n"
-                "-Zeus		,100\n"
-                "-Poseidon	,94\n"
-                "-Athena 	,89\n\n\n"
-                "2. BLOCKS\n"
-                "All of actions that gods can make are represented by blocks.\n"
-                "List of blocks is following:\n"
-                "	a) Combat\n"
-                "	   --INPUT: 2 Gods and 1 Arena\n"
-                "	   --OUTPUT: 1 God\n"
-                "	   -- This is the part, where fight takes place. "
-                "2 gods are facing each other and only one can be the"
-                " winner. Both of them will use all their wits to win, so "
-                "in case they are fighting in their world or even in their "
-                "usual environment, they will become even more deadly "
-                "(i.e. Athena in the Library of Alexandria).\n\n"
+    msg.setText("BLOCKS:\n"
+                "	a) Combat:\n"
+                "	     -- INPUT: 2 Gods and 1 Arena\n"
+                "	     -- OUTPUT: 1 God\n"
+                "	     -- god vs god in Arena => winner\n\n"
                 "	b) Rest\n"
-                "	   --INPUT: 1 God\n"
-                "	   --OUTPUT: 1 God\n"
-                "	   -- Whats better after a harsh fight than long, "
-                "uniterrupted rest. This action restores god's strenght "
-                "back to its original value.\n\n"
+                "	     -- INPUT: 1 God\n"
+                "	     -- OUTPUT: 1 God\n"
+                "	     -- wounded god => healed god\n\n"
                 "	c) Item Select\n"
-                "	   --INPUT: 1 God and 1 Item\n"
-                "	   --OUTPUT: 1 God\n"
-                "	   -- What's worse than facing Mimir in the Alfheim? "
-                "Facing Mimir with mythic god-slaying weapon in the Alfheim! "
-                "Through this action, god's strenght is increased or decreased "
-                "by various weapons.\n\n"
+                "	     -- INPUT: 1 God and 1 Item\n"
+                "	     -- OUTPUT: 1 God\n"
+                "	     -- god => god with added strenght\n\n"
                 "	d) Dice throw\n"
-                "	   --INPUT: 1 God\n"
-                "	   --OUTPUT: 1 God\n"
-                "	   -- Desperate gods do desperate things. Through this "
-                "action, god will sacrifice 10% of current health for which "
-                "obtains a random item with double efficiency.\n\n"
+                "	     -- INPUT: 1 God\n"
+                "	     -- OUTPUT: 1 God\n"
+                "	     -- god => 0.9*god+2*(Rand_Item)\n\n"
                 "	e) Select Arena\n"
-                "	   --INPUT: 2 Gods\n"
-                "	   --OUTPUT: 1 Arena\n"
-                "	   -- This action chooses as its output preffered arena "
-                "of one of gods.\n\n\n"
-                "3.ARENAS, their efficiency and who are they preffered by\n"
-                "--Greek arenas\n"
-                "-Olymp		,8 ,Zeus\n"
-                "-Aegean Sea		,5 ,Poseidon\n"
-                "-Library of Alexandia	,3 ,Athena\n\n"
-                "--Northern arenas\n"
-                "-Asgartd		,9 ,Odin\n"
-                "-Norwegian Sea	,5 ,Njord\n"
-                "-Alfheim		,4 ,Mimir\n\n"
-                "--Neutral arenas\n"
-                "-Valley Of Kings	,0 ,nobody\n\n\n"
-                "4.WEAPONS and their efficiency\n"
-                "-LeviathanAxe		,7\n"
-                "-Curse			,-10 \n"
-                "-Scroll of Wisdom	,4\n"
-                "-Piety			,3 \n"
-                "-Impiety		,-3\n");
+                "	     -- INPUT: 2 Gods\n"
+                "	     -- OUTPUT: 1 Arena\n"
+                "	     -- god vs god => one of gods's favourite arena\n");
     msg.exec();
 
 }
